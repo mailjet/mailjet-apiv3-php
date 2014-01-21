@@ -13,10 +13,8 @@ or download the contents of this repo as a zip.
 ```
 https://github.com/mailjet/mailjet-apiv3-php/archive/master.zip
 ```
-unzip it to your preferred location.
-
-Once that's done, fire up a terminal, move to the folder just created and run the following commands
-
+and unzip it to your desired location.
+Once that's done, fire up a terminal, move to the folder you've just created and run the following commands:
 ```
 curl -s https://getcomposer.org/installer | php
 php composer.phar install
