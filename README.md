@@ -9,7 +9,11 @@ To install simply clone a copy of the main git repo by running:
 ```
 git clone git@github.com:mailjet/mailjet-apiv3-php.git
 ```
-or download the contents of this repo as a zip and unzip it to your preferred location.
+or download the contents of this repo as a zip.
+```
+https://github.com/mailjet/mailjet-apiv3-php/archive/master.zip
+```
+unzip it to your preferred location.
 
 Once that's done, fire up a terminal, move to the folder just created and run the following commands
 
