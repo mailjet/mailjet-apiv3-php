@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnbiz/!svn/ver/77/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet
+END
+ResultSet.php
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnbiz/!svn/ver/77/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/ResultSet.php
+END
+ResultSetInterface.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnbiz/!svn/ver/41/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/ResultSetInterface.php
+END

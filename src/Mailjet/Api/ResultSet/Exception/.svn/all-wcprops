@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnbiz/!svn/ver/33/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/Exception
+END
+ExceptionInterface.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnbiz/!svn/ver/33/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/Exception/ExceptionInterface.php
+END
+RuntimeException.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnbiz/!svn/ver/33/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/Exception/RuntimeException.php
+END
+InvalidArgumentException.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnbiz/!svn/ver/33/Mailjet-API-Wrapper-PHP5/src/Mailjet/Api/ResultSet/Exception/InvalidArgumentException.php
+END

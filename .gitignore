@@ -4,4 +4,5 @@ tmp/*
 app/tmp/*
 app/[Cc]onfig/core.php
 app/[Cc]onfig/database.php
+.DS_Store
 !empty
