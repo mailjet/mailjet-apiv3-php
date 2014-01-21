@@ -1,5 +1,5 @@
 #Mailjet PHP Wrapper for API v3
-- [x] Work In Progress
+|Work In Progress|
 ## Introduction
 Provides a simple PHP library for the last version of the [MailJet API](http://dev.mailjet.com/).
 The goal of this component is to simplify the usage of the MailJet API for PHP developers.
