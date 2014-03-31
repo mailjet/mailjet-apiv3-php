@@ -44,6 +44,12 @@ The first thing to do is to import the required namespaces and files:
     ?>
 
 **Be Careful:** Make sure you've kept the directory structure intact or the include function will not be able to find the file which autoloads the wrapper's classes
+Next, you will add your credentials:
+
+    $APIKey = 'MY_API_KEY_VALUE';
+    $secretKey = 'MY_API_SECRET_KEY_VALUE';
+
+Obviously you need to replace the values within the quotes with your own, that you can find at the following URL [https://app.mailjet.com/account/api_keys](https://app.mailjet.com/account/api_keys) once you've registered and logged in Mailjet.
 
 ## Examples
 ## Reporting issues
