@@ -39,7 +39,11 @@ The first thing to do is to import the required namespaces and files:
 
     <?php 
     include_once __DIR__ . '/vendor/autoload.php';
+    use Mailjet\Api as MailjetApi;
+    use Mailjet\Model\Apitoken;
     ?>
+
+**Be Careful:** Make sure you've kept the directory structure intact or the include function will not be able to find the file which autoloads the wrapper's classes
 
 ## Examples
 ## Reporting issues
