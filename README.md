@@ -56,9 +56,41 @@ Now the fun beigins, create a new object which takes as arguments your credentia
     $wrapper = new MailjetApi\Api($APIKey, $secretKey);
 
 This basically, starts the engine. Now what you're going to do next depends on what you want to POST,DELETE,PUT or GET from the Mailjet servers throught the API.
-    
-    	
-
 
 ## Examples
+A function that creates a list of contacts ```$Lname```
+
+     function createList($wrapper,$Lname) {
+     $apicall = $wrapper->contactslist();
+     $newList = new Contactslist();
+     $newList->setName($Lname);
+     $createList = $apicall->create($newList);
+     echo "success - created list\n";
+     return $createList->getID();
+     }
+
+A function that creates a Contact ```$buddy```
+
+     function createContact($wrapper, $buddy) {
+     $apicall = $wrapper->contact();
+     $newContact = new Contact();
+     $newContact->setEmail($buddy);
+     $createContact = $apicall->create($newContact);
+     echo "success - created contact\n";
+     return $createContact->getID();
+     }
+     
+A function that adds a given contact ID ```$buddyID``` to a given list ```$ListID```
+
+    function addContactToList($wrapper,$ListID,$buddyID) {
+    $apicall = $wrapper->Listrecipient();
+    $newContactToList = new Listrecipient();
+    $newContactToList->setListID($ListID);
+    $newContactToList->setContactID($buddyID);
+    $addContactToList = $apicall->create($newContactToList);
+    echo "success - created contact to list\n";
+    return $addContactToList;
+    }
+
+
 ## Reporting issues
