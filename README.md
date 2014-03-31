@@ -37,11 +37,11 @@ Create an empty file and name it ```mailjetapi.php```.
 
 The first thing to do is to import the required namespaces and files:
 
-    <?php 
+     
     include_once __DIR__ . '/vendor/autoload.php';
     use Mailjet\Api as MailjetApi;
     use Mailjet\Model\Apitoken;
-    ?>
+    
 
 **Be Careful:** Make sure you've kept the directory structure intact or the include function will not be able to find the file which autoloads the wrapper's classes
 Next, you will add your credentials:
@@ -50,6 +50,15 @@ Next, you will add your credentials:
     $secretKey = 'MY_API_SECRET_KEY_VALUE';
 
 Obviously you need to replace the values within the quotes with your own, that you can find at the following URL [Mailjet API Keys](https://www.mailjet.com/account/api_keys) once you've registered and logged in Mailjet.
+
+Now the fun beigins, create a new object which takes as arguments your credentials:
+
+    $wrapper = new MailjetApi\Api($APIKey, $secretKey);
+
+This basically, starts the engine. Now what you're going to do next depends on what you want to POST,DELETE,PUT or GET from the Mailjet servers throught the API.
+    
+    	
+
 
 ## Examples
 ## Reporting issues
