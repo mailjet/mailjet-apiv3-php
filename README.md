@@ -93,4 +93,4 @@ A function that adds a given contact ID ```$buddyID``` to a given list ```$ListI
 
 
 ## Reporting issues
-Open an issue on github or email one of the maintainer. That would be me ;) (orlando at mailjet dot com)
+Open an issue on github or email one of the maintainers. That would be me ;) (orlando at mailjet dot com)
