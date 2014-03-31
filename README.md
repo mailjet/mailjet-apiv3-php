@@ -1,6 +1,5 @@
 #Mailjet PHP Wrapper for API v3
-|Work| In| Progress|
-|----|---|---------|
+
 ## Introduction
 Provides a simple PHP library for the last version of the [MailJet API](http://dev.mailjet.com/).
 The goal of this component is to simplify the usage of the MailJet API for PHP developers.
@@ -94,3 +93,4 @@ A function that adds a given contact ID ```$buddyID``` to a given list ```$ListI
 
 
 ## Reporting issues
+Open an issue on github or email one of the maintainer. That would be me ;) (orlando at mailjet dot com)
