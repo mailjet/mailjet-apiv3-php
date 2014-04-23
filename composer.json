@@ -1,0 +1,38 @@
+{
+	"name" : "mailjet/api",
+	"description" : "OOP wrapper for the Mailjet API",
+	"type" : "library",
+	"keywords" : [
+		"zf2",
+		"mailjet"
+	],
+	"license" : [
+		"BSD-3-Clause"
+	],
+	"require" : {
+		"zendframework/zend-json" : "2.2.*",
+		"php" : ">=5.3.3",
+		"zendframework/zend-form" : "2.2.*",
+		"zendframework/zend-http" : "2.2.*",
+		"zendframework/zend-servicemanager" : "2.2.*",
+		"zendframework/zendservice-api" : "dev-master"
+	},
+	"require-dev" : {
+		"zendframework/zend-serializer" : "2.2.*",
+		"zendframework/zend-mvc" : "2.2.*",
+		"zendframework/zend-view" : "2.2.*",
+		"zendframework/zend-code" : "2.2.*",
+		"zendframework/zend-console" : "2.2.*",
+		"zendframework/zend-text" : "2.2.*",
+		"zendframework/zend-modulemanager" : "2.2.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Mailjet" : "src"
+		}
+	},
+	"minimum-stability" : "stable",
+	"bin" : [
+		"mailjet.php"
+	]
+}
