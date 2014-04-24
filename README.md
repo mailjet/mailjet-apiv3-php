@@ -50,12 +50,22 @@ Next, you will add your credentials:
 
 Obviously you need to replace the values within the quotes with your own, that you can find at the following URL [Mailjet API Keys](https://www.mailjet.com/account/api_keys) once you've registered and logged in Mailjet.
 
-Now the fun beigins, create a new object which takes as arguments your credentials:
+Now the fun begins, create a new object which takes as arguments your credentials:
 
     $wrapper = new MailjetApi\Api($APIKey, $secretKey);
 
 This basically, starts the engine. Now what you're going to do next depends on what you want to POST,DELETE,PUT or GET from the Mailjet servers throught the API.
 
+Next you will specifying which resource to call this way:
+```php
+$wrapper->resourceName()
+```
+For example if I want to use the resource ApiKey (which tells me a bunch of information about my ApiKey) I will do:
+```php
+$wrapper->apikey()
+```
+
+*NOTE* Make sure you've been using the correct namespace at the start of the file, each resource has its own namespace.
 ## Examples
 A function that creates a list of contacts ```$Lname```
 
