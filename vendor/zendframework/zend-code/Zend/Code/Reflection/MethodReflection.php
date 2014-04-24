@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -47,12 +47,18 @@ class MethodReflection extends PhpReflectionMethod implements ReflectionInterfac
             return false;
         }
 
-        if (!$this->annotations) {
-            $cachingFileScanner = new CachingFileScanner($this->getFileName());
-            $nameInformation    = $cachingFileScanner->getClassNameInformation($this->getDeclaringClass()->getName());
-
-            $this->annotations = new AnnotationScanner($annotationManager, $docComment, $nameInformation);
+        if ($this->annotations) {
+            return $this->annotations;
         }
+
+        $cachingFileScanner = $this->createFileScanner($this->getFileName());
+        $nameInformation    = $cachingFileScanner->getClassNameInformation($this->getDeclaringClass()->getName());
+
+        if (!$nameInformation) {
+            return false;
+        }
+
+        $this->annotations = new AnnotationScanner($annotationManager, $docComment, $nameInformation);
 
         return $this->annotations;
     }
@@ -119,7 +125,13 @@ class MethodReflection extends PhpReflectionMethod implements ReflectionInterfac
      */
     public function getContents($includeDocBlock = true)
     {
-        $fileContents = file($this->getFileName());
+        $fileName = $this->getFileName();
+
+        if ((class_exists($this->class) && !$fileName) || ! file_exists($fileName)) {
+            return ''; // probably from eval'd code, return empty
+        }
+
+        $fileContents = file($fileName);
         $startNum     = $this->getStartLine($includeDocBlock);
         $endNum       = ($this->getEndLine() - $this->getStartLine());
 
@@ -133,8 +145,14 @@ class MethodReflection extends PhpReflectionMethod implements ReflectionInterfac
      */
     public function getBody()
     {
+        $fileName = $this->getDeclaringClass()->getFileName();
+
+        if (false === $fileName || ! file_exists($fileName)) {
+            return '';
+        }
+
         $lines = array_slice(
-            file($this->getDeclaringClass()->getFileName(), FILE_IGNORE_NEW_LINES),
+            file($fileName, FILE_IGNORE_NEW_LINES),
             $this->getStartLine(),
             ($this->getEndLine() - $this->getStartLine()),
             true
@@ -164,5 +182,20 @@ class MethodReflection extends PhpReflectionMethod implements ReflectionInterfac
     public function __toString()
     {
         return parent::__toString();
+    }
+
+    /**
+     * Creates a new FileScanner instance.
+     *
+     * By having this as a seperate method it allows the method to be overridden
+     * if a different FileScanner is needed.
+     *
+     * @param  string $filename
+     *
+     * @return FileScanner
+     */
+    protected function createFileScanner($filename)
+    {
+        return new CachingFileScanner($filename);
     }
 }
