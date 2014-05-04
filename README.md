@@ -1,9 +1,10 @@
-#Mailjet PHP Wrapper for API v3
+# Mailjet PHP Wrapper for API v3
 
 ## Introduction
-Provides a simple PHP library for the last version of the [MailJet API](http://dev.mailjet.com/).
+Provides a simple PHP library for the last version of the [MailJet API](http://dev.mailjet.com).
 The goal of this component is to simplify the usage of the MailJet API for PHP developers.
-###Prerequisites
+
+### Prerequisites
 Make sure to have the following details:
 * Mailjet API Key
 * Mailjet API Secret Key
@@ -12,18 +13,22 @@ Make sure to have the following details:
 
 
 ## Installation
-To install simply clone a copy of the main git repo by running:
+
+There are several possibilities to install the library:
+
+### Git clone
 
 ```
 git clone git@github.com:mailjet/mailjet-apiv3-php.git
 ```
-or download the contents of this repo as a zip.
+
+### Download the zip tarball
 
 ```
 https://github.com/mailjet/mailjet-apiv3-php/archive/master.zip
 ```
-and unzip it to your desired location.
-Once that's done, fire up a terminal, move to the folder you've just created and run the following commands:
+
+### Composer
 
 ```
 curl -s https://getcomposer.org/installer | php
@@ -36,23 +41,24 @@ Create an empty file and name it ```mailjetapi.php```.
 
 The first thing to do is to import the required namespaces and files:
 
-     
-    include_once __DIR__ . '/vendor/autoload.php';
-    use Mailjet\Api as MailjetApi;
-    use Mailjet\Model\Apitoken;
-    
+     include_once __DIR__ . '/vendor/autoload.php';
+     use Mailjet\Api as MailjetApi;
+     use Mailjet\Model\Apitoken;
+
 
 **Be Careful:** Make sure you've kept the directory structure intact or the include function will not be able to find the file which autoloads the wrapper's classes
 Next, you will add your credentials:
 
-    $APIKey = 'MY_API_KEY_VALUE';
-    $secretKey = 'MY_API_SECRET_KEY_VALUE';
+     <?php
+     $APIKey = 'MY_API_KEY_VALUE';
+     $secretKey = 'MY_API_SECRET_KEY_VALUE';
 
 Obviously you need to replace the values within the quotes with your own, that you can find at the following URL [Mailjet API Keys](https://www.mailjet.com/account/api_keys) once you've registered and logged in Mailjet.
 
 Now the fun begins, create a new object which takes as arguments your credentials:
 
-    $wrapper = new MailjetApi\Api($APIKey, $secretKey);
+     <?php
+     $wrapper = new MailjetApi\Api($APIKey, $secretKey);
 
 This basically, starts the engine. Now what you're going to do next depends on what you want to POST,DELETE,PUT or GET from the Mailjet servers throught the API.
 
