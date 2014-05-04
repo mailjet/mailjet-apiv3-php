@@ -6,3 +6,5 @@ app/[Cc]onfig/core.php
 app/[Cc]onfig/database.php
 .DS_Store
 !empty
+composer.phar
+vendor/*

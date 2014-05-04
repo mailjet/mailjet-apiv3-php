@@ -1,7 +1,7 @@
 <?php
 return array(
     'Mailjet' => array(
-
+        //
     ),
     'controllers' => array(
         'invokables' => array(
@@ -13,10 +13,10 @@ return array(
             'routes' => array(
                 'mailjet-api-generate' => array(
                     'options' => array(
-                        'route' => 'api generate <metadata-file>',
+                        'route'    => 'api generate <metadata-file>',
                         'defaults' => array(
                             'controller' => 'Mailjet\Controller\Api',
-                            'action' => 'generate',
+                            'action'     => 'generate',
                         ),
                     ),
                 ),
