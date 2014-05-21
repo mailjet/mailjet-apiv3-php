@@ -5,6 +5,10 @@
 Provides a simple PHP library for the last version of the [MailJet API](http://dev.mailjet.com).
 The goal of this component is to simplify the usage of the MailJet API for PHP developers.
 
+**Beware** this library has been designed for people using Zend. If you do not use Zend,
+you might be interested by our mailjet-apiv3-php-simple repository with a simpler wrapper
+based on cURL.
+
 ### Prerequisites
 
 Make sure to have the following details:
