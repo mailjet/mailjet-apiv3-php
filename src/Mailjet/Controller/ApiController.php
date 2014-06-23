@@ -124,12 +124,7 @@ LICENSE;
                     'Mailjet Api',
                     'Wrapper used (as proxy) to consume apis',
                     array(
-                        new Generator\DocBlock\Tag(
-                            array(
-                                'name' => 'see',
-                                'description' => sprintf('http://mjdemo.poxx.net/~shubham'),
-                            )
-                        ),
+                        new Generator\DocBlock\Tag('see', sprintf('http://mjdemo.poxx.net/~shubham')),
                     )
                 )
             )
@@ -158,11 +153,7 @@ LICENSE;
                     'Helper for ' . $metadata->Name . ' calls',
                     null,
                     array(
-                        new ReturnTag(
-                            array(
-                                'datatype' => ucfirst($metadata->Name),
-                            )
-                        ),
+                        new ReturnTag(ucfirst($metadata->Name)),
                     )
                 )
             );
@@ -208,12 +199,7 @@ LICENSE;
                     $class->getName() . ' Api',
                     $metadata->Description,
                     array(
-                        new Generator\DocBlock\Tag(
-                            array(
-                                'name' => 'see',
-                                'description' => sprintf('http://mjdemo.poxx.net/~shubham/%s.html', $name),
-                            )
-                        ),
+                        new Generator\DocBlock\Tag('see', sprintf('http://mjdemo.poxx.net/~shubham/%s.html', $name)),
                     )
                 )
             )->addMethod(
@@ -441,17 +427,8 @@ LICENSE;
                     "Sets the " . $property->getDocBlock()->getShortDescription(),
                     '',
                     array(
-                        new ParamTag(
-                            array(
-                                'name' => $name,
-                                'datatype' => $dataType,
-                            )
-                        ),
-                        new ReturnTag(
-                            array(
-                                'datatype' => $class->getName(),
-                            )
-                        ),
+                        new ParamTag($name, $dataType),
+                        new ReturnTag($class->getName()),
                     )
                 )
             );
@@ -481,11 +458,7 @@ LICENSE;
                     'Gets the ' . $property->getDocBlock()->getShortDescription(),
                     '',
                     array(
-                        new ReturnTag(
-                            array(
-                                'datatype' => $dataType,
-                            )
-                        ),
+                        new ReturnTag($dataType),
                     )
                 )
             );
@@ -501,11 +474,7 @@ LICENSE;
                         'Add new item to ' . ucfirst($name),
                         '',
                         array(
-                            new ReturnTag(
-                                array(
-                                    'datatype' => 'bool',
-                                )
-                            ),
+                            new ReturnTag('bool'),
                         )
                     )
                 );
@@ -518,11 +487,7 @@ LICENSE;
                         'Remove $item from ' . ucfirst($name),
                         '',
                         array(
-                            new ReturnTag(
-                                array(
-                                    'datatype' => 'bool',
-                                )
-                            ),
+                            new ReturnTag('bool'),
                         )
                     )
                 );
@@ -573,19 +538,8 @@ LICENSE;
                                 "Return list of $modelClassName filtered by \$filters if provided"
                                 . PHP_EOL ,
                                 array(
-                                    new ParamTag(
-                                        array(
-                                            'name' => 'filters',
-                                            'datatype' => 'array',
-                                            'description' => 'key/val filters',
-                                        )
-                                    ),
-                                    new ReturnTag(
-                                        array(
-                                            'datatype' => 'ResultSet\ResultSet',
-                                            'description' => "List of $modelClassName",
-                                        )
-                                    ),
+                                    new ParamTag('filters', 'array', 'key/val filters'),
+                                    new ReturnTag('ResultSet\ResultSet', "List of $modelClassName"),
                                 )
                             )
                         ),
@@ -631,17 +585,8 @@ LICENSE;
                                         ($isKey ? "Return $modelClassName" : "Return list of $modelClassName with $filterName = \$$filterName"),
                                         '',
                                         array(
-                                            new ParamTag(
-                                                array(
-                                                    'name' => $filterName,
-                                                    'datatype' => $dataType,
-                                                )
-                                            ),
-                                            new ReturnTag(
-                                                array(
-                                                    'datatype' => $isKey ? $modelClassName : 'ResultSet\ResultSet',
-                                                )
-                                            ),
+                                            new ParamTag($filterName, $dataType),
+                                            new ReturnTag($isKey ? $modelClassName : 'ResultSet\ResultSet'),
                                         )
                                     )
                                 ),
@@ -665,18 +610,8 @@ LICENSE;
                                 "Return $modelClassName with id = \$id",
                                 '',
                                 array(
-                                    new ParamTag(
-                                        array(
-                                            'name' => 'id',
-                                            'datatype' => 'int',
-                                            'description' => 'Id of resource to get',
-                                        )
-                                    ),
-                                    new ReturnTag(
-                                        array(
-                                            'datatype' => $modelClassName,
-                                        )
-                                    ),
+                                    new ParamTag('id', 'int', 'Id of resource to get'),
+                                    new ReturnTag($modelClassName),
                                 )
                             )
                         ),
@@ -692,11 +627,7 @@ LICENSE;
                                 "Return current $modelClassName",
                                 '',
                                 array(
-                                    new ReturnTag(
-                                        array(
-                                            'datatype' => $modelClassName,
-                                        )
-                                    ),
+                                    new ReturnTag($modelClassName),
                                 )
                             )
                         ),
@@ -719,19 +650,8 @@ LICENSE;
                             "Delete the $model with id = \$id",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => 'id',
-                                        'datatype' => 'integer',
-                                        'description' => 'Id to delete',
-                                    )
-                                ),
-                                new ReturnTag(
-                                    array(
-                                        'datatype' => 'bool',
-                                        'description' => 'True on success',
-                                    )
-                                ),
+                                new ParamTag('id', 'integer', 'Id to delete'),
+                                new ReturnTag('bool', 'True on success'),
                             )
                         )
                     ),
@@ -756,18 +676,8 @@ LICENSE;
                             "Create a new $model",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => $model,
-                                        'datatype' => $modelClassName
-                                    )
-                                ),
-                                new ReturnTag(
-                                    array(
-                                        'datatype' => "$modelClassName|false",
-                                        'description' => 'Object created or false',
-                                    )
-                                ),
+                                new ParamTag($model, $modelClassName),
+                                new ReturnTag("$modelClassName|false", 'Object created or false'),
                             )
                         )
                     ),
@@ -791,18 +701,8 @@ LICENSE;
                             "Update existing $model",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => $model,
-                                        'datatype' => $modelClassName
-                                    )
-                                ),
-                                new ReturnTag(
-                                    array(
-                                        'datatype' => "$modelClassName|false",
-                                        'description' => 'Object created or false',
-                                    )
-                                ),
+                                new ParamTag($model, $modelClassName),
+                                new ReturnTag("$modelClassName|false", 'Object created or false'),
                             )
                         )
                     ),
