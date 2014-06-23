@@ -124,12 +124,7 @@ LICENSE;
                     'Mailjet Api',
                     'Wrapper used (as proxy) to consume apis',
                     array(
-                        new Generator\DocBlock\Tag(
-                            array(
-                                'name' => 'see',
-                                'description' => sprintf('http://mjdemo.poxx.net/~shubham'),
-                            )
-                        ),
+                        new Generator\DocBlock\Tag('see', sprintf('http://mjdemo.poxx.net/~shubham')),
                     )
                 )
             )
@@ -208,12 +203,7 @@ LICENSE;
                     $class->getName() . ' Api',
                     $metadata->Description,
                     array(
-                        new Generator\DocBlock\Tag(
-                            array(
-                                'name' => 'see',
-                                'description' => sprintf('http://mjdemo.poxx.net/~shubham/%s.html', $name),
-                            )
-                        ),
+                        new Generator\DocBlock\Tag('see', sprintf('http://mjdemo.poxx.net/~shubham/%s.html', $name)),
                     )
                 )
             )->addMethod(
@@ -441,12 +431,7 @@ LICENSE;
                     "Sets the " . $property->getDocBlock()->getShortDescription(),
                     '',
                     array(
-                        new ParamTag(
-                            array(
-                                'name' => $name,
-                                'datatype' => $dataType,
-                            )
-                        ),
+                        new ParamTag($name, $dataType),
                         new ReturnTag(
                             array(
                                 'datatype' => $class->getName(),
@@ -573,13 +558,7 @@ LICENSE;
                                 "Return list of $modelClassName filtered by \$filters if provided"
                                 . PHP_EOL ,
                                 array(
-                                    new ParamTag(
-                                        array(
-                                            'name' => 'filters',
-                                            'datatype' => 'array',
-                                            'description' => 'key/val filters',
-                                        )
-                                    ),
+                                    new ParamTag('filters', 'array', 'key/val filters'),
                                     new ReturnTag(
                                         array(
                                             'datatype' => 'ResultSet\ResultSet',
@@ -631,12 +610,7 @@ LICENSE;
                                         ($isKey ? "Return $modelClassName" : "Return list of $modelClassName with $filterName = \$$filterName"),
                                         '',
                                         array(
-                                            new ParamTag(
-                                                array(
-                                                    'name' => $filterName,
-                                                    'datatype' => $dataType,
-                                                )
-                                            ),
+                                            new ParamTag($filterName, $dataType),
                                             new ReturnTag(
                                                 array(
                                                     'datatype' => $isKey ? $modelClassName : 'ResultSet\ResultSet',
@@ -665,13 +639,7 @@ LICENSE;
                                 "Return $modelClassName with id = \$id",
                                 '',
                                 array(
-                                    new ParamTag(
-                                        array(
-                                            'name' => 'id',
-                                            'datatype' => 'int',
-                                            'description' => 'Id of resource to get',
-                                        )
-                                    ),
+                                    new ParamTag('id', 'int', 'Id of resource to get'),
                                     new ReturnTag(
                                         array(
                                             'datatype' => $modelClassName,
@@ -719,13 +687,7 @@ LICENSE;
                             "Delete the $model with id = \$id",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => 'id',
-                                        'datatype' => 'integer',
-                                        'description' => 'Id to delete',
-                                    )
-                                ),
+                                new ParamTag('id', 'integer', 'Id to delete'),
                                 new ReturnTag(
                                     array(
                                         'datatype' => 'bool',
@@ -756,12 +718,7 @@ LICENSE;
                             "Create a new $model",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => $model,
-                                        'datatype' => $modelClassName
-                                    )
-                                ),
+                                new ParamTag($model, $modelClassName),
                                 new ReturnTag(
                                     array(
                                         'datatype' => "$modelClassName|false",
@@ -791,12 +748,7 @@ LICENSE;
                             "Update existing $model",
                             '',
                             array(
-                                new ParamTag(
-                                    array(
-                                        'name' => $model,
-                                        'datatype' => $modelClassName
-                                    )
-                                ),
+                                new ParamTag($model, $modelClassName),
                                 new ReturnTag(
                                     array(
                                         'datatype' => "$modelClassName|false",
