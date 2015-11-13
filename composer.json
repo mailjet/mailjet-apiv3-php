@@ -1,6 +1,6 @@
 {
-    "name": "mailjet/mailjet-apiv3-php-simple",
-    "description": "[API v3] PHP wrapper for the Mailjet API",
+    "name": "mailjet/mailjet-apiv3-php",
+    "description": "PHP wrapper for the Mailjet API",
     "keywords": ["mailjet", "api", "v3", "php", "email"],
     "homepage": "https://github.com/mailjet/mailjet-apiv3-php/",
     "license": "MIT",
