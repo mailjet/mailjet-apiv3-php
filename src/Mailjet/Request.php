@@ -43,12 +43,15 @@ class Request extends \GuzzleHttp\Client
      */
     public function __construct($auth, $method, $url, $filters, $body, $type)
     {
-        parent::__construct();
+        parent::__construct(['defaults' => [
+			'headers' => [
+				'user-agent' => 'mailjet-apiv3-php/' . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
+			]	
+		]]);
         $this->type = $type;
         $this->auth = $auth;
         $this->method = $method;
         $this->url = $url;
-        // $this->url = 'http://requestb.in/1guyftg1';
         $this->filters = $filters;
         $this->body = $body;
 
@@ -81,17 +84,9 @@ class Request extends \GuzzleHttp\Client
                     	]
                     ]
                 );
-                //$req = $this->getFunction($this->url, [
-                //		'headers'  => ['content-type' => $this->type],
-                //		'query' => $this->filters,
-                //		'json' => $this->body,
-                //		'auth' => $this->auth
-                //	]
-                //);
             }
             catch (\GuzzleHttp\Exception\ClientException $e) {
                 $response = $e->getResponse();
-                // $responseBodyAsString = $response->getBody()->getContents();
             }
         }
 
