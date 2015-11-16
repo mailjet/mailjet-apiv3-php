@@ -13,8 +13,6 @@
 
 namespace Mailjet;
 
-require 'vendor/autoload.php';
-
 /**
  * This is the Mailjet Request class
  * @category Mailjet_API
