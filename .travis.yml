@@ -1,0 +1,11 @@
+language: php
+php:
+- '5.5'
+script: phpunit --coverage-text
+env:
+  global:
+  - secure: rE2SVhVCOWtcHb0lAfiiokj7zMo+bCUR2rY5lgCQZeVyIQl+NjDwbgJCXZmfvcAg+pVy8/Mc/F8n9W9BiZMGLm5xyL4piUT8l2YKU1JnW4Floy9OOdr2UwcE8LNteW1iZZNDK1CECsLZVSYJ08eCtI5K+eAMpq0sIoFLJwkkbT8=
+  - secure: sa+CcpxUxsUy2HEZExD3zTfu9S6SPcp/4Pj4YnSamgd33JGoRGhFOk75jB5Gk375eki64ljsRnP6B9v6zgPRV+I6nPyt6d13sZQAaN4Cm8I0HBB+ifIBz3NSYUq8/c+5x3y8hOIJWpte8ml7S1BJbUr/+uNEL5Sew2Kuu1obH9o=
+notifications:
+  email:
+  - ccollas@mailjet.com
