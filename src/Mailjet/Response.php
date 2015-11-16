@@ -11,7 +11,7 @@
  * @link     http://link.com
  */
 
-namespace mailjet;
+namespace Mailjet;
 
 /**
  * This is the Mailjet Response
