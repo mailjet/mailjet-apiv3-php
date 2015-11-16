@@ -24,7 +24,7 @@ require 'vendor/autoload.php';
  */
 class Client
 {
-    const WRAPPER_VERSION = 'v1.0.0';
+    const WRAPPER_VERSION = 'v1.0.1';
 
     private $apikey;
     private $apisecret;
