@@ -11,9 +11,7 @@
  * @link     http://link.com
  */
 
-namespace mailjet;
-
-require 'vendor/autoload.php';
+namespace Mailjet;
 
 /**
  * PHP version 5

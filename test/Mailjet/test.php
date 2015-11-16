@@ -1,6 +1,6 @@
 <?php
 
-namespace mailjet;
+namespace Mailjet;
 use \Mailjet\Resources;
 
 require 'vendor/autoload.php';
