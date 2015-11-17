@@ -89,6 +89,16 @@ class Response
     }
 
     /**
+     * Total getter
+     * return the total count of all results
+     * @return int count
+     */
+    public function getTotal()
+    {
+        return $this->body['Total'];
+    }
+
+    /**
      * Success getter
      * @return boolean true is return code is 2**
      */
