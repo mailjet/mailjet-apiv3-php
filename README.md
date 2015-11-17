@@ -11,6 +11,10 @@
 
 Check out all the resources and all the PHP code examples on the official documentation: [Maijlet Documentation][doc]
 
+## Requirements
+
+`PHP >= 5.4`
+
 ## Getting Started !
 
 [grab][api_credential] and save your Mailjet API credentials:
