@@ -55,6 +55,8 @@ $me = $client->get(Resources::$User);
 
 `$me->getCount()` will provide the number of element requested
 
+`$me->getTotal()` will provide the total count of all results
+
 ### Debug
 
 `$me->getStatus()` contains the server http response code
