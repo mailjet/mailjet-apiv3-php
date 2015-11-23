@@ -68,8 +68,7 @@ class Client
 
         $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
 
-        $contentType = $action ==
-            ('csvdata/text:plain' || $action == 'csverror/text:csv') ?
+        $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
                 'text/plain' : 'application/json';
 
         return (new \Mailjet\Request(
