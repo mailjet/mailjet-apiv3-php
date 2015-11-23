@@ -54,7 +54,7 @@ class Client
      * @param array  $args     Request arguments
      * @return Mailjet\Response server response
      */
-    private function call($method, $resource, $action, $args)
+    private function _call($method, $resource, $action, $args)
     {
         $args = array_merge(
             [
@@ -101,7 +101,7 @@ class Client
      */
     public function post($resource, $args = [])
     {
-        return $this->call('POST', $resource[0], $resource[1], $args);
+        return $this->_call('POST', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -112,7 +112,7 @@ class Client
      */
     public function get($resource, $args = [])
     {
-        return $this->call('GET', $resource[0], $resource[1], $args);
+        return $this->_call('GET', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -123,7 +123,7 @@ class Client
      */
     public function put($resource, $args = [])
     {
-        return $this->call('PUT', $resource[0], $resource[1], $args);
+        return $this->_call('PUT', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -134,7 +134,7 @@ class Client
      */
     public function delete($resource, $args = [])
     {
-        return $this->call('DELETE', $resource[0], $resource[1], $args);
+        return $this->_call('DELETE', $resource[0], $resource[1], $args);
     }
 
     /**
