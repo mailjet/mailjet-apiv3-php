@@ -6,6 +6,8 @@
 ![alt text](http://cdn.appstorm.net/web.appstorm.net/files/2012/02/mailjet_logo_200x200.png "Mailjet")
 
 [![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
+![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)
+![Current Version](https://img.shields.io/badge/version-1.0.2-green.svg)
 
 [Mailjet][mailjet] API Client.
 
