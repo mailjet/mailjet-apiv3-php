@@ -44,7 +44,7 @@ class Request extends \GuzzleHttp\Client
         parent::__construct(['defaults' => [
 			'headers' => [
 				'user-agent' => 'mailjet-apiv3-php/' . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
-			]	
+			]
 		]]);
         $this->type = $type;
         $this->auth = $auth;
@@ -75,10 +75,10 @@ class Request extends \GuzzleHttp\Client
                     array($this, strtolower($this->method)), [
                     $this->url,
                   		[
-							'headers'  => ['content-type' => $this->type],
-							'query' => $this->filters,
-							'json' => $this->body,
-							'auth' => $this->auth
+                        'headers'  => ['content-type' => $this->type],
+                        'query' => $this->filters,
+                        'json' => $this->body,
+                        'auth' => $this->auth
                     	]
                     ]
                 );
