@@ -136,5 +136,3 @@ class Request extends \GuzzleHttp\Client
         return $this->auth;
     }
 }
-
-?>
