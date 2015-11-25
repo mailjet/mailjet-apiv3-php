@@ -29,7 +29,7 @@ composer require mailjet/mailjet-apiv3-php
 
 [![Download](https://cdn1.iconfinder.com/data/icons/hawcons/32/698860-icon-129-cloud-download-128.png)](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
 
- - Download the mailjet-apiv3-php archive
+ - Download the [mailjet-apiv3-php archive](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
  - unzip it
  - require it in your project
 
