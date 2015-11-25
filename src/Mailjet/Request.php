@@ -73,13 +73,12 @@ class Request extends \GuzzleHttp\Client
             try {
                 $response = call_user_func_array(
                     array($this, strtolower($this->method)), [
-                    $this->url,
-                  		[
-                        'headers'  => ['content-type' => $this->type],
-                        'query' => $this->filters,
-                        'json' => $this->body,
-                        'auth' => $this->auth
-                    	]
+                    $this->url, [
+                        	'headers'  => ['content-type' => $this->type],
+                        	'query' => $this->filters,
+                        	'json' => $this->body,
+                        	'auth' => $this->auth
+                		]
                     ]
                 );
             }
