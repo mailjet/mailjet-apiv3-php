@@ -20,23 +20,8 @@ Check out all the resources and all the PHP code examples on the official docume
 
 ## Installation
 
-### With composer
 ``` bash
 composer require mailjet/mailjet-apiv3-php
-```
-
-### Without composer
-
-[![Download](https://cdn1.iconfinder.com/data/icons/hawcons/32/698860-icon-129-cloud-download-128.png)](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
-
- - Download the [mailjet-apiv3-php archive](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
- - unzip it
- - require it in your project
-
-``` php
-<?php
-require '/path_to_mailjet/vendor/autoload.php';
-?>
 ```
 
 ## Getting Started !
