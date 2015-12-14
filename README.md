@@ -18,27 +18,6 @@ Check out all the resources and all the PHP code examples on the official docume
 
 `PHP >= 5.4`
 
-## Installation
-
-### With composer
-``` bash
-composer require mailjet/mailjet-apiv3-php
-```
-
-### Without composer
-
-[![Download](https://cdn1.iconfinder.com/data/icons/hawcons/32/698860-icon-129-cloud-download-128.png)](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
-
- - Download the [mailjet-apiv3-php archive](https://github.com/mailjet/mailjet-apiv3-php/raw/dist/dist/mailjet-apiv3-php.zip)
- - unzip it
- - require it in your project
-
-``` php
-<?php
-require '/path_to_mailjet/vendor/autoload.php';
-?>
-```
-
 ## Getting Started !
 
 [grab][api_credential] and save your Mailjet API credentials:
@@ -118,6 +97,37 @@ $client->post(Resources::$Email, ['body' => $email]);
 ?>
 
 ```
+
+## Error handling
+
+``` php
+<?php
+
+$response = $client->post(Resources::$User);
+
+if ($response->success())
+{
+  var_dump($response->getData());
+}
+else
+{
+  var_dump($response->getStatus());
+  var_dump($response->getData());
+  /*
+    array(3) {
+      ["ErrorInfo"]=>
+      string(0) ""
+      ["ErrorMessage"]=>
+      string(21) "Operation not allowed"
+      ["StatusCode"]=>
+      int(401)
+    }
+  */
+}
+
+?>
+```
+
 
 ## Call a resource with an action
 
