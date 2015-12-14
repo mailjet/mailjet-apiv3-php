@@ -120,6 +120,7 @@ else
   var_dump($response->getStatus());
   var_dump($response->getData());
   /*
+    int(401)
     array(3) {
       ["ErrorInfo"]=>
       string(0) ""
