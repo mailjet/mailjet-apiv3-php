@@ -18,6 +18,12 @@ Check out all the resources and all the PHP code examples on the official docume
 
 `PHP >= 5.4`
 
+## Installation
+
+``` bash
+composer require mailjet/mailjet-apiv3-php
+```
+
 ## Getting Started !
 
 [grab][api_credential] and save your Mailjet API credentials:
