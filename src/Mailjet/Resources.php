@@ -95,6 +95,7 @@ class Resources
     public static $Preferences = ['preferences', ''];
     public static $Preset = ['preset', ''];
     public static $Sender = ['sender', ''];
+    public static $SenderValidate = ['sender', 'validate'];
     public static $Senderstatistics = ['senderstatistics', ''];
     public static $Template = ['template', ''];
     public static $TemplateDetailcontent = ['template', 'detailcontent'];
