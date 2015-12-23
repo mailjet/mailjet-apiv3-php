@@ -35,145 +35,138 @@ export MJ_APIKEY_PRIVATE='your api secret'
 
 ```
 
-Initialize your Mailjet Client:
+Initialize your [Mailjet][mailjet] Client:
 
 ``` php
 <?php
 
 use \Mailjet\Resources;
-
-$apikey = getenv('MJ_APIKEY_PUBLIC');
-$apisecret = getenv('MJ_APIKEY_PRIVATE');
-
-$client = new \Mailjet\Client($apikey, $apisecret);
-?>
-```
-It's as easy as 1, 2, 3 !
-
-## Make your first request
-
-### Get your user informations:
-
-``` php
-
-$me = $client->get(Resources::$User);
-
-```
-
-### Read the result:
-
-`$me->success()` will be false in case of error.
-
-`$me->getData()` will contain the requested data, error message etc..
-
-`$me->getCount()` will provide the number of element requested
-
-`$me->getTotal()` will provide the total count of all results
-
-### Debug
-
-`$me->getStatus()` contains the server http response code
-
-`$me->request->getUrl()` contains the call url
-
-`$me->request->getFilters()` contains the provided filters
-
-and `$me->request->getBody()` contains the request body
-
-## Send Emails
-
-``` php
-
-<?php
-
-$email = [
-  'FromName' => 'Roger Smith',
-  'FromEmail' => 'roger@smith.com',
-  'Subject' => 'Hey!',
-  'Text-Part' => 'Hello Humans!',
-  'Html-Part' => '<p>Hello Humans</p>',
-  'Recipients' => [
-      ['Email' => 'stan@smith.com', 'Name' => 'Stan'],
-      ['Email' => 'francine@smith.com', 'Name' => 'Francine']
-  ]
-];
-
-$client->post(Resources::$Email, ['body' => $email]);
-
-?>
-
-```
-
-## Error handling
-
-``` php
-<?php
-
-$response = $client->post(Resources::$User);
-
-if ($response->success())
-{
-  var_dump($response->getData());
-}
-else
-{
-  var_dump($response->getStatus());
-  var_dump($response->getData());
-  /*
-    int(401)
-    array(3) {
-      ["ErrorInfo"]=>
-      string(0) ""
-      ["ErrorMessage"]=>
-      string(21) "Operation not allowed"
-      ["StatusCode"]=>
-      int(401)
-    }
-  */
-}
-
-?>
-```
-
-
-## Call a resource with an action
-
-``` php
-
-<?php
-
-$client->get(Resources::$ContactGetcontactslists, ['id' => $contact_id]);
-
-?>
-
-```
-
-## Copy/Paste Examples
-
-### View a single contact
-``` php
-
-<?php
-
-namespace example;
-use \Mailjet\Resources;
-
-require 'vendor/autoload.php';
 
 $apikey = getenv('MJ_APIKEY_PUBLIC');
 $apisecret = getenv('MJ_APIKEY_PRIVATE');
 
 $mj = new \Mailjet\Client($apikey, $apisecret);
+?>
+```
+It's as easy as 1, 2, 3 !
 
-$response = $mj->get(Resources::$Contact, ['id' => $contact_id]));
 
+## Make your first call
+
+``` php
+<?php
+require 'vendor/autoload.php';
+
+use \Mailjet\Resources;
+
+// use your saved credentials
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'));
+
+// Resources are all located in the Resources class
+$response = $mj->get(Resources::$Contact);
+
+/*
+  Read the response
+*/
 if ($response->success())
-{
-  $contact = $response->getData();
-  // ...
-}
+  var_dump($response->getData());
+else
+  var_dump($response->getStatus());
+
+```
+
+### [Filtering resources](http://dev.mailjet.com/guides/?php#filtering-resources)
+
+The [Mailjet][mailjet] API provides a set of general filters that can be applied to a GET request for each resource. In addition to these general filters, each API resource has its own filters that can be used when performing the GET
+
+``` php
+<?php
+
+$filters = ['Limit' => '150'];
+
+$response = $mj->get(Resources::$Contact, ['filters' => $filters]);
+
+```
+
+### [Send transactional emails](http://dev.mailjet.com/guides/?php#send-transactional-email)
+
+``` php
+<?php
+
+$body = [
+    'FromEmail' => "pilot@mailjet.com",
+    'FromName' => "Mailjet Pilot",
+    'Subject' => "Your email flight plan!",
+    'Text-part' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!",
+    'Html-part' => "<h3>Dear passenger, welcome to Mailjet!</h3><br />May the delivery force be with you!",
+    'Recipients' => [['Email' => "passenger@mailjet.com"]]
+];
+
+$response = $mj->post(Resources::$Email, ['body' => $body]);
+```
+
+### [Send marketing campaign](http://dev.mailjet.com/guides/?php#send-marketing-campaigns)
+
+To send your first newsletter, you need to have at least one active sender address in the Sender domains & addresses section.
+
+``` php
+<?php
+
+$body = [
+    'Recipients' => [
+        [
+            'Email' => "mailjet@example.org",
+            'Name' => "Mailjet"
+        ]
+    ]
+];
+
+$response = $mj->post(Resources::$NewsletterTest, ['id' => $id, 'body' => $body]);
 
 ?>
+```
+
+### [Event API - real time notifications](http://dev.mailjet.com/guides/?php#event-api-real-time-notifications)
+
+The Event API offer a real-time notification through http request on any events related to the messages you sent. The main supported events are open, click, bounce, spam, blocked, unsub and sent. This event notification works for transactional and marketing emails.
+
+The endpoint is an URL our server will call for each event (it can lead to a lot of hits !). You can use the API to setup a new endpoint using the /eventcallbackurl resource. Alternatively, you can configure this in your account preferences, in the Event Tracking section.
+
+``` php
+<?php
+
+$body = [
+    'EventType' => "open",
+    'Url' => "https://mydomain.com/event_handler"
+];
+
+$response = $mj->post(Resources::$Eventcallbackurl, ['body' => $body]);
+```
+
+### [Statistics](http://dev.mailjet.com/guides/?php#statistics)
+
+The [Mailjet][mailjet] API offers resources to extracts information for every messages you send. You can also filter through the message statistics to view specific metrics for your messages.
+
+``` php
+<?php
+
+$response = $mj->get(Resources::$Message, ['id' => $id]);
+```
+
+### [Parse API - Inbound emails](http://dev.mailjet.com/guides/?php#parse-api-inbound-emails)
+
+The Parse API allows you to have inbound emails parsed and their content delivered to a webhook of your choice.
+In order to begin receiving emails to your webhook, create a new instance of the Parse API via a POST request on the /parseroute resource.
+
+``` php
+<?php
+
+$body = [
+    'Url' => 'https://www.mydomain.com/mj_parse.php'
+];
+
+$response = $mj->post(Resources::$Parseroute, ['body' => $body]);
+
 ```
 
 ## Send a pull request
