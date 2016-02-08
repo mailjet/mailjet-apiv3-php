@@ -8,3 +8,4 @@ app/[Cc]onfig/database.php
 !empty
 composer.phar
 vendor/*
+composer.lock
