@@ -30,7 +30,6 @@ class Client
 
     private $version = 'v3/';
     private $secure = true;
-    private $apiUrl = null;
     private $call = true;
 
     /**
