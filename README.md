@@ -25,7 +25,7 @@ composer require mailjet/mailjet-apiv3-php
 ```
 Without composer:
 
-Clone [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file.
+Clone or Download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file.
 
 ## Getting Started !
 
