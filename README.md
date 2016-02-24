@@ -23,6 +23,9 @@ Check out all the resources and all the PHP code examples on the official docume
 ``` bash
 composer require mailjet/mailjet-apiv3-php
 ```
+Without composer:
+
+Clone [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file.
 
 ## Getting Started !
 
