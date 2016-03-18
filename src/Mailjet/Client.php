@@ -23,7 +23,7 @@ namespace Mailjet;
  */
 class Client
 {
-    const WRAPPER_VERSION = 'v1.1.0';
+    const WRAPPER_VERSION = 'v1.1.1';
 
     private $apikey;
     private $apisecret;
