@@ -52,13 +52,6 @@ class Request extends \GuzzleHttp\Client
         $this->url = $url;
         $this->filters = $filters;
         $this->body = $body;
-
-        $payload = [];
-        if ($type == 'application/json') {
-            $payload['body'] = json_encode($body);
-        } else {
-            $payload['body'] = $body;
-        }
     }
 
     /**
@@ -68,18 +61,19 @@ class Request extends \GuzzleHttp\Client
      */
     public function call($call)
     {
+        $payload = [
+            'headers'  => ['content-type' => $this->type],
+            'query' => $this->filters,
+            'auth' => $this->auth,
+            ($this->type=="application/json"?'json':'body')=> $this->body,
+        ];
+
         $response = null;
         if ($call) {
             try {
                 $response = call_user_func_array(
                     array($this, strtolower($this->method)), [
-                    $this->url, [
-                        	'headers'  => ['content-type' => $this->type],
-                        	'query' => $this->filters,
-                        	'json' => $this->body,
-                        	'auth' => $this->auth
-                		]
-                    ]
+                    $this->url, $payload]
                 );
             }
             catch (\GuzzleHttp\Exception\ClientException $e) {
