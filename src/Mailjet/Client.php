@@ -23,7 +23,7 @@ namespace Mailjet;
  */
 class Client
 {
-    const WRAPPER_VERSION = 'v1.1.1';
+    const WRAPPER_VERSION = \Mailjet\Config::WRAPPER_VERSION;
 
     private $apikey;
     private $apisecret;

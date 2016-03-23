@@ -43,7 +43,7 @@ class Request extends \GuzzleHttp\Client
     {
         parent::__construct(['defaults' => [
 			'headers' => [
-				'user-agent' => 'mailjet-apiv3-php/' . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
+				'user-agent' => \Mailjet\Config::USER_AGENT . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
 			]
 		]]);
         $this->type = $type;
