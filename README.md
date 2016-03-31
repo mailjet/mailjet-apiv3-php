@@ -29,7 +29,8 @@ Clone or Download [this repository](https://github.com/mailjet/mailjet-apiv3-php
 
 ## Getting Started !
 
-[grab][api_credential] and save your Mailjet API credentials:
+[grab][api_credential] and save your Mailjet API credentials.
+It will create some variables available in your code, via the `getenv` function:
 
 ``` bash
 
@@ -45,8 +46,14 @@ Initialize your [Mailjet][mailjet] Client:
 
 use \Mailjet\Resources;
 
+// getenv will allow us to get the MJ_APIKEY_PUBLIC/PRIVATE variables we created before
 $apikey = getenv('MJ_APIKEY_PUBLIC');
 $apisecret = getenv('MJ_APIKEY_PRIVATE');
+
+// or
+
+$apikey = 'my api key';
+$apisecret = 'my api secrret';
 
 $mj = new \Mailjet\Client($apikey, $apisecret);
 ?>
