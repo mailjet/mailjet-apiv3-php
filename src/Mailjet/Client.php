@@ -23,7 +23,7 @@ namespace Mailjet;
  */
 class Client
 {
-    const WRAPPER_VERSION = \Mailjet\Config::WRAPPER_VERSION;
+    const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
     private $apikey;
     private $apisecret;
@@ -51,7 +51,7 @@ class Client
      * @param string $resource mailjet resource
      * @param string $action   mailjet resource action
      * @param array  $args     Request arguments
-     * @return Mailjet\Response server response
+     * @return Response server response
      */
     private function _call($method, $resource, $action, $args)
     {
@@ -70,7 +70,7 @@ class Client
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
                 'text/plain' : 'application/json';
 
-        return (new \Mailjet\Request(
+        return (new Request(
             [$this->apikey, $this->apisecret],
             $method,
             $url,
@@ -83,7 +83,7 @@ class Client
     /**
      * Build the base API url depending on wether user need a secure connection
      * or not
-     * @return the API url;
+     * @return string the API url;
      */
     private function getApiUrl()
     {
@@ -93,9 +93,9 @@ class Client
 
     /**
      * Trigger a POST request
-     * @param ResourceArray $resource Mailjet Resource/Action pair
-     * @param array         $args     Request arguments
-     * @return Mailjet\Response
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args     Request arguments
+     * @return Response
      */
     public function post($resource, $args = [])
     {
@@ -104,9 +104,9 @@ class Client
 
     /**
      * Trigger a GET request
-     * @param ResourceArray $resource Mailjet Resource/Action pair
-     * @param array         $args     Request arguments
-     * @return Mailjet\Response
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args     Request arguments
+     * @return Response
      */
     public function get($resource, $args = [])
     {
@@ -115,9 +115,9 @@ class Client
 
     /**
      * Trigger a POST request
-     * @param ResourceArray $resource Mailjet Resource/Action pair
-     * @param array         $args     Request arguments
-     * @return Mailjet\Response
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args     Request arguments
+     * @return Response
      */
     public function put($resource, $args = [])
     {
@@ -126,9 +126,9 @@ class Client
 
     /**
      * Trigger a GET request
-     * @param ResourceArray $resource Mailjet Resource/Action pair
-     * @param array         $args     Request arguments
-     * @return Mailjet\Response
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args     Request arguments
+     * @return Response
      */
     public function delete($resource, $args = [])
     {
@@ -180,5 +180,5 @@ class Client
             return true;
         }
         return false;
-    } 
+    }
 }
