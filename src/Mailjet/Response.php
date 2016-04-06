@@ -39,7 +39,7 @@ class Response
 
         if ($response) {
             $this->status = $response->getStatusCode();
-            $this->body = json_decode($response->getBody(), true);
+            $this->body = json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
             $this->success = floor($this->status / 100) == 2 ? true : false;
         }
     }
