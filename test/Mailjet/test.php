@@ -1,10 +1,8 @@
 <?php
 
-namespace mailjet;
-use \Mailjet\Resources;
+namespace Mailjet;
 
-require 'vendor/autoload.php';
-
+require __DIR__.'/../../vendor/autoload.php';
 
 class MailjetTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +24,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $client = new \Mailjet\Client('', '', false);
+        $client = new Client('', '', false);
 
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
@@ -44,7 +42,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertUrl('/REST/contact', $response);
 
         $this->assertUrl('/REST/contact/2', $client->get(Resources::$Contact, ['id' => 2]));
-        
+
         $this->assertUrl(
             '/REST/contact/test@mailjet.com',
             $client->get(Resources::$Contact, ['id' => 'test@mailjet.com'])
@@ -53,7 +51,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testPost()
     {
-        $client = new \Mailjet\Client('', '', false);
+        $client = new Client('', '', false);
 
         $email = [
           'FromName'     => 'Mailjet PHP test',
@@ -70,4 +68,3 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertPayload($email, $ret);
     }
 }
-?>
