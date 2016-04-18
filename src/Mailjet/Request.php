@@ -13,6 +13,9 @@
 
 namespace Mailjet;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException;
+
 /**
  * This is the Mailjet Request class
  * @category Mailjet_API
@@ -21,7 +24,7 @@ namespace Mailjet;
  * @license MIT https://licencepath.com
  * @link http://link.com
  */
-class Request extends \GuzzleHttp\Client
+class Request extends GuzzleClient
 {
     private $method;
     private $url;
@@ -43,7 +46,7 @@ class Request extends \GuzzleHttp\Client
     {
         parent::__construct(['defaults' => [
             'headers' => [
-                'user-agent' => \Mailjet\Config::USER_AGENT . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
+                'user-agent' => Config::USER_AGENT . phpversion() . '/' . Client::WRAPPER_VERSION
             ]
         ]]);
         $this->type = $type;
@@ -66,7 +69,7 @@ class Request extends \GuzzleHttp\Client
             'headers'  => ['content-type' => $this->type],
             'query' => $this->filters,
             'auth' => $this->auth,
-            ($this->type=="application/json"?'json':'body')=> $this->body,
+            ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
 
         $response = null;
@@ -77,12 +80,12 @@ class Request extends \GuzzleHttp\Client
                     $this->url, $payload]
                 );
             }
-            catch (\GuzzleHttp\Exception\ClientException $e) {
+            catch (ClientException $e) {
                 $response = $e->getResponse();
             }
         }
 
-        return new \Mailjet\Response($this, $response);
+        return new Response($this, $response);
     }
 
     /**

@@ -24,7 +24,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Response
 {
-
     private $status;
     private $success;
     private $body;

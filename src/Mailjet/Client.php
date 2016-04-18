@@ -172,13 +172,14 @@ class Client
      * @param bool $bIsSecured True use https / false use http
      * @return bool true if we set value false otherwise
      */
-    public function setSecureProtocol( $bIsSecured ) {
-
+    public function setSecureProtocol($bIsSecured)
+    {
         if (is_bool($bIsSecured)) {
-
             $this->secure = $bIsSecured;
+
             return true;
         }
+
         return false;
     }
 }
