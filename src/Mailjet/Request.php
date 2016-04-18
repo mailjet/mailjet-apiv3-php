@@ -42,10 +42,10 @@ class Request extends \GuzzleHttp\Client
     public function __construct($auth, $method, $url, $filters, $body, $type)
     {
         parent::__construct(['defaults' => [
-			'headers' => [
-				'user-agent' => \Mailjet\Config::USER_AGENT . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
-			]
-		]]);
+            'headers' => [
+                'user-agent' => \Mailjet\Config::USER_AGENT . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
+            ]
+        ]]);
         $this->type = $type;
         $this->auth = $auth;
         $this->method = $method;
