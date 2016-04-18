@@ -56,8 +56,8 @@ class Response
 
     /**
      * Status Getter
-     * return the http status code
-     * @return int status
+     * return the entire response array
+     * @return array
      */
     public function getBody()
     {
@@ -73,19 +73,23 @@ class Response
     {
         if (isset($this->body['Data'])) {
             return $this->body['Data'];
-        } else {
-            return $this->body;
         }
+
+        return $this->body;
     }
 
     /**
      * Count getter
      * return the resulting array size
-     * @return int count
+     * @return null|int
      */
     public function getCount()
     {
-        return $this->body['Count'];
+        if (isset($this->body['Count'])) {
+            return $this->body['Count'];
+        }
+
+        return null;
     }
 
     /**
@@ -95,7 +99,11 @@ class Response
      */
     public function getTotal()
     {
-        return $this->body['Total'];
+        if (isset($this->body['Total'])) {
+            return $this->body['Total'];
+        }
+
+        return null;
     }
 
     /**
