@@ -23,12 +23,12 @@ namespace Mailjet;
  */
 class Request extends \GuzzleHttp\Client
 {
-
     private $method;
     private $url;
     private $filters;
     private $body;
     private $auth;
+    private $type;
 
     /**
      * Build a new Http request
@@ -57,7 +57,8 @@ class Request extends \GuzzleHttp\Client
     /**
      * Trigger the actual call
      * TODO: DATA API
-     * @return the call response
+     * @param $call
+     * @return Response the call response
      */
     public function call($call)
     {
@@ -86,7 +87,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Filters getters
-     * @return Request filters
+     * @return array Request filters
      */
     public function getFilters()
     {
@@ -95,7 +96,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Http method getter
-     * @return Request method
+     * @return string Request method
      */
     public function getMethod()
     {
@@ -104,7 +105,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Call Url getter
-     * @return Request Url
+     * @return string Request Url
      */
     public function getUrl()
     {
@@ -113,7 +114,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Request body getter
-     * @return request body
+     * @return array request body
      */
     public function getBody()
     {
@@ -122,7 +123,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Auth getter. to discuss
-     * @return Request auth
+     * @return string Request auth
      */
     public function getAuth()
     {

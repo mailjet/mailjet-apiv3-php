@@ -12,6 +12,7 @@
  */
 
 namespace Mailjet;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * This is the Mailjet Response
@@ -31,7 +32,7 @@ class Response
     /**
      * Construct a Mailjet response
      * @param Request        $request  Mailjet actual request
-     * @param GuzzleResponse $response Guzzle response
+     * @param ResponseInterface $response Guzzle response
      */
     public function __construct($request, $response)
     {
