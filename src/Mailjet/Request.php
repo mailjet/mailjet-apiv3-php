@@ -13,6 +13,9 @@
 
 namespace Mailjet;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException;
+
 /**
  * This is the Mailjet Request class
  * @category Mailjet_API
@@ -21,14 +24,14 @@ namespace Mailjet;
  * @license MIT https://licencepath.com
  * @link http://link.com
  */
-class Request extends \GuzzleHttp\Client
+class Request extends GuzzleClient
 {
-
     private $method;
     private $url;
     private $filters;
     private $body;
     private $auth;
+    private $type;
 
     /**
      * Build a new Http request
@@ -42,10 +45,10 @@ class Request extends \GuzzleHttp\Client
     public function __construct($auth, $method, $url, $filters, $body, $type)
     {
         parent::__construct(['defaults' => [
-			'headers' => [
-				'user-agent' => \Mailjet\Config::USER_AGENT . phpversion() . '/' . \Mailjet\Client::WRAPPER_VERSION
-			]
-		]]);
+            'headers' => [
+                'user-agent' => Config::USER_AGENT . phpversion() . '/' . Client::WRAPPER_VERSION
+            ]
+        ]]);
         $this->type = $type;
         $this->auth = $auth;
         $this->method = $method;
@@ -57,7 +60,8 @@ class Request extends \GuzzleHttp\Client
     /**
      * Trigger the actual call
      * TODO: DATA API
-     * @return the call response
+     * @param $call
+     * @return Response the call response
      */
     public function call($call)
     {
@@ -65,7 +69,7 @@ class Request extends \GuzzleHttp\Client
             'headers'  => ['content-type' => $this->type],
             'query' => $this->filters,
             'auth' => $this->auth,
-            ($this->type=="application/json"?'json':'body')=> $this->body,
+            ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
 
         $response = null;
@@ -76,17 +80,17 @@ class Request extends \GuzzleHttp\Client
                     $this->url, $payload]
                 );
             }
-            catch (\GuzzleHttp\Exception\ClientException $e) {
+            catch (ClientException $e) {
                 $response = $e->getResponse();
             }
         }
 
-        return new \Mailjet\Response($this, $response);
+        return new Response($this, $response);
     }
 
     /**
      * Filters getters
-     * @return Request filters
+     * @return array Request filters
      */
     public function getFilters()
     {
@@ -95,7 +99,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Http method getter
-     * @return Request method
+     * @return string Request method
      */
     public function getMethod()
     {
@@ -104,7 +108,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Call Url getter
-     * @return Request Url
+     * @return string Request Url
      */
     public function getUrl()
     {
@@ -113,7 +117,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Request body getter
-     * @return request body
+     * @return array request body
      */
     public function getBody()
     {
@@ -122,7 +126,7 @@ class Request extends \GuzzleHttp\Client
 
     /**
      * Auth getter. to discuss
-     * @return Request auth
+     * @return string Request auth
      */
     public function getAuth()
     {
