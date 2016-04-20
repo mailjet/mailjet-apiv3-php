@@ -39,7 +39,14 @@ class Response
 
         if ($response) {
             $this->status = $response->getStatusCode();
-            $this->body = json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+            if (defined('JSON_BIGINT_AS_STRING') && false)
+            {
+                $this->body = json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+            }
+            else
+            {   // PHP v <= 5.3.* doens't support the fourth parameter of json_decode (same for ubuntu 14.04!)
+                $this->body = json_decode($response->getBody(), true, 512);
+            }
             $this->success = floor($this->status / 100) == 2 ? true : false;
         }
     }
