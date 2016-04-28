@@ -40,7 +40,7 @@ class Response
         if ($response) {
             $this->rawResponse = $response;
             $this->status = $response->getStatusCode();
-            $this->body = decodeBody($response->getBody());
+            $this->body = $this->decodeBody($response->getBody());
             $this->success = floor($this->status / 100) == 2 ? true : false;
         }
     }
