@@ -150,7 +150,7 @@ class Response
              */
             $maxIntLength = strlen((string) PHP_INT_MAX) - 1;
             $jsonWithoutBigIntegers = preg_replace('/:\s*(-?\d{'.$maxIntLength.',})/', ': "$1"', $body);
-            $object = json_decode($jsonWithoutBigIntegers);
+            $object = json_decode($jsonWithoutBigIntegers, true);
         }
         return $object;
     }
