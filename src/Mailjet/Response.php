@@ -38,15 +38,9 @@ class Response
         $this->request = $request;
 
         if ($response) {
+            $this->rawResponse = $response;
             $this->status = $response->getStatusCode();
-            if (defined('JSON_BIGINT_AS_STRING') && false)
-            {
-                $this->body = json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
-            }
-            else
-            {   // PHP v <= 5.3.* doens't support the fourth parameter of json_decode (same for ubuntu 14.04!)
-                $this->body = json_decode($response->getBody(), true, 512);
-            }
+            $this->body = $this->decodeBody($response->getBody());
             $this->success = floor($this->status / 100) == 2 ? true : false;
         }
     }
@@ -100,6 +94,16 @@ class Response
     }
 
     /**
+     * Error Reason getter
+     * return the resulting error message
+     * @return null|string
+     */
+    public function getReasonPhrase()
+    {
+        return $this->rawResponse->getReasonPhrase();
+    }
+
+    /**
      * Total getter
      * return the total count of all results
      * @return int count
@@ -120,5 +124,34 @@ class Response
     public function success()
     {
         return $this->success;
+    }
+
+    /**
+     * From http://stackoverflow.com/questions/19520487/json-bigint-as-string-removed-in-php-5-5
+     *
+     * Decodes a mailjet string response to an object reprensenting that response
+     *
+     * @param string    $body   The mailjet response as string
+     *
+     * @return object           Object representing the mailjet response
+     */
+    protected function decodeBody($body)
+    {
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
+            /** In PHP >=5.4.0, json_decode() accepts an options parameter, that allows you
+             * to specify that large ints (like Steam Transaction IDs) should be treated as
+             * strings, rather than the PHP default behaviour of converting them to floats.
+             */
+            $object = json_decode($body, true, 512, JSON_BIGINT_AS_STRING);
+        } else {
+            /** Not all servers will support that, however, so for older versions we must
+             * manually detect large ints in the JSON string and quote them (thus converting
+             *them to strings) before decoding, hence the preg_replace() call.
+             */
+            $maxIntLength = strlen((string) PHP_INT_MAX) - 1;
+            $jsonWithoutBigIntegers = preg_replace('/:\s*(-?\d{'.$maxIntLength.',})/', ': "$1"', $body);
+            $object = json_decode($jsonWithoutBigIntegers, true);
+        }
+        return $object;
     }
 }

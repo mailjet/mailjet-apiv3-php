@@ -84,7 +84,6 @@ class Request extends GuzzleClient
                 $response = $e->getResponse();
             }
         }
-
         return new Response($this, $response);
     }
 
