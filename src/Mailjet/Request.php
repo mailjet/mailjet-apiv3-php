@@ -15,6 +15,7 @@ namespace Mailjet;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 /**
  * This is the Mailjet Request class
@@ -81,6 +82,9 @@ class Request extends GuzzleClient
                 );
             }
             catch (ClientException $e) {
+                $response = $e->getResponse();
+            }
+            catch (ServerException $e) {
                 $response = $e->getResponse();
             }
         }
