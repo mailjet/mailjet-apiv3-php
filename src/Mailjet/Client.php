@@ -150,6 +150,7 @@ class Client
             $path = '';
         } elseif ($action == 'csverror/text:csv'
             || $action == 'csvdata/text:plain'
+            || $action == 'JSONError/application:json/LAST'
         ) {
             $path = 'DATA';
         } else {
