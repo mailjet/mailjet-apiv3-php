@@ -34,6 +34,8 @@ class Resources
     public static $Apitoken = ['apitoken', ''];
     public static $Axtesting = ['axtesting', ''];
     public static $Batchjob = ['batchjob', ''];
+    public static $BatchjobCsverror = ['batchjob', 'csverror/text:csv'];
+    public static $BatchjobJsonerror = ['batchjob', 'JSONError/application:json/LAST'];
     public static $Bouncestatistics = ['bouncestatistics', ''];
     public static $Campaign = ['campaign', ''];
     public static $Campaignaggregate = ['campaignaggregate', ''];
