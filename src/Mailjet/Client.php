@@ -60,7 +60,9 @@ class Client
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => '{}'
+            'body' => null
+            //'body' => '{}' -> when we make get request this argument has to be null, else it returns status code 411 - Length required
+
             ],
             array_change_key_case($args)
         );
