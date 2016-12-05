@@ -57,10 +57,10 @@ class Client
     {
         $args = array_merge(
             [
-            'id' => '',
-            'actionid' => '',
-            'filters' => [],
-            'body' => '{}'
+                'id' => '',
+                'actionid' => '',
+                'filters' => [],
+                'body' => $method == 'GET' ? null : '{}',
             ],
             array_change_key_case($args)
         );
