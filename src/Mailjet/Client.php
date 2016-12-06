@@ -38,11 +38,12 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $call = true)
+    public function __construct($key, $secret, $options = ['version' => 'v3','call' => true])
     {
-        $this->call = $call;
+        $this->call = $options['call'];
         $this->apikey = $key;
         $this->apisecret = $secret;
+        $this->version = $options['version'].'/'
     }
 
     /**
@@ -53,7 +54,7 @@ class Client
      * @param array  $args     Request arguments
      * @return Response server response
      */
-    private function _call($method, $resource, $action, $args)
+    private function _call($method, $resource, $action, $version, $args)
     {
         $args = array_merge(
             [
@@ -65,7 +66,7 @@ class Client
             array_change_key_case($args)
         );
 
-        $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
+        $url = $this->buildURL($resource, $action, $version, $args['id'], $args['actionid']);
 
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
                 'text/plain' : 'application/json';
@@ -85,10 +86,14 @@ class Client
      * or not
      * @return string the API url;
      */
-    private function getApiUrl()
+    private function getApiUrl($version)
     {
         $h = $this->secure ? 'https' : 'http';
-        return $h . '://api.mailjet.com/' . $this->version;
+        if (in_array($this->version, $version)) {
+            return $h . '://api.mailjet.com/' . $this->version;
+        } else {
+            return $h . '://api.mailjet.com/' . $version[count($version) - 1]; //get the latest version
+        }
     }
 
     /**
@@ -99,7 +104,7 @@ class Client
      */
     public function post($resource, $args = [])
     {
-        return $this->_call('POST', $resource[0], $resource[1], $args);
+        return $this->_call('POST', $resource[0], $resource[1], $resource[2], $args);
     }
 
     /**
@@ -110,7 +115,7 @@ class Client
      */
     public function get($resource, $args = [])
     {
-        return $this->_call('GET', $resource[0], $resource[1], $args);
+        return $this->_call('GET', $resource[0], $resource[1], $resource[2], $args);
     }
 
     /**
@@ -121,7 +126,7 @@ class Client
      */
     public function put($resource, $args = [])
     {
-        return $this->_call('PUT', $resource[0], $resource[1], $args);
+        return $this->_call('PUT', $resource[0], $resource[1], $resource[2], $args);
     }
 
     /**
@@ -132,7 +137,7 @@ class Client
      */
     public function delete($resource, $args = [])
     {
-        return $this->_call('DELETE', $resource[0], $resource[1], $args);
+        return $this->_call('DELETE', $resource[0], $resource[1], $resource[2], $args);
     }
 
     /**
@@ -143,7 +148,7 @@ class Client
      * @param string $actionid mailjet resource actionid
      * @return string final call url
      */
-    private function buildURL($resource, $action, $id, $actionid)
+    private function buildURL($resource, $action, $version, $id, $actionid)
     {
         $path = null;
         if ($resource == 'send') {
@@ -157,7 +162,7 @@ class Client
             $path = 'REST';
         }
 
-        return $this->getApiUrl() . join(
+        return $this->getApiUrl($version) . join(
             '/',
             array_filter(
                 array(
