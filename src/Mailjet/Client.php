@@ -40,10 +40,14 @@ class Client
      */
     public function __construct($key, $secret, $options = ['version' => 'v3','call' => true])
     {
-        $this->call = $options['call'];
+        if (isset($options['call'])) {
+            $this->call = $options['call'];
+        }
         $this->apikey = $key;
         $this->apisecret = $secret;
-        $this->version = $options['version'].'/'
+        if (isset($options['version'])) {
+            $this->version = $options['version'].'/';
+        }
     }
 
     /**
