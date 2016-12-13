@@ -28,7 +28,7 @@ class Client
     private $apikey;
     private $apisecret;
 
-    private $version = 'v3/';
+    private $version = 'v3';
     private $secure = true;
     private $call = true;
 
@@ -38,16 +38,11 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $options = ['version' => 'v3','call' => true])
+    public function __construct($key, $secret, $call = true)
     {
-        if (isset($options['call'])) {
-            $this->call = $options['call'];
-        }
+        $this->call = $call;            
         $this->apikey = $key;
         $this->apisecret = $secret;
-        if (isset($options['version'])) {
-            $this->version = $options['version'].'/';
-        }
     }
 
     /**
@@ -69,7 +64,7 @@ class Client
             ],
             array_change_key_case($args)
         );
-
+        
         $url = $this->buildURL($resource, $action, $version, $args['id'], $args['actionid']);
 
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
@@ -93,22 +88,21 @@ class Client
     private function getApiUrl($version)
     {
         $h = $this->secure ? 'https' : 'http';
-        if (in_array($this->version, $version)) {
-            return $h . '://api.mailjet.com/' . $this->version;
-        } else {
-            return $h . '://api.mailjet.com/' . $version[count($version) - 1]; //get the latest version
+        return $h . '://api.mailjet.com/' . $version . '/';
+    }
+
+    /**
+     * Trigger a POST request
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args     Request arguments
+     * @return Response
+     */
+    public function post($resource, array $args = [], $version = "")
+    {
+        if (empty($version)) {
+            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
         }
-    }
-
-    /**
-     * Trigger a POST request
-     * @param array $resource Mailjet Resource/Action pair
-     * @param array $args     Request arguments
-     * @return Response
-     */
-    public function post($resource, $args = [])
-    {
-        return $this->_call('POST', $resource[0], $resource[1], $resource[2], $args);
+        return $this->_call('POST', $resource[0], $resource[1], $version, $args);
     }
 
     /**
@@ -117,9 +111,12 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function get($resource, $args = [])
+    public function get($resource, array $args = [], $version = "")
     {
-        return $this->_call('GET', $resource[0], $resource[1], $resource[2], $args);
+        if (empty($version)) {
+            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
+        }
+        return $this->_call('GET', $resource[0], $resource[1], $version, $args);
     }
 
     /**
@@ -128,9 +125,12 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function put($resource, $args = [])
+    public function put($resource, array $args = [], $version = "")
     {
-        return $this->_call('PUT', $resource[0], $resource[1], $resource[2], $args);
+        if (empty($version)) {
+            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
+        }
+        return $this->_call('PUT', $resource[0], $resource[1], $version, $args);
     }
 
     /**
@@ -139,9 +139,12 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function delete($resource, $args = [])
+    public function delete($resource, array $args = [], $version = "")
     {
-        return $this->_call('DELETE', $resource[0], $resource[1], $resource[2], $args);
+        if (empty($version)) {
+            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
+        }
+        return $this->_call('DELETE', $resource[0], $resource[1], $version, $args);
     }
 
     /**
@@ -165,7 +168,7 @@ class Client
         } else {
             $path = 'REST';
         }
-
+        
         return $this->getApiUrl($version) . join(
             '/',
             array_filter(

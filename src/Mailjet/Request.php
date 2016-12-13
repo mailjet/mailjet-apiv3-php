@@ -72,13 +72,12 @@ class Request extends GuzzleClient
             'auth' => $this->auth,
             ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
-
         $response = null;
         if ($call) {
             try {
                 $response = call_user_func_array(
-                    array($this, strtolower($this->method)), [
-                    $this->url, $payload]
+                    [$this, strtolower($this->method)],
+                    [$this->url, $payload]
                 );
             }
             catch (ClientException $e) {

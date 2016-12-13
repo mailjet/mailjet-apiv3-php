@@ -6,9 +6,9 @@ require __DIR__.'/../../vendor/autoload.php';
 
 class MailjetTest extends \PHPUnit_Framework_TestCase
 {
-    private function assertUrl($url, $response)
+    private function assertUrl($url, $response, $version = 'v3')
     {
-        $this->assertEquals('https://api.mailjet.com/v3'.$url, $response->request->getUrl());
+        $this->assertEquals('https://api.mailjet.com/'.$version.$url, $response->request->getUrl());
     }
 
     public function assertPayload($payload, $response)
@@ -63,8 +63,25 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
           'MJ-custom-ID' => 'Hello ID',
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email]);
+        $ret = $client->post(Resources::$Email, ['body' => $email], 'v3');
         $this->assertUrl('/send', $ret);
+        $this->assertPayload($email, $ret);
+    }
+
+    public function testPostV3_1()
+    {
+        $client = new Client('', '', false);
+
+        $email = [
+            'Messages' => [[
+                'From' => ['Email' => "test@mailjet.com", 'Name' => "Mailjet PHP test"],
+                'TextPart' => "Simple Email test",
+                'To' => [['Email' => "test@mailjet.com", 'Name' => 'Test']]
+            ]]
+        ];
+
+        $ret = $client->post(Resources::$Email, ['body' => $email], 'v3.1');
+        $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
     }
 }
