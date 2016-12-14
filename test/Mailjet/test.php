@@ -63,7 +63,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
           'MJ-custom-ID' => 'Hello ID',
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3']);
+        $ret = $client->post(Resources::$Email, ['body' => $email]);
         $this->assertUrl('/send', $ret);
         $this->assertPayload($email, $ret);
     }
@@ -80,7 +80,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
             ]]
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email]);
+        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
     }
