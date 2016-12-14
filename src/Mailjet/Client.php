@@ -28,8 +28,9 @@ class Client
     private $apikey;
     private $apisecret;
 
-    private $version = 'v3';
-    private $secure = true;
+    private $version = Config::GENERAL_VERSION;
+    private $url = Config::MAIN_URL;
+    private $secured = Config::SECURED;
     private $call = true;
 
     /**
@@ -38,11 +39,23 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $call = true)
-    {
-        $this->call = $call;            
+    public function __construct($key, $secret, array $settings = [])
+    {           
         $this->apikey = $key;
         $this->apisecret = $secret;
+        
+        if (!empty($settings['url']) && is_string($settings['url'])) {
+            $this->url = $settings['url']; 
+        }
+        if (!empty($settings['version']) && is_string($settings['version'])) {
+            $this->version = $settings['version']; 
+        }
+        if (isset($settings['call']) && is_bool($settings['call'])) {
+            $this->call = $settings['call']; 
+        }
+        if (isset($settings['secured']) && is_bool($settings['secured'])) {
+            $this->secured = $settings['secured']; 
+        }
     }
 
     /**
@@ -53,7 +66,7 @@ class Client
      * @param array  $args     Request arguments
      * @return Response server response
      */
-    private function _call($method, $resource, $action, $version, $args)
+    private function _call($method, $resource, $action, $args)
     {
         $args = array_merge(
             [
@@ -65,7 +78,7 @@ class Client
             array_change_key_case($args)
         );
         
-        $url = $this->buildURL($resource, $action, $version, $args['id'], $args['actionid']);
+        $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
 
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
                 'text/plain' : 'application/json';
@@ -85,10 +98,10 @@ class Client
      * or not
      * @return string the API url;
      */
-    private function getApiUrl($version)
+    private function getApiUrl()
     {
-        $h = $this->secure ? 'https' : 'http';
-        return $h . '://api.mailjet.com/' . $version . '/';
+        $h = $this->secured === true ? 'https' : 'http';
+        return $h."://".$this->url.'/'.$this->version.'/';
     }
 
     /**
@@ -97,12 +110,10 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function post($resource, array $args = [], $version = "")
+    public function post($resource, array $args = [], array $options = [])
     {
-        if (empty($version)) {
-            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
-        }
-        return $this->_call('POST', $resource[0], $resource[1], $version, $args);
+        $this->setOptions($options, $resource);
+        return $this->_call('POST', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -111,12 +122,10 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function get($resource, array $args = [], $version = "")
+    public function get($resource, array $args = [], array $options = [])
     {
-        if (empty($version)) {
-            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
-        }
-        return $this->_call('GET', $resource[0], $resource[1], $version, $args);
+        $this->setOptions($options, $resource);
+        return $this->_call('GET', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -125,12 +134,10 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function put($resource, array $args = [], $version = "")
+    public function put($resource, array $args = [], array $options = [])
     {
-        if (empty($version)) {
-            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
-        }
-        return $this->_call('PUT', $resource[0], $resource[1], $version, $args);
+        $this->setOptions($options, $resource);
+        return $this->_call('PUT', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -139,12 +146,10 @@ class Client
      * @param array $args     Request arguments
      * @return Response
      */
-    public function delete($resource, array $args = [], $version = "")
+    public function delete($resource, array $args = [], array $options = [])
     {
-        if (empty($version)) {
-            empty($resource[2]) ? $version = $this->version : $version = $resource[2];
-        }
-        return $this->_call('DELETE', $resource[0], $resource[1], $version, $args);
+        $this->setOptions($options, $resource);
+        return $this->_call('DELETE', $resource[0], $resource[1], $args);
     }
 
     /**
@@ -155,7 +160,7 @@ class Client
      * @param string $actionid mailjet resource actionid
      * @return string final call url
      */
-    private function buildURL($resource, $action, $version, $id, $actionid)
+    private function buildURL($resource, $action, $id, $actionid)
     {
         $path = null;
         if ($resource == 'send') {
@@ -169,7 +174,7 @@ class Client
             $path = 'REST';
         }
         
-        return $this->getApiUrl($version) . join(
+        return $this->getApiUrl() . join(
             '/',
             array_filter(
                 array(
@@ -194,5 +199,18 @@ class Client
         }
 
         return false;
+    }
+    
+    private function setOptions($options, $resource)
+    {
+        if (!empty($options['version']) && is_string($options['version'])) {
+            $this->version = $options['version'];
+        } elseif (!empty($resource[2])) {
+            $this->version = $resource[2];
+        } if (!empty($options['url']) && is_string($options['url'])) {
+            $this->url = $options['url'];
+        } if (isset($options['secured']) && is_bool($options['secured'])) {
+            $this->secured = $options['secured'];
+        }
     }
 }

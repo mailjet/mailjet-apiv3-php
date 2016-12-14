@@ -24,7 +24,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $client = new Client('', '', false);
+        $client = new Client('', '', ['call' => false]);
 
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
@@ -51,7 +51,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testPost()
     {
-        $client = new Client('', '', false);
+        $client = new Client('', '', ['call' => false]);
 
         $email = [
           'FromName'     => 'Mailjet PHP test',
@@ -63,14 +63,14 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
           'MJ-custom-ID' => 'Hello ID',
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email], 'v3');
+        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3']);
         $this->assertUrl('/send', $ret);
         $this->assertPayload($email, $ret);
     }
 
     public function testPostV3_1()
     {
-        $client = new Client('', '', false);
+        $client = new Client('', '', ['call' => false]);
 
         $email = [
             'Messages' => [[
@@ -80,7 +80,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
             ]]
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email], 'v3.1');
+        $ret = $client->post(Resources::$Email, ['body' => $email]);
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
     }
