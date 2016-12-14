@@ -26,7 +26,7 @@ namespace Mailjet;
  */
 class Resources
 {
-    public static $Email = ['send', '', 'v3.1'];
+    public static $Email = ['send', ''/*, 'v3.1'*/];
     public static $Aggregategraphstatistics = ['aggregategraphstatistics', ''];
     public static $Apikey = ['apikey', ''];
     public static $Apikeyaccess = ['apikeyaccess', ''];

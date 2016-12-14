@@ -32,6 +32,7 @@ class Client
     private $url = Config::MAIN_URL;
     private $secured = Config::SECURED;
     private $call = true;
+    private $settings = [];
 
     /**
      * Client constructor requires:
@@ -43,19 +44,9 @@ class Client
     {           
         $this->apikey = $key;
         $this->apisecret = $secret;
-        
-        if (!empty($settings['url']) && is_string($settings['url'])) {
-            $this->url = $settings['url']; 
-        }
-        if (!empty($settings['version']) && is_string($settings['version'])) {
-            $this->version = $settings['version']; 
-        }
-        if (isset($settings['call']) && is_bool($settings['call'])) {
-            $this->call = $settings['call']; 
-        }
-        if (isset($settings['secured']) && is_bool($settings['secured'])) {
-            $this->secured = $settings['secured']; 
-        }
+        $this->initSettings($settings);
+        $this->settings["changed"] = true;
+        $this->setSettings();
     }
 
     /**
@@ -112,8 +103,15 @@ class Client
      */
     public function post($resource, array $args = [], array $options = [])
     {
-        $this->setOptions($options, $resource);
-        return $this->_call('POST', $resource[0], $resource[1], $args);
+        if (!empty($options)) {
+            $this->setOptions($options, $resource);
+        }
+        $result = $this->_call('POST', $resource[0], $resource[1], $args);
+        if (!empty($this->settings['changed'])) {
+            $this->setSettings();
+        }
+        
+        return $result;
     }
 
     /**
@@ -124,8 +122,14 @@ class Client
      */
     public function get($resource, array $args = [], array $options = [])
     {
-        $this->setOptions($options, $resource);
-        return $this->_call('GET', $resource[0], $resource[1], $args);
+        if (!empty($options)) {
+            $this->setOptions($options, $resource);
+        }
+        $result = $this->_call('GET', $resource[0], $resource[1], $args);
+        if (!empty($this->settings['changed'])) {
+            $this->setSettings();
+        }
+        return $result;
     }
 
     /**
@@ -136,8 +140,14 @@ class Client
      */
     public function put($resource, array $args = [], array $options = [])
     {
-        $this->setOptions($options, $resource);
-        return $this->_call('PUT', $resource[0], $resource[1], $args);
+        if (!empty($options)) {
+            $this->setOptions($options, $resource);
+        }
+        $result = $this->_call('PUT', $resource[0], $resource[1], $args);
+        if (!empty($settings['changed'])) {
+            $this->setSettings();
+        }
+        return $result;
     }
 
     /**
@@ -148,8 +158,14 @@ class Client
      */
     public function delete($resource, array $args = [], array $options = [])
     {
-        $this->setOptions($options, $resource);
-        return $this->_call('DELETE', $resource[0], $resource[1], $args);
+        if (!empty($options)) {
+            $this->setOptions($options, $resource);
+        }
+        $result = $this->_call('DELETE', $resource[0], $resource[1], $args);
+        if (!empty($settings['changed'])) {
+            $this->setSettings();
+        }
+        return $result;
     }
 
     /**
@@ -201,6 +217,13 @@ class Client
         return false;
     }
     
+    // TODO : make the next code more readable
+    
+    /**
+     * Temporary set the variables generating the url
+     * @param array $options    contain temporary modifications for the client
+     * @param array $resource   may contain the version linked to the ressource
+     */
     private function setOptions($options, $resource)
     {
         if (!empty($options['version']) && is_string($options['version'])) {
@@ -211,6 +234,52 @@ class Client
             $this->url = $options['url'];
         } if (isset($options['secured']) && is_bool($options['secured'])) {
             $this->secured = $options['secured'];
+        } if (isset($options['call']) && is_bool($options['call'])) {
+            $this->call = $options['call'];
         }
+        $this->settings["changed"] = true;
+    }
+    
+    /**
+     * set back the variables generating the url
+     */
+    private function setSettings()
+    {
+        if (!empty($this->settings['url']) && is_string($this->settings['url'])) {
+            $this->url = $this->settings['url']; 
+        } if (!empty($this->settings['version']) && is_string($this->settings['version'])) {
+            $this->version = $this->settings['version']; 
+        } if (isset($this->settings['call']) && is_bool($this->settings['call'])) {
+            $this->call = $this->settings['call']; 
+        } if (isset($this->settings['secured']) && is_bool($this->settings['secured'])) {
+            $this->secured = $this->settings['secured']; 
+        }
+        $this->settings["changed"] = false;
+    }
+    
+    /**
+     * Set a backup if the variables generating the url are change during a call.
+     */
+    private function initSettings($settings = [])
+    {
+        if (!empty($settings['url']) && is_string($settings['url'])) {
+            $this->settings['url'] = $settings['url']; 
+        } else {
+            $this->settings['url'] = $this->url; 
+        } if (!empty($settings['version']) && is_string($settings['version'])) {
+            $this->settings['version'] = $settings['version']; 
+        } else {
+            $this->settings['version'] = $this->version; 
+        }  if (isset($settings['call']) && is_bool($settings['call'])) {
+            $this->settings['call'] = $settings['call']; 
+        } else {
+            $this->settings['call'] = $this->call; 
+        }  if (isset($settings['secured']) && is_bool($settings['secured'])) {
+            $this->settings['secured'] = $settings['secured']; 
+        } else {
+            $this->settings['secured'] = $this->secured; 
+        } 
+        
+        $this->settings["changed"] = false;
     }
 }
