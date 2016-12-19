@@ -28,7 +28,7 @@ class Client
     private $apikey;
     private $apisecret;
 
-    private $version = Config::GENERAL_VERSION;
+    private $version = Config::MAIN_VERSION;
     private $url = Config::MAIN_URL;
     private $secured = Config::SECURED;
     private $call = true;

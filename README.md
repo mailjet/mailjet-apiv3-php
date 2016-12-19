@@ -179,6 +179,46 @@ $response = $mj->post(Resources::$Parseroute, ['body' => $body]);
 
 ```
 
+
+## New !! Specificities of the version 3.1 !
+
+This version add a new way to construct the Client or you call. We add the possibility to add an array with for parameters on both Client creation or api call (please, note that each of these parameters are preset and are not mandatory in the creation or the call) :
+
+ - url (api.mailjet.com)
+ - version (v3)
+ - call (true)
+ - secured (true (true give 'https' when false give 'http'))
+
+### A little example : 
+
+``` php 
+<?php 
+...
+
+// We initialise the client with variables. We only keep the secured from the main configuration.
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
+                          getenv('MJ_APIKEY_PRIVATE'),
+                          ['url' => "my.test.url", 'version' => 'v3.1', 'call' => false]
+                        );
+
+// We only change the version for this call
+$response = $mj->get(Resources::$Contact, [], ['version' => 'v3']);
+
+```
+
+###Here is the priority list :
+
+Functionality call > Client creation > resource (only with version) > wrapper configuration
+
+Note : the settings pasted in the call will only be temporary for the call.
+
+TODO : add a functionality changing the Client configuration and another setting the client to the main configuration
+
+Here is the list of the functionalities working with the version 3.1 :
+
+ - RESSOURCES::$Email
+
+
 ## Send a pull request
 
  - Fork the project.

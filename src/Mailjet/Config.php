@@ -26,7 +26,7 @@ class Config
 {
     const WRAPPER_VERSION = 'v1.1.8';
     const USER_AGENT = 'mailjet-apiv3-php/';
-    const GENERAL_VERSION = 'v3';
+    const MAIN_VERSION = 'v3';
     const MAIN_URL = "api.mailjet.com";
     const SECURED = true;
 }
