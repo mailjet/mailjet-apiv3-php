@@ -30,9 +30,10 @@ class Client
 
     private $version = Config::MAIN_VERSION;
     private $url = Config::MAIN_URL;
-    private $secured = Config::SECURED;
+    private $secure = Config::SECURED;
     private $call = true;
     private $settings = [];
+    private $change = false;
 
     /**
      * Client constructor requires:
@@ -40,12 +41,11 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, array $settings = [])
+    public function __construct($key, $secret, $call = true, array $settings = [])
     {           
         $this->apikey = $key;
         $this->apisecret = $secret;
-        $this->initSettings($settings);
-        $this->settings["changed"] = true;
+        $this->initSettings($call, $settings);
         $this->setSettings();
     }
 
@@ -68,7 +68,7 @@ class Client
             ],
             array_change_key_case($args)
         );
-        
+
         $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
 
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
@@ -91,7 +91,7 @@ class Client
      */
     private function getApiUrl()
     {
-        $h = $this->secured === true ? 'https' : 'http';
+        $h = $this->secure === true ? 'https' : 'http';
         return $h."://".$this->url.'/'.$this->version.'/';
     }
 
@@ -107,7 +107,7 @@ class Client
             $this->setOptions($options, $resource);
         }
         $result = $this->_call('POST', $resource[0], $resource[1], $args);
-        if (!empty($this->settings['changed'])) {
+        if (!empty($this->changed)) {
             $this->setSettings();
         }
         
@@ -126,7 +126,7 @@ class Client
             $this->setOptions($options, $resource);
         }
         $result = $this->_call('GET', $resource[0], $resource[1], $args);
-        if (!empty($this->settings['changed'])) {
+        if (!empty($this->changed)) {
             $this->setSettings();
         }
         return $result;
@@ -144,7 +144,7 @@ class Client
             $this->setOptions($options, $resource);
         }
         $result = $this->_call('PUT', $resource[0], $resource[1], $args);
-        if (!empty($settings['changed'])) {
+        if (!empty($this->changed)) {
             $this->setSettings();
         }
         return $result;
@@ -162,7 +162,7 @@ class Client
             $this->setOptions($options, $resource);
         }
         $result = $this->_call('DELETE', $resource[0], $resource[1], $args);
-        if (!empty($settings['changed'])) {
+        if (!empty($this->changed)) {
             $this->setSettings();
         }
         return $result;
@@ -189,7 +189,7 @@ class Client
         } else {
             $path = 'REST';
         }
-        
+
         return $this->getApiUrl() . join(
             '/',
             array_filter(
@@ -233,11 +233,11 @@ class Client
         } if (!empty($options['url']) && is_string($options['url'])) {
             $this->url = $options['url'];
         } if (isset($options['secured']) && is_bool($options['secured'])) {
-            $this->secured = $options['secured'];
+            $this->secure = $options['secured'];
         } if (isset($options['call']) && is_bool($options['call'])) {
             $this->call = $options['call'];
         }
-        $this->settings["changed"] = true;
+        $this->changed = true;
     }
     
     /**
@@ -252,34 +252,41 @@ class Client
         } if (isset($this->settings['call']) && is_bool($this->settings['call'])) {
             $this->call = $this->settings['call']; 
         } if (isset($this->settings['secured']) && is_bool($this->settings['secured'])) {
-            $this->secured = $this->settings['secured']; 
+            $this->secure = $this->settings['secured']; 
         }
-        $this->settings["changed"] = false;
+        $this->changed = false;
     }
     
     /**
      * Set a backup if the variables generating the url are change during a call.
      */
-    private function initSettings($settings = [])
+    private function initSettings($call, $settings = [])
     {
         if (!empty($settings['url']) && is_string($settings['url'])) {
             $this->settings['url'] = $settings['url']; 
         } else {
             $this->settings['url'] = $this->url; 
-        } if (!empty($settings['version']) && is_string($settings['version'])) {
+        }
+        
+        if (!empty($settings['version']) && is_string($settings['version'])) {
             $this->settings['version'] = $settings['version']; 
         } else {
             $this->settings['version'] = $this->version; 
-        }  if (isset($settings['call']) && is_bool($settings['call'])) {
+        }
+        
+        $settings['call'] = $call;
+        if (isset($settings['call']) && is_bool($settings['call'])) {
             $this->settings['call'] = $settings['call']; 
         } else {
             $this->settings['call'] = $this->call; 
-        }  if (isset($settings['secured']) && is_bool($settings['secured'])) {
+        }
+        
+        if (isset($settings['secured']) && is_bool($settings['secured'])) {
             $this->settings['secured'] = $settings['secured']; 
         } else {
-            $this->settings['secured'] = $this->secured; 
+            $this->settings['secured'] = $this->secure; 
         } 
         
-        $this->settings["changed"] = false;
+        $this->changed = false;
     }
 }
