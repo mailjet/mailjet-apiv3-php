@@ -6,9 +6,9 @@ require __DIR__.'/../../vendor/autoload.php';
 
 class MailjetTest extends \PHPUnit_Framework_TestCase
 {
-    private function assertUrl($url, $response)
+    private function assertUrl($url, $response, $version = 'v3')
     {
-        $this->assertEquals('https://api.mailjet.com/v3'.$url, $response->request->getUrl());
+        $this->assertEquals('https://api.mailjet.com/'.$version.$url, $response->request->getUrl());
     }
 
     public function assertPayload($payload, $response)
@@ -24,7 +24,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $client = new Client('', '', false);
+        $client = new Client('', '', ['call' => false]);
 
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
@@ -51,7 +51,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function testPost()
     {
-        $client = new Client('', '', false);
+        $client = new Client('', '', ['call' => false]);
 
         $email = [
           'FromName'     => 'Mailjet PHP test',
@@ -65,6 +65,23 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
         $ret = $client->post(Resources::$Email, ['body' => $email]);
         $this->assertUrl('/send', $ret);
+        $this->assertPayload($email, $ret);
+    }
+
+    public function testPostV3_1()
+    {
+        $client = new Client('', '', ['call' => false]);
+
+        $email = [
+            'Messages' => [[
+                'From' => ['Email' => "test@mailjet.com", 'Name' => "Mailjet PHP test"],
+                'TextPart' => "Simple Email test",
+                'To' => [['Email' => "test@mailjet.com", 'Name' => 'Test']]
+            ]]
+        ];
+
+        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
+        $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
     }
 }
