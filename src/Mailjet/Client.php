@@ -33,7 +33,7 @@ class Client
     private $secure = Config::SECURED;
     private $call = true;
     private $settings = [];
-    private $change = false;
+    private $changed = false;
 
     /**
      * Client constructor requires:
