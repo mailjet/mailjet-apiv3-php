@@ -187,4 +187,4 @@ $response = $mj->post(Resources::$Parseroute, ['body' => $body]);
  - Add documentation for your feature or bug fix.
  - Add specs for your feature or bug fix.
  - Commit and push your changes.
- - Submit a pull request. Please do not include changes to the gemspec, or version file.
+ - Submit a pull request.
