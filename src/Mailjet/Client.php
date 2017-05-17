@@ -60,7 +60,7 @@ class Client
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => '{}'
+            'body' => $method == 'GET' ? null : '{}',
             ],
             array_change_key_case($args)
         );
