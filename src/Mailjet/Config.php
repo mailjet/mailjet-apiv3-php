@@ -24,6 +24,6 @@ namespace Mailjet;
  */
 class Config
 {
-    const WRAPPER_VERSION = 'v1.1.8';
+    const WRAPPER_VERSION = 'v1.1.9';
     const USER_AGENT = 'mailjet-apiv3-php/';
 }
