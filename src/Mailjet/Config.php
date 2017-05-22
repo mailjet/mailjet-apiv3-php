@@ -14,17 +14,9 @@
 
 namespace Mailjet;
 
-/**
- * This is the Config class
- * @category Mailjet_API
- * @package  Mailjet-apiv3
- * @author Guillaume Badi <gbadi@mailjet.com>
- * @license MIT https://licencepath.com
- * @link http://link.com
- */
 class Config
 {
-    const WRAPPER_VERSION = 'v1.1.8';
+    const WRAPPER_VERSION = 'v1.2.0';
     const USER_AGENT = 'mailjet-apiv3-php/';
     const MAIN_VERSION = 'v3';
     const MAIN_URL = "api.mailjet.com";
