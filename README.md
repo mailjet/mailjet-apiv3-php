@@ -179,15 +179,16 @@ $response = $mj->post(Resources::$Parseroute, ['body' => $body]);
 
 ```
 
+## New !! Version 1.2.0 of the PHP wrapper !
 
-## New !! Specificities of the version 3.1 !
+This version modifies the way to construct the Client or the calls. We add the possibility to add an array with parameters on both Client creation and API call (please, note that each of these parameters are preset and are not mandatory in the creation or the call) :
 
-This version adds a new way to construct the Client or your call. We add the possibility to add an array with for parameters on both Client creation or API call (please, note that each of these parameters are preset and are not mandatory in the creation or the call) :
+Properties of the $settings (Client constructor) and $options (API call function)
 
- - url (api.mailjet.com)
- - version (v3)
- - call (true)
- - secured (true (true give 'https' when false give 'http'))
+ - url (Default: api.mailjet.com) : domain name of the API 
+ - version (Default: v3) : API version (only working for Mailjet API V3 +)
+ - call (Default: true) : turns on(true) / off the call to the API
+ - secured (Default: true) : turns on(true) / off the use of 'https'
 
 ### A basic example : 
 
@@ -195,30 +196,20 @@ This version adds a new way to construct the Client or your call. We add the pos
 <?php 
 ...
 
-// We initialise the client with variables. We only keep the secured from the main configuration.
+// Client constructors with specific settings : 
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
-                          getenv('MJ_APIKEY_PRIVATE'),
-                          ['url' => "www.mailjet.com", 'version' => 'v3.1', 'call' => false]
+                          getenv('MJ_APIKEY_PRIVATE'), true, 
+                          ['url' => "www.mailjet.com", 'version' => 'v3', 'call' => false]
                         );
 
-// We only change the version for this call
+// API call with specific options. The options passed in the call will only be used for this call.
 $response = $mj->get(Resources::$Contact, [], ['version' => 'v3']);
 
 ```
 
-###Here is the priority list :
+Priority list of options, settings, and default configurations in order of precedence:  
 
-Funtion call > Client creation > resource (only with version) > wrapper configuration
-
-Note : the settings pasted in the call will only be used for this call.
-
-TODO :
-- add a functionality changing the Client configuration 
-- add anoter functionality setting the client to the main configuration
-
-Here is the list of the functionalities working with the version 3.1 :
-
- - RESSOURCES::$Email
+API call > Client constructor > Resource (only with version, available in the Resources Class - Ressources.php) > Wrapper configuration (Config.php) 
 
 
 ## Send a pull request
