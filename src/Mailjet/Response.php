@@ -14,14 +14,6 @@
 namespace Mailjet;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * This is the Mailjet Response
- * @category Mailjet_API
- * @package  Mailjet-apiv3
- * @author Guillaume Badi <gbadi@mailjet.com>
- * @license MIT https://opensource.org/licenses/MIT
- * @link dev.mailjet.com
- */
 class Response
 {
     private $status;
