@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PHP version 5
  *
@@ -14,19 +13,24 @@
 
 namespace Mailjet;
 
-class Client {
+use GuzzleHttp\RequestOptions as RequestOptions;
 
+class Client
+{
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
     private $apikey;
     private $apisecret;
-    private $version = Config::MAIN_VERSION;
-    private $url = Config::MAIN_URL;
-    private $secure = Config::SECURED;
-    private $call = true;
-    private $settings = [];
-    private $changed = false;
-    private $requestOptions = array();
+    private $version        = Config::MAIN_VERSION;
+    private $url            = Config::MAIN_URL;
+    private $secure         = Config::SECURED;
+    private $call           = true;
+    private $settings       = [];
+    private $changed        = false;
+    private $requestOptions = [
+        RequestOptions::TIMEOUT => 30,
+        RequestOptions::CONNECT_TIMEOUT => 30,
+    ];
 
     /**
      * Client constructor requires:
@@ -34,8 +38,9 @@ class Client {
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $call = true, array $settings = []) {
-        $this->apikey = $key;
+    public function __construct($key, $secret, $call = true, array $settings = [])
+    {
+        $this->apikey    = $key;
         $this->apisecret = $secret;
         $this->initSettings($call, $settings);
         $this->setSettings();
@@ -49,22 +54,26 @@ class Client {
      * @param array  $args     Request arguments
      * @return Response server response
      */
-    private function _call($method, $resource, $action, $args) {
+    private function _call($method, $resource, $action, $args)
+    {
         $args = array_merge(
-                [
+            [
             'id' => '',
             'actionid' => '',
             'filters' => [],
             'body' => $method == 'GET' ? null : '{}',
-                ], array_change_key_case($args)
+            ], array_change_key_case($args)
         );
 
-        $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
+        $url = $this->buildURL($resource, $action, $args['id'],
+            $args['actionid']);
 
-        $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ?
-                'text/plain' : 'application/json';
-        $request = new Request(
-                [$this->apikey, $this->apisecret], $method, $url, $args['filters'], $args['body'], $contentType, $this->requestOptions
+        $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv')
+                ?
+            'text/plain' : 'application/json';
+        $request     = new Request(
+            [$this->apikey, $this->apisecret], $method, $url, $args['filters'],
+            $args['body'], $contentType, $this->requestOptions
         );
         return $request->call($this->call);
     }
@@ -74,9 +83,10 @@ class Client {
      * or not
      * @return string the API url;
      */
-    private function getApiUrl() {
+    private function getApiUrl()
+    {
         $h = $this->secure === true ? 'https' : 'http';
-        return $h . "://" . $this->url . '/' . $this->version . '/';
+        return $h."://".$this->url.'/'.$this->version.'/';
     }
 
     /**
@@ -85,7 +95,8 @@ class Client {
      * @param array $args     Request arguments
      * @return Response
      */
-    public function post($resource, array $args = [], array $options = []) {
+    public function post($resource, array $args = [], array $options = [])
+    {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
@@ -103,7 +114,8 @@ class Client {
      * @param array $args     Request arguments
      * @return Response
      */
-    public function get($resource, array $args = [], array $options = []) {
+    public function get($resource, array $args = [], array $options = [])
+    {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
@@ -120,7 +132,8 @@ class Client {
      * @param array $args     Request arguments
      * @return Response
      */
-    public function put($resource, array $args = [], array $options = []) {
+    public function put($resource, array $args = [], array $options = [])
+    {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
@@ -137,7 +150,8 @@ class Client {
      * @param array $args     Request arguments
      * @return Response
      */
-    public function delete($resource, array $args = [], array $options = []) {
+    public function delete($resource, array $args = [], array $options = [])
+    {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
@@ -156,24 +170,27 @@ class Client {
      * @param string $actionid mailjet resource actionid
      * @return string final call url
      */
-    private function buildURL($resource, $action, $id, $actionid) {
+    private function buildURL($resource, $action, $id, $actionid)
+    {
         $path = null;
         if ($resource == 'send') {
             $path = '';
-        } elseif ($action == 'csverror/text:csv' || $action == 'csvdata/text:plain' || $action == 'JSONError/application:json/LAST'
+        } elseif ($action == 'csverror/text:csv' || $action == 'csvdata/text:plain'
+            || $action == 'JSONError/application:json/LAST'
         ) {
             $path = 'DATA';
         } else {
             $path = 'REST';
         }
 
-        return $this->getApiUrl() . join(
-                        '/', array_filter(
-                                array(
-                                    $path, $resource,
-                                    $id, $action, $actionid
-                                )
-                        )
+        return $this->getApiUrl().join(
+                '/',
+                array_filter(
+                    array(
+                        $path, $resource,
+                        $id, $action, $actionid
+                    )
+                )
         );
     }
 
@@ -182,7 +199,8 @@ class Client {
      * @param bool $bIsSecured True use https / false use http
      * @return bool true if we set value false otherwise
      */
-    public function setSecureProtocol($bIsSecured) {
+    public function setSecureProtocol($bIsSecured)
+    {
         if (is_bool($bIsSecured)) {
             $this->secure = $bIsSecured;
 
@@ -191,7 +209,6 @@ class Client {
 
         return false;
     }
-
     // TODO : make the next code more readable
 
     /**
@@ -199,7 +216,8 @@ class Client {
      * @param array $options    contain temporary modifications for the client
      * @param array $resource   may contain the version linked to the ressource
      */
-    private function setOptions($options, $resource) {
+    private function setOptions($options, $resource)
+    {
         if (!empty($options['version']) && is_string($options['version'])) {
             $this->version = $options['version'];
         } elseif (!empty($resource[2])) {
@@ -217,7 +235,8 @@ class Client {
     /**
      * set back the variables generating the url
      */
-    private function setSettings() {
+    private function setSettings()
+    {
         if (!empty($this->settings['url']) && is_string($this->settings['url'])) {
             $this->url = $this->settings['url'];
         } if (!empty($this->settings['version']) && is_string($this->settings['version'])) {
@@ -233,7 +252,8 @@ class Client {
     /**
      * Set a backup if the variables generating the url are change during a call.
      */
-    private function initSettings($call, $settings = []) {
+    private function initSettings($call, $settings = [])
+    {
         if (!empty($settings['url']) && is_string($settings['url'])) {
             $this->settings['url'] = $settings['url'];
         } else {
@@ -263,20 +283,57 @@ class Client {
     }
 
     /**
-     * Set Guzzle request options
-     * @param array $requestOptions
-     * @return array request options
+     * Set HTTP request Timeout
+     * @param   $timeout
      */
-    public function setRequestOptions($requestOptions) {
-        return $this->requestOptions = $requestOptions;
+    public function setTimeout($timeout)
+    {
+        $this->requestConfig[RequestOptions::TIMEOUT] = $timeout;
     }
 
     /**
-     * Get Guzzle request options
-     * @return array request options
+     * Set HTTP connection Timeout
+     * @param   $timeout
      */
-    public function getRequestOptions() {
-        return $this->requestOptions;
+    public function setConnectionTimeout($timeout)
+    {
+        $this->requestOptions[RequestOptions::CONNECT_TIMEOUT] = $timeout;
     }
 
+    /**
+     * Get HTTP request Timeout
+     * $return   $timeout
+     */
+    public function getTimeout()
+    {
+        return $this->requestOptions[RequestOptions::TIMEOUT];
+    }
+
+    /**
+     * Get HTTP connection Timeout
+     * $return   $timeout
+     */
+    public function getConnectionTimeout()
+    {
+        return $this->requestOptions[RequestOptions::CONNECT_TIMEOUT];
+    }
+
+    /**
+     * Add a HTTP request option
+     * @param array $key
+     * @param array $value
+     * [IMPORTANT]Default options will be overwritten
+     * if such option is provided
+     * @see \GuzzleHttp\RequestOptions for a list of available request options.
+     */
+    public function addRequestOption($key, $value)
+    {
+        $refl          = new ReflectionClass('GuzzleHttp\RequestOptions');
+        $valid_options = $refl->getConstants();
+        if (isset($valid_options[$key])) {
+            $this->requestOptions[$key] = $value;
+        } else {
+            throw new Exception('Unsupported option $key');
+        }
+    }
 }

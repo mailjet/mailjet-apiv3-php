@@ -26,7 +26,7 @@ class Request extends GuzzleClient {
     private $body;
     private $auth;
     private $type;
-    private $requestOptions = array();
+    private $requestOptions = [];
 
     /**
      * Build a new Http request
@@ -37,7 +37,7 @@ class Request extends GuzzleClient {
      * @param array  $body    Mailjet resource body
      * @param string $type    Request Content-type
      */
-    public function __construct($auth, $method, $url, $filters, $body, $type, $requestOptions = null) {
+    public function __construct($auth, $method, $url, $filters, $body, $type, array $requestOptions = []) {
         parent::__construct(['defaults' => [
                 'headers' => [
                     'user-agent' => Config::USER_AGENT . phpversion() . '/' . Client::WRAPPER_VERSION
@@ -66,7 +66,9 @@ class Request extends GuzzleClient {
             ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
         if (!empty($this->requestOptions)) {
-            $payload = array_merge($payload, $this->requestOptions);
+            if (is_array($this->requestOptions)) {
+                $payload = array_merge_recursive($payload, $this->requestOptions);
+            }
         }
         $response = null;
         if ($call) {
@@ -121,14 +123,6 @@ class Request extends GuzzleClient {
      */
     public function getAuth() {
         return $this->auth;
-    }
-
-    /**
-     * Set Guzzle request options
-     * @return array request options
-     */
-    public function setRequestOptions($requestOptions) {
-        return $this->requestOptions = $requestOptions;
     }
 
 }
