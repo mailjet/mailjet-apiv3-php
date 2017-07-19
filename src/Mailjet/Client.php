@@ -13,11 +13,23 @@
 
 namespace Mailjet;
 
-use GuzzleHttp\RequestOptions as RequestOptions;
 
 class Client
 {
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
+
+    /**
+     * connect_timeout: (float, default=0) Float describing the number of
+     * seconds to wait while trying to connect to a server. Use 0 to wait
+     * indefinitely (the default behavior).
+     */
+    const CONNECT_TIMEOUT = 'connect_timeout';
+
+    /**
+     * timeout: (float, default=0) Float describing the timeout of the
+     * request in seconds. Use 0 to wait indefinitely (the default behavior).
+     */
+    const TIMEOUT = 'timeout';
 
     private $apikey;
     private $apisecret;
@@ -28,8 +40,8 @@ class Client
     private $settings       = [];
     private $changed        = false;
     private $requestOptions = [
-        RequestOptions::TIMEOUT => 30,
-        RequestOptions::CONNECT_TIMEOUT => 30,
+        self::TIMEOUT => 30,
+        self::CONNECT_TIMEOUT => 30,
     ];
 
     /**
@@ -38,7 +50,8 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $call = true, array $settings = [])
+    public function __construct($key, $secret, $call = true,
+                                array $settings = [])
     {
         $this->apikey    = $key;
         $this->apisecret = $secret;
@@ -288,7 +301,7 @@ class Client
      */
     public function setTimeout($timeout)
     {
-        $this->requestConfig[RequestOptions::TIMEOUT] = $timeout;
+        $this->requestConfig[self::TIMEOUT] = $timeout;
     }
 
     /**
@@ -297,7 +310,7 @@ class Client
      */
     public function setConnectionTimeout($timeout)
     {
-        $this->requestOptions[RequestOptions::CONNECT_TIMEOUT] = $timeout;
+        $this->requestOptions[self::CONNECT_TIMEOUT] = $timeout;
     }
 
     /**
@@ -306,7 +319,7 @@ class Client
      */
     public function getTimeout()
     {
-        return $this->requestOptions[RequestOptions::TIMEOUT];
+        return $this->requestOptions[self::TIMEOUT];
     }
 
     /**
@@ -315,7 +328,7 @@ class Client
      */
     public function getConnectionTimeout()
     {
-        return $this->requestOptions[RequestOptions::CONNECT_TIMEOUT];
+        return $this->requestOptions[self::CONNECT_TIMEOUT];
     }
 
     /**
@@ -328,12 +341,8 @@ class Client
      */
     public function addRequestOption($key, $value)
     {
-        $refl          = new ReflectionClass('GuzzleHttp\RequestOptions');
-        $valid_options = $refl->getConstants();
-        if (isset($valid_options[$key])) {
+        if ((!is_null($key)) && (!is_null($value))) {
             $this->requestOptions[$key] = $value;
-        } else {
-            throw new Exception('Unsupported option $key');
         }
     }
 }
