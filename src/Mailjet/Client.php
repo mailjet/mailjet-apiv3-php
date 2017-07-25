@@ -300,7 +300,7 @@ class Client
      */
     public function setTimeout($timeout)
     {
-        $this->requestConfig[self::TIMEOUT] = $timeout;
+        $this->requestOptions[self::TIMEOUT] = $timeout;
     }
 
     /**
