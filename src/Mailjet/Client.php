@@ -18,14 +18,14 @@ class Client
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
     /**
-     * connect_timeout: (float, default=0) Float describing the number of
+     * connect_timeout: (float, default=2) Float describing the number of
      * seconds to wait while trying to connect to a server. Use 0 to wait
      * indefinitely (the default behavior).
      */
     const CONNECT_TIMEOUT = 'connect_timeout';
 
     /**
-     * timeout: (float, default=0) Float describing the timeout of the
+     * timeout: (float, default=15) Float describing the timeout of the
      * request in seconds. Use 0 to wait indefinitely (the default behavior).
      */
     const TIMEOUT = 'timeout';
@@ -39,8 +39,8 @@ class Client
     private $settings       = [];
     private $changed        = false;
     private $requestOptions = [
-        self::TIMEOUT => 30,
-        self::CONNECT_TIMEOUT => 30,
+        self::TIMEOUT => 15,
+        self::CONNECT_TIMEOUT => 2,
     ];
 
     /**

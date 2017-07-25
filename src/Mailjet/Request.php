@@ -65,10 +65,9 @@ class Request extends GuzzleClient {
             'auth' => $this->auth,
             ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
-        if (!empty($this->requestOptions)) {
-            if (is_array($this->requestOptions)) {
+        if ((!empty($this->requestOptions)) && (is_array($this->requestOptions))) {
+           
                 $payload = array_merge_recursive($payload, $this->requestOptions);
-            }
         }
         $response = null;
         if ($call) {
