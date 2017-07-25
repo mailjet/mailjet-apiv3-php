@@ -13,7 +13,6 @@
 
 namespace Mailjet;
 
-
 class Client
 {
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
@@ -344,5 +343,14 @@ class Client
         if ((!is_null($key)) && (!is_null($value))) {
             $this->requestOptions[$key] = $value;
         }
+    }
+
+    /**
+     * Get HTTP connection options
+     * $return   array requestOptions
+     */
+    public function getRequestOptions()
+    {
+        return $this->requestOptions;
     }
 }

@@ -84,4 +84,16 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
     }
+	
+	public function testClientHasOptions()
+    {
+         $client = new Client('', '', ['call' => false]);
+         $client->setTimeout(3);
+         $client->setConnectionTimeout(5);
+         $client->addRequestOption('delay', 23);
+         $this->assertEquals(3, $client->getTimeout());
+         $this->assertEquals(5, $client->getConnectionTimeout());
+         $this->assertEquals(23, $client->getRequestOptions()['delay']);
+    }
+	
 }
