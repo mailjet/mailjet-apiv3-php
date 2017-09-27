@@ -100,6 +100,8 @@ $response = $mj->get(Resources::$Contact, ['filters' => $filters]);
 
 ### [Send transactional emails](http://dev.mailjet.com/guides/?php#send-transactional-email)
 
+You can send transactional messages with Mailjet's v3.1 Send API with the following code :  
+
 ``` php
 <?php
 /*
@@ -107,7 +109,8 @@ This calls sends an email to one recipient.
 */
 require 'vendor/autoload.php';
 use \Mailjet\Resources;
-$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['version' => 'v3.1']);
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),
+              true,['version' => 'v3.1']);
 $body = [
     'Messages' => [
         [
@@ -131,6 +134,9 @@ $response = $mj->post(Resources::$Email, ['body' => $body]);
 $response->success() && var_dump($response->getData());
 ?>
 ```
+
+In case, you wish to use Mailjet's Send API v3, you can find the legacy documentation and code samples [here](https://dev.mailjet.com/legacy/?php#send-api-v3-august-2017)
+
 
 ### [Send marketing campaign](http://dev.mailjet.com/guides/?php#send-marketing-campaigns)
 
