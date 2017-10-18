@@ -2,8 +2,6 @@
 
 namespace Mailjet;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 class MailjetTest extends \PHPUnit_Framework_TestCase
 {
     private function assertUrl($url, $response, $version = 'v3')
