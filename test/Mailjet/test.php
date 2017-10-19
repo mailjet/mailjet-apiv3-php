@@ -19,6 +19,58 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($shouldBe, $response->request->getFilters());
     }
 
+    public function assertHttpMethod($payload, $response)
+    {
+        $this->assertEquals($payload, $response->request->getMethod());
+    }
+
+    public function assertGetAuth($payload, $response)
+    {
+        $this->assertEquals($payload, $response->request->getAuth()[0]);
+        $this->assertEquals($payload, $response->request->getAuth()[1]);
+    }
+
+    public function assertGetStatus($payload, $response)
+    {
+        var_dump($response->getStatus());
+        $this->assertEquals($payload, $response->getStatus());
+    }
+
+    public function assertGetBody($payload, $response)
+    {
+        var_dump($response->getBody());
+        $this->assertEquals($payload, $response->getBody());
+    }
+
+    public function assertGetData($payload, $response)
+    {
+        var_dump($response->getData());
+        $this->assertEquals($payload, $response->getData());
+    }
+    
+    public function assertGetCount($payload, $response)
+    {
+        var_dump($response->getCount());
+        $this->assertEquals($payload, $response->getCount());
+    }
+    
+    public function assertGetReasonPhrase($payload, $response)
+    {
+        var_dump($response->getReasonPhrase());
+        $this->assertEquals($payload, $response->getReasonPhrase());
+    }
+
+    public function assertGetTotal($payload, $response)
+    {
+        var_dump($response->getTotal());
+        $this->assertEquals($payload, $response->getTotal());
+    }
+
+    public function assertSuccess($payload, $response)
+    {
+        var_dump($response->success());
+        $this->assertEquals($payload, $response->success());
+    }
 
     public function testGet()
     {
@@ -45,6 +97,24 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
             '/REST/contact/test@mailjet.com',
             $client->get(Resources::$Contact, ['id' => 'test@mailjet.com'])
         );
+
+        $this->assertHttpMethod('GET', $response);
+
+        $this->assertGetAuth('', $response);
+
+        $this->assertGetStatus(200, $response);
+
+        $this->assertGetBody('', $response);
+        
+        $this->assertGetData('', $response);
+        
+        $this->assertGetCount('', $response);
+        
+        $this->assertGetReasonPhrase('', $response);
+        
+        $this->assertGetTotal('', $response);
+        
+        $this->assertSuccess('', $response);
     }
 
     public function testPost()
@@ -64,6 +134,8 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $ret = $client->post(Resources::$Email, ['body' => $email]);
         $this->assertUrl('/send', $ret);
         $this->assertPayload($email, $ret);
+        $this->assertHttpMethod('POST', $ret);
+        $this->assertGetAuth('', $ret);
     }
 
     public function testPostV3_1()
@@ -81,6 +153,8 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
+        $this->assertHttpMethod('POST', $ret);
+        $this->assertGetAuth('', $ret);
     }
 	
     public function testClientHasOptions()
