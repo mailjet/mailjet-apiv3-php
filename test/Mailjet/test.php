@@ -2,8 +2,6 @@
 
 namespace Mailjet;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 class MailjetTest extends \PHPUnit_Framework_TestCase
 {
     private function assertUrl($url, $response, $version = 'v3')
@@ -85,7 +83,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertPayload($email, $ret);
     }
 	
-	public function testClientHasOptions()
+    public function testClientHasOptions()
     {
          $client = new Client('', '', ['call' => false]);
          $client->setTimeout(3);
