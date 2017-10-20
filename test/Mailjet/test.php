@@ -32,44 +32,43 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
     public function assertGetStatus($payload, $response)
     {
-        var_dump($response->getStatus());
         $this->assertEquals($payload, $response->getStatus());
     }
 
-    public function assertGetBody($payload, $response)
+    public function assertGetBody($payload, $keyName, $response)
     {
-        var_dump($response->getBody());
-        $this->assertEquals($payload, $response->getBody());
+        $this->assertEquals($payload, $response->getBody()[$keyName]);
     }
 
-    public function assertGetData($payload, $response)
+    public function assertGetData($payload, $keyName, $response)
     {
-        var_dump($response->getData());
-        $this->assertEquals($payload, $response->getData());
+        $this->assertEquals($payload, $response->getData()[$keyName]);
     }
     
     public function assertGetCount($payload, $response)
     {
-        var_dump($response->getCount());
         $this->assertEquals($payload, $response->getCount());
     }
     
     public function assertGetReasonPhrase($payload, $response)
     {
-        var_dump($response->getReasonPhrase());
         $this->assertEquals($payload, $response->getReasonPhrase());
     }
 
     public function assertGetTotal($payload, $response)
     {
-        var_dump($response->getTotal());
         $this->assertEquals($payload, $response->getTotal());
     }
 
     public function assertSuccess($payload, $response)
     {
-        var_dump($response->success());
         $this->assertEquals($payload, $response->success());
+    }
+
+    public function assertSetSecureProtocol($client)
+    {
+        $this->assertTrue($client->setSecureProtocol(true));
+        $this->assertFalse($client->setSecureProtocol('not boolean type'));
     }
 
     public function testGet()
@@ -80,7 +79,7 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFilters(['id' => 2], $client->get(Resources::$Contact, [
             'filters' => ['id' => 2]
-        ]));
+        ], ['version' => 'v3.1']));
 
         $response = $client->get(Resources::$ContactGetcontactslists, ['id' => 2]);
         $this->assertUrl('/REST/contact/2/getcontactslists', $response);
@@ -102,19 +101,21 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertGetAuth('', $response);
 
-        $this->assertGetStatus(200, $response);
+        $this->assertGetStatus(401, $response);
 
-        $this->assertGetBody('', $response);
+        $this->assertGetBody('', '', $response);
         
-        $this->assertGetData('', $response);
+        $this->assertGetData('', '', $response);
         
         $this->assertGetCount('', $response);
         
-        $this->assertGetReasonPhrase('', $response);
+        $this->assertGetReasonPhrase('Unauthorized', $response);
         
         $this->assertGetTotal('', $response);
         
         $this->assertSuccess('', $response);
+
+        $this->assertSetSecureProtocol($client);
     }
 
     public function testPost()
@@ -136,6 +137,13 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertPayload($email, $ret);
         $this->assertHttpMethod('POST', $ret);
         $this->assertGetAuth('', $ret);
+        $this->assertGetStatus(401, $ret);
+        $this->assertGetBody('', 'StatusCode', $ret);
+        $this->assertGetData('', 'StatusCode', $ret);
+        $this->assertGetCount('', $ret);
+        $this->assertGetReasonPhrase('Unauthorized', $ret);
+        $this->assertGetTotal('', $ret);
+        $this->assertSuccess('', $ret);
     }
 
     public function testPostV3_1()
@@ -155,6 +163,13 @@ class MailjetTest extends \PHPUnit_Framework_TestCase
         $this->assertPayload($email, $ret);
         $this->assertHttpMethod('POST', $ret);
         $this->assertGetAuth('', $ret);
+        $this->assertGetStatus(401, $ret);
+        $this->assertGetBody(401, 'StatusCode', $ret);
+        $this->assertGetData(401, 'StatusCode', $ret);
+        $this->assertGetCount('', $ret);
+        $this->assertGetReasonPhrase('Unauthorized', $ret);
+        $this->assertGetTotal('', $ret);
+        $this->assertSuccess('', $ret);
     }
 	
     public function testClientHasOptions()
