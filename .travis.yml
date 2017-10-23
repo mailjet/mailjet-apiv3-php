@@ -1,11 +1,14 @@
 language: php
 php:
-- 7.0
-- 5.4
-- 5.5
-- 5.6
-install: composer install
-script: phpunit
+  - 7.0
+  - 5.4
+  - 5.5
+  - 5.6
+install:
+  - composer install
+script: phpunit --coverage-clover build/logs/clover.xml
+after_success:
+  - travis_retry vendor/bin/coveralls -v
 notifications:
   slack:
     secure: woxqf55Y5XlEOr9WrXalAMQEay8Rqpd9RdvQXw28AZsySVIYP2btfdA7OJRTiC7znIaSXQZqAeIZhKYXCLUv6QqG/saNe9sV5MC9o6sC4FgqdaPU493X2C7KSiwMqeyY9v0bbeUUI9O/g0cnaQGD/NJmVIpvaYz6Tu0MM06fB4c=
