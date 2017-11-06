@@ -2,7 +2,9 @@
 
 namespace Mailjet;
 
-class MailjetTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MailjetTest extends TestCase
 {
     private function assertUrl($url, $response, $version = 'v3')
     {
