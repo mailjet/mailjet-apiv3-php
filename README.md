@@ -25,7 +25,7 @@ composer require mailjet/mailjet-apiv3-php
 ```
 Without composer:
 
-Clone or Download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file. If you encounter any issue, please post it here and not on the mirror repository.
+Clone or Download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file. If you encounter an issue, please post it here and not on the mirror repository.
 
 ## Getting Started !
 
@@ -140,7 +140,7 @@ In case, you wish to use Mailjet's Send API v3, you can find the legacy document
 
 ### [Send marketing campaign](http://dev.mailjet.com/guides/?php#send-marketing-campaigns)
 
-To send your first newsletter, you need to have at least one active sender address in the Sender domains & addresses section.
+In order to send your first newsletter, you need to have at least one active sender address in the Sender domains & addresses section.
 
 ``` php
 <?php
@@ -161,9 +161,9 @@ $response = $mj->post(Resources::$NewsletterTest, ['id' => $id, 'body' => $body]
 
 ### [Event API - real time notifications](http://dev.mailjet.com/guides/?php#event-api-real-time-notifications)
 
-The Event API offer a real-time notification through http request on any events related to the messages you sent. The main supported events are open, click, bounce, spam, blocked, unsub and sent. This event notification works for transactional and marketing emails.
+The [Event API](https://www.mailjet.com/feature/event-api/) offer a real-time notification through http request on any events related to the messages you sent. The main supported events are open, click, bounce, spam, blocked, unsub and sent. This event notification works for transactional and marketing emails.
 
-The endpoint is an URL our server will call for each event (it can lead to a lot of hits !). You can use the API to setup a new endpoint using the /eventcallbackurl resource. Alternatively, you can configure this in your account preferences, in the Event Tracking section.
+The endpoint is an URL our server will call for each event (it can lead to a lot of hits). You can use the API to setup a new endpoint using the /eventcallbackurl resource. Alternatively, you can configure this in your account preferences, in the Event Tracking section.
 
 ``` php
 <?php
@@ -239,7 +239,7 @@ API call > Client constructor > Resource (only with version, available in the Re
 
  - Fork the project.
  - Create a topic branch.
- - Implement your feature or bug fix.
+ - Implement your feature/bug fix.
  - Add documentation for your feature or bug fix.
  - Add specs for your feature or bug fix.
  - Commit and push your changes.
