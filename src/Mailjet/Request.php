@@ -72,9 +72,8 @@ class Request extends GuzzleClient {
         $response = null;
         if ($call) {
             try {
-                $response = call_user_func_array(
-                        [$this, strtolower($this->method)], [$this->url, $payload]
-                );
+                $method = strtolower($this->method);
+                $response = $this->$method($this->url, $payload);
             } catch (ClientException $e) {
                 $response = $e->getResponse();
             } catch (ServerException $e) {
