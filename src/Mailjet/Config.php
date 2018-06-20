@@ -16,7 +16,7 @@ namespace Mailjet;
 
 class Config
 {
-    const WRAPPER_VERSION = 'v1.2.0';
+    const WRAPPER_VERSION = 'v1.3.0';
     const USER_AGENT = 'mailjet-apiv3-php/';
     const MAIN_VERSION = 'v3';
     const MAIN_URL = "api.mailjet.com";
