@@ -7,10 +7,10 @@ namespace Mailjet;
  * This is the Mailjet Resources Class
  *
  * @category Mailjet_API
- * @package  Mailjet-apiv3
- * @author   Guillaume Badi <gbadi@mailjet.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     dev.mailjet.com
+ * @package Mailjet-apiv3
+ * @author Guillaume Badi <gbadi@mailjet.com>
+ * @license MIT https://opensource.org/licenses/MIT
+ * @link dev.mailjet.com
  */
 class Resources
 {
@@ -100,4 +100,8 @@ class Resources
     public static $Useragentstatistics = ['useragentstatistics', ''];
     public static $Widget = ['widget', ''];
     public static $Widgetcustomvalue = ['widgetcustomvalue', ''];
+    public static $Sms = ['sms', ''];
+    public static $SmsSend = ['sms-send', ''];
+    public static $SmsExport = ['sms', 'export'];
+    public static $SmsCount = ['sms', 'count'];
 }

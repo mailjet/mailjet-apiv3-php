@@ -60,15 +60,27 @@ class Request extends GuzzleClient {
      */
     public function call($call) {
         $payload = [
-            'headers' => ['content-type' => $this->type],
             'query' => $this->filters,
-            'auth' => $this->auth,
             ($this->type === 'application/json' ? 'json' : 'body') => $this->body,
         ];
-        if ((!empty($this->requestOptions)) && (is_array($this->requestOptions))) {
-           
-                $payload = array_merge_recursive($payload, $this->requestOptions);
+        
+        $authArgsCount = count($this->auth);
+        $headers = [
+            'content-type' => $this->type
+        ];
+        
+        if ($authArgsCount > 1) {
+            $payload['auth'] = $this->auth;
+        } else {
+            $headers['Authorization'] = 'Bearer ' . $this->auth[0];
         }
+        
+        $payload['headers'] = $headers;
+        
+        if ((! empty($this->requestOptions)) && (is_array($this->requestOptions))) {
+            $payload = array_merge_recursive($payload, $this->requestOptions);
+        }
+        
         $response = null;
         if ($call) {
             try {
