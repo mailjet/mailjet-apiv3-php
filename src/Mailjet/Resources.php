@@ -100,7 +100,7 @@ class Resources
     public static $Useragentstatistics = ['useragentstatistics', ''];
     public static $Widget = ['widget', ''];
     public static $Widgetcustomvalue = ['widgetcustomvalue', ''];
-    public static $Statcounter = ['statcounters', ''];
-    public static $StatisticsLinkClick = ['statistics', 'link-click'];
+    public static $Statcounters = ['statcounters', ''];
+    public static $StatisticsLinkclick = ['statistics', 'link-click'];
     public static $StatisticsRecipientesp = ['statistics', 'recipient-esp'];
 }
