@@ -152,7 +152,7 @@ class Client
      */
     private function _isBasicAuthenticationRequired($key, $secret)
     {        
-        return is_string($key) && is_string($secret);
+        return is_string($key) && is_string($secret) && empty($secret);
     }
 
     /**
@@ -239,7 +239,7 @@ class Client
     private function buildURL($resource, $action, $id, $actionid)
     {
         $path = null;
-        if ($resource == 'send' || $resource == 'sms') {
+        if ($resource == 'send' || $resource == 'sms' || $resource == 'sms-send') {
             $path = '';
         } elseif ($action == 'csverror/text:csv' || $action == 'csvdata/text:plain'
             || $action == 'JSONError/application:json/LAST'
