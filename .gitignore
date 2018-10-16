@@ -9,3 +9,5 @@ app/[Cc]onfig/database.php
 composer.phar
 vendor/*
 composer.lock
+/.metadata/
+/.metadata/
