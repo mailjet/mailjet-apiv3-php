@@ -32,6 +32,7 @@ class Client
 
     private $apikey;
     private $apisecret;
+    private $apitoken;
     private $version        = Config::MAIN_VERSION;
     private $url            = Config::MAIN_URL;
     private $secure         = Config::SECURED;
@@ -52,10 +53,13 @@ class Client
     public function __construct($key, $secret, $call = true,
                                 array $settings = [])
     {
-        $this->apikey    = $key;
-        $this->apisecret = $secret;
-        $this->initSettings($call, $settings);
-        $this->setSettings();
+        $isBasicAuthentication = $this->_isBasicAuthenticationRequired($key, $secret);
+        
+        if ($isBasicAuthentication) {
+            $this->_setBasicAuthentication($key, $secret, $call, $settings);
+        } else {
+            $this->_setTokenAuthetication($key, $secret, $call);
+        }        
     }
 
     /**
@@ -83,8 +87,16 @@ class Client
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv')
                 ?
             'text/plain' : 'application/json';
+        
+        $auth = (isset($this->apisecret) && is_string($this->apisecret) !== '') ? [
+            $this->apikey,
+            $this->apisecret
+        ] : [
+            $this->apitoken
+        ];
+        
         $request     = new Request(
-            [$this->apikey, $this->apisecret], $method, $url, $args['filters'],
+            $auth, $method, $url, $args['filters'],
             $args['body'], $contentType, $this->requestOptions
         );
         return $request->call($this->call);
@@ -99,6 +111,48 @@ class Client
     {
         $h = $this->secure === true ? 'https' : 'http';
         return $h."://".$this->url.'/'.$this->version.'/';
+    }
+
+    /**
+     * 
+     * @param string $key
+     * @param string $secret
+     * @param boolean $call
+     * @param array $settings
+     */
+    private function _setBasicAuthentication($key, $secret, $call, $settings)
+    {
+        $this->apikey    = $key;
+        $this->apisecret = $secret;
+        $this->initSettings($call, $settings);
+        $this->setSettings();
+    }
+
+    /**
+     * 
+     * @param string $token
+     * @param boolean $call
+     * @param array $settings
+     */
+    private function _setTokenAuthetication($token, $call, $settings)
+    {
+        $this->apitoken = $token;
+        $this->initSettings($call, $settings);
+        $this->setSettings();
+    }
+
+    /**
+     * Checks that both parameters are strings, which means
+     * that basic authentication will be required
+     *
+     * @param string $key
+     * @param string $secret
+     *
+     * @return boolean flag
+     */
+    private function _isBasicAuthenticationRequired($key, $secret)
+    {        
+        return is_string($key) && is_string($secret) && empty($secret);
     }
 
     /**
@@ -185,7 +239,7 @@ class Client
     private function buildURL($resource, $action, $id, $actionid)
     {
         $path = null;
-        if ($resource == 'send') {
+        if ($resource == 'send' || $resource == 'sms' || $resource == 'sms-send') {
             $path = '';
         } elseif ($action == 'csverror/text:csv' || $action == 'csvdata/text:plain'
             || $action == 'JSONError/application:json/LAST'
