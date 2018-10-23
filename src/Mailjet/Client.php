@@ -58,7 +58,7 @@ class Client
         if ($isBasicAuthentication) {
             $this->_setBasicAuthentication($key, $secret, $call, $settings);
         } else {
-            $this->_setTokenAuthetication($key, $call);
+            $this->_setTokenAuthetication($key, $call, $settings);
         }
     }
 
