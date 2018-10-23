@@ -54,12 +54,12 @@ class Client
                                 array $settings = [])
     {
         $isBasicAuthentication = $this->_isBasicAuthenticationRequired($key, $secret);
-        
+
         if ($isBasicAuthentication) {
             $this->_setBasicAuthentication($key, $secret, $call, $settings);
         } else {
-            $this->_setTokenAuthetication($key, $secret, $call);
-        }        
+            $this->_setTokenAuthetication($key, $call);
+        }
     }
 
     /**
@@ -87,14 +87,14 @@ class Client
         $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv')
                 ?
             'text/plain' : 'application/json';
-        
+
         $auth = (isset($this->apisecret) && is_string($this->apisecret) !== '') ? [
             $this->apikey,
             $this->apisecret
         ] : [
             $this->apitoken
         ];
-        
+
         $request     = new Request(
             $auth, $method, $url, $args['filters'],
             $args['body'], $contentType, $this->requestOptions
@@ -114,7 +114,7 @@ class Client
     }
 
     /**
-     * 
+     *
      * @param string $key
      * @param string $secret
      * @param boolean $call
@@ -129,7 +129,7 @@ class Client
     }
 
     /**
-     * 
+     *
      * @param string $token
      * @param boolean $call
      * @param array $settings
@@ -151,7 +151,7 @@ class Client
      * @return boolean flag
      */
     private function _isBasicAuthenticationRequired($key, $secret)
-    {        
+    {
         return is_string($key) && is_string($secret) && empty($secret);
     }
 
