@@ -120,7 +120,7 @@ class Client
      * @param boolean $call
      * @param array $settings
      */
-    private function _setBasicAuthentication($key, $secret, $call, $settings)
+    private function _setBasicAuthentication($key, $secret, $call, array $settings)
     {
         $this->apikey    = $key;
         $this->apisecret = $secret;
@@ -134,7 +134,7 @@ class Client
      * @param boolean $call
      * @param array $settings
      */
-    private function _setTokenAuthetication($token, $call, $settings)
+    private function _setTokenAuthetication($token, $call, array $settings)
     {
         $this->apitoken = $token;
         $this->initSettings($call, $settings);
@@ -318,7 +318,7 @@ class Client
     /**
      * Set a backup if the variables generating the url are change during a call.
      */
-    private function initSettings($call, $settings = [])
+    private function initSettings($call, array $settings = [])
     {
         if (!empty($settings['url']) && is_string($settings['url'])) {
             $this->settings['url'] = $settings['url'];
