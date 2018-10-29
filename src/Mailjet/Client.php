@@ -152,7 +152,7 @@ class Client
      */
     private function _isBasicAuthenticationRequired($key, $secret)
     {        
-        return is_string($key) && is_string($secret) && empty($secret);
+        return is_string($key) && is_string($secret) && !empty($secret);
     }
 
     /**
