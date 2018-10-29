@@ -58,7 +58,7 @@ class Client
         if ($isBasicAuthentication) {
             $this->_setBasicAuthentication($key, $secret, $call, $settings);
         } else {
-            $this->_setTokenAuthetication($key, $secret, $call);
+            $this->_setTokenAuthentication($key, $call, $settings);
         }        
     }
 
@@ -134,7 +134,7 @@ class Client
      * @param boolean $call
      * @param array $settings
      */
-    private function _setTokenAuthetication($token, $call, $settings)
+    private function _setTokenAuthentication($token, $call, $settings)
     {
         $this->apitoken = $token;
         $this->initSettings($call, $settings);
@@ -152,7 +152,7 @@ class Client
      */
     private function _isBasicAuthenticationRequired($key, $secret)
     {        
-        return is_string($key) && is_string($secret) && empty($secret);
+        return is_string($key) && is_string($secret) && !empty($secret);
     }
 
     /**
