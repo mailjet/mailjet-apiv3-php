@@ -29,7 +29,6 @@ class MailjetTest extends TestCase
     public function assertGetAuth($payload, $response)
     {
         $this->assertEquals($payload, $response->request->getAuth()[0]);
-        $this->assertEquals($payload, $response->request->getAuth()[1]);
     }
 
     public function assertGetStatus($payload, $response)
@@ -166,8 +165,8 @@ class MailjetTest extends TestCase
         $this->assertHttpMethod('POST', $ret);
         $this->assertGetAuth('', $ret);
         $this->assertGetStatus(401, $ret);
-        $this->assertGetBody(401, 'StatusCode', $ret);
-        $this->assertGetData(401, 'StatusCode', $ret);
+        $this->assertGetBody('', 'StatusCode', $ret);
+        $this->assertGetData('', 'StatusCode', $ret);
         $this->assertGetCount('', $ret);
         $this->assertGetReasonPhrase('Unauthorized', $ret);
         $this->assertGetTotal('', $ret);
