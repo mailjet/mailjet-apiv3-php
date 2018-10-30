@@ -21,4 +21,5 @@ class Config
     const MAIN_VERSION = 'v3';
     const MAIN_URL = "api.mailjet.com";
     const SECURED = true;
+    const SMS_VERSION = 'v4';
 }
