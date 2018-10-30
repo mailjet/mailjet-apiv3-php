@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP version 5
  *
@@ -15,6 +16,7 @@ namespace Mailjet;
 
 class Client
 {
+
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
     /**
@@ -33,15 +35,25 @@ class Client
     private $apikey;
     private $apisecret;
     private $apitoken;
-    private $version        = Config::MAIN_VERSION;
-    private $url            = Config::MAIN_URL;
-    private $secure         = Config::SECURED;
-    private $call           = true;
-    private $settings       = [];
-    private $changed        = false;
+    private $version = Config::MAIN_VERSION;
+    private $url = Config::MAIN_URL;
+    private $secure = Config::SECURED;
+    private $call = true;
+    private $settings = [];
+    private $changed = false;
     private $requestOptions = [
         self::TIMEOUT => 15,
         self::CONNECT_TIMEOUT => 2,
+    ];
+    private $smsResources = [
+        'send',
+        'sms',
+        'sms-send'
+    ];
+    private $dataAction = [
+        'csverror/text:csv',
+        'csvdata/text:plain',
+        'JSONError/application:json/LAST'
     ];
 
     /**
@@ -50,16 +62,30 @@ class Client
      * @param string  $secret Mailjet API Secret
      * @param boolean $call   performs the call or not
      */
-    public function __construct($key, $secret, $call = true,
-                                array $settings = [])
+    public function __construct($key, $secret = false, $call = true, array $settings = [])
     {
-        $isBasicAuthentication = $this->_isBasicAuthenticationRequired($key, $secret);
-        
-        if ($isBasicAuthentication) {
-            $this->_setBasicAuthentication($key, $secret, $call, $settings);
+        $this->setAuthentication($key, $secret, $call, $settings);
+    }
+
+    /**
+     * Set auth
+     * @param string $key
+     * @param string|null $secret
+     * @param bool $call
+     * @param array $settings
+     */
+    private function setAuthentication($key, $secret, $call, $settings)
+    {
+        $isBasicAuth = $this->isBasicAuthentication($key, $secret);
+        if ($isBasicAuth) {
+            $this->apikey = $key;
+            $this->apisecret = $secret;
         } else {
-            $this->_setTokenAuthetication($key, $secret, $call);
-        }        
+            $this->apitoken = $key;
+            $this->version = Config::SMS_VERSION;
+        }
+        $this->initSettings($call, $settings);
+        $this->setSettings();
     }
 
     /**
@@ -73,31 +99,23 @@ class Client
     private function _call($method, $resource, $action, $args)
     {
         $args = array_merge(
-            [
+                [
             'id' => '',
             'actionid' => '',
             'filters' => [],
             'body' => $method == 'GET' ? null : '{}',
-            ], array_change_key_case($args)
+                ], array_change_key_case($args)
         );
 
-        $url = $this->buildURL($resource, $action, $args['id'],
-            $args['actionid']);
+        $url = $this->buildURL($resource, $action, $args['id'], $args['actionid']);
 
-        $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv')
-                ?
-            'text/plain' : 'application/json';
-        
-        $auth = (isset($this->apisecret) && is_string($this->apisecret) !== '') ? [
-            $this->apikey,
-            $this->apisecret
-        ] : [
-            $this->apitoken
-        ];
-        
-        $request     = new Request(
-            $auth, $method, $url, $args['filters'],
-            $args['body'], $contentType, $this->requestOptions
+        $contentType = ($action == 'csvdata/text:plain' || $action == 'csverror/text:csv') ? 'text/plain' : 'application/json';
+
+        $isBasicAuth = $this->isBasicAuthentication($this->apikey, $this->apisecret);
+        $auth = $isBasicAuth ? [$this->apikey, $this->apisecret] : [$this->apitoken];
+
+        $request = new Request(
+                $auth, $method, $url, $args['filters'], $args['body'], $contentType, $this->requestOptions
         );
         return $request->call($this->call);
     }
@@ -110,35 +128,7 @@ class Client
     private function getApiUrl()
     {
         $h = $this->secure === true ? 'https' : 'http';
-        return $h."://".$this->url.'/'.$this->version.'/';
-    }
-
-    /**
-     * 
-     * @param string $key
-     * @param string $secret
-     * @param boolean $call
-     * @param array $settings
-     */
-    private function _setBasicAuthentication($key, $secret, $call, $settings)
-    {
-        $this->apikey    = $key;
-        $this->apisecret = $secret;
-        $this->initSettings($call, $settings);
-        $this->setSettings();
-    }
-
-    /**
-     * 
-     * @param string $token
-     * @param boolean $call
-     * @param array $settings
-     */
-    private function _setTokenAuthetication($token, $call, $settings)
-    {
-        $this->apitoken = $token;
-        $this->initSettings($call, $settings);
-        $this->setSettings();
+        return sprintf('%s://%s/%s/', $h, $this->url, $this->version);
     }
 
     /**
@@ -150,9 +140,12 @@ class Client
      *
      * @return boolean flag
      */
-    private function _isBasicAuthenticationRequired($key, $secret)
-    {        
-        return is_string($key) && is_string($secret) && empty($secret);
+    private function isBasicAuthentication($key, $secret)
+    {
+        if (!empty($key) && !empty($secret)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -167,10 +160,10 @@ class Client
             $this->setOptions($options, $resource);
         }
         $result = $this->_call('POST', $resource[0], $resource[1], $args);
+
         if (!empty($this->changed)) {
             $this->setSettings();
         }
-
         return $result;
     }
 
@@ -238,26 +231,15 @@ class Client
      */
     private function buildURL($resource, $action, $id, $actionid)
     {
-        $path = null;
-        if ($resource == 'send' || $resource == 'sms' || $resource == 'sms-send') {
+        $path = 'REST';
+        if (in_array($resource, $this->smsResources)) {
             $path = '';
-        } elseif ($action == 'csverror/text:csv' || $action == 'csvdata/text:plain'
-            || $action == 'JSONError/application:json/LAST'
-        ) {
+        } elseif (in_array($action, $this->dataAction)) {
             $path = 'DATA';
-        } else {
-            $path = 'REST';
         }
 
-        return $this->getApiUrl().join(
-                '/',
-                array_filter(
-                    array(
-                        $path, $resource,
-                        $id, $action, $actionid
-                    )
-                )
-        );
+        $arrayFilter = [$path, $resource, $id, $action, $actionid];
+        return $this->getApiUrl() . join('/', array_filter($arrayFilter));
     }
 
     /**
@@ -275,6 +257,7 @@ class Client
 
         return false;
     }
+
     // TODO : make the next code more readable
 
     /**
@@ -288,11 +271,17 @@ class Client
             $this->version = $options['version'];
         } elseif (!empty($resource[2])) {
             $this->version = $resource[2];
-        } if (!empty($options['url']) && is_string($options['url'])) {
+        }
+
+        if (!empty($options['url']) && is_string($options['url'])) {
             $this->url = $options['url'];
-        } if (isset($options['secured']) && is_bool($options['secured'])) {
+        }
+
+        if (isset($options['secured']) && is_bool($options['secured'])) {
             $this->secure = $options['secured'];
-        } if (isset($options['call']) && is_bool($options['call'])) {
+        }
+
+        if (isset($options['call']) && is_bool($options['call'])) {
             $this->call = $options['call'];
         }
         $this->changed = true;
@@ -407,4 +396,5 @@ class Client
     {
         return $this->requestOptions;
     }
+
 }
