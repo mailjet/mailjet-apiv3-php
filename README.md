@@ -202,7 +202,7 @@ $response = $mj->post(Resources::$Parseroute, ['body' => $body]);
 
 ```
 
-## New!! Version 1.2.0 of the PHP wrapper!
+## Version 1.2.0 of the PHP wrapper
 
 This version modifies the way to construct the Client or the calls. We add the possibility to add an array with parameters on both Client creation and API call (please note that each of these parameters are preset and are not mandatory in the creation or the call):
 
@@ -234,6 +234,28 @@ Priority list of options, settings, and default configurations in order of prece
 
 API call > Client constructor > Resource (only with version, available in the Resources Class - [Resources.php](src/Mailjet/Resources.php)) > Wrapper configuration ([Config.php](src/Mailjet/Config.php)) 
 
+## Version 1.4.0 of the PHP wrapper
+
+This version adds the possibility to use authentication with bearer token and use the [SMS features](https://dev.mailjet.com/guides-sms/#overview) of the API. The bearer token can be generated in the [SMS menu](https://app.mailjet.com/sms) of your Mailjet account.
+
+To create a new instance of the Mailjet client with token auth the token should be provided as the first parameter, the second must be NULL:
+``` php
+$mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
+                          NULL, true, 
+                          ['url' => "www.mailjet.com", 'version' => 'v3', 'call' => false]
+                        );
+```
+
+An example SMS API request. The available SMS resources can be seen [here](src/Mailjet/Resources.php#L106).
+``` php
+$mj = new \Mailjet\Client($token);
+$response = $mj->get(Resources::$Sms);
+if ($response->success()) {
+    var_dump($response->getData());
+} else {
+    var_dump($response->getStatus());
+}
+```
 
 ## Send a pull request
 
