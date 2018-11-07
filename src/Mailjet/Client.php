@@ -16,7 +16,6 @@ namespace Mailjet;
 
 class Client
 {
-
     const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
     /**
@@ -58,9 +57,10 @@ class Client
 
     /**
      * Client constructor requires:
-     * @param string  $key    Mailjet API Key
-     * @param string  $secret Mailjet API Secret
-     * @param boolean $call   performs the call or not
+     * @param string  $key Mailjet API Key
+     * @param bool    $secret Mailjet API Secret
+     * @param boolean $call performs the call or not
+     * @param array   $settings
      */
     public function __construct($key, $secret = false, $call = true, array $settings = [])
     {
@@ -151,7 +151,8 @@ class Client
     /**
      * Trigger a POST request
      * @param array $resource Mailjet Resource/Action pair
-     * @param array $args     Request arguments
+     * @param array $args Request arguments
+     * @param array $options
      * @return Response
      */
     public function post($resource, array $args = [], array $options = [])
@@ -170,7 +171,8 @@ class Client
     /**
      * Trigger a GET request
      * @param array $resource Mailjet Resource/Action pair
-     * @param array $args     Request arguments
+     * @param array $args Request arguments
+     * @param array $options
      * @return Response
      */
     public function get($resource, array $args = [], array $options = [])
@@ -188,7 +190,8 @@ class Client
     /**
      * Trigger a POST request
      * @param array $resource Mailjet Resource/Action pair
-     * @param array $args     Request arguments
+     * @param array $args Request arguments
+     * @param array $options
      * @return Response
      */
     public function put($resource, array $args = [], array $options = [])
@@ -206,7 +209,8 @@ class Client
     /**
      * Trigger a GET request
      * @param array $resource Mailjet Resource/Action pair
-     * @param array $args     Request arguments
+     * @param array $args Request arguments
+     * @param array $options
      * @return Response
      */
     public function delete($resource, array $args = [], array $options = [])
@@ -306,6 +310,8 @@ class Client
 
     /**
      * Set a backup if the variables generating the url are change during a call.
+     * @param       $call
+     * @param array $settings
      */
     private function initSettings($call, $settings = [])
     {
@@ -375,8 +381,8 @@ class Client
 
     /**
      * Add a HTTP request option
-     * @param array $key
-     * @param array $value
+     * @param string $key
+     * @param string $value
      * [IMPORTANT]Default options will be overwritten
      * if such option is provided
      * @see \GuzzleHttp\RequestOptions for a list of available request options.

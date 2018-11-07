@@ -45,42 +45,42 @@ class MailjetApiv3Test extends TestCase
         $this->assertEquals($this->secretKey, $response->request->getAuth()[1]);
     }
 
-    private function assertGetStatus($payload, $response)
+    private function assertGetStatus($payload, Response $response)
     {
         $this->assertEquals($payload, $response->getStatus());
     }
 
-    private function assertGetBody($payload, $keyName, $response)
+    private function assertGetBody($payload, $keyName, Response $response)
     {
         $this->assertEquals($payload, $response->getBody()[$keyName]);
     }
 
-    private function assertGetData($payload, $keyName, $response)
+    private function assertGetData($payload, $keyName, Response $response)
     {
         $this->assertEquals($payload, $response->getData()[$keyName]);
     }
 
-    private function assertGetCount($payload, $response)
+    private function assertGetCount($payload, Response $response)
     {
         $this->assertEquals($payload, $response->getCount());
     }
 
-    private function assertGetReasonPhrase($payload, $response)
+    private function assertGetReasonPhrase($payload, Response $response)
     {
         $this->assertEquals($payload, $response->getReasonPhrase());
     }
 
-    private function assertGetTotal($payload, $response)
+    private function assertGetTotal($payload, Response $response)
     {
         $this->assertEquals($payload, $response->getTotal());
     }
 
-    private function assertSuccess($payload, $response)
+    private function assertSuccess($payload, Response $response)
     {
         $this->assertEquals($payload, $response->success());
     }
 
-    private function assertSetSecureProtocol($client)
+    private function assertSetSecureProtocol(Client $client)
     {
         $this->assertTrue($client->setSecureProtocol(true));
         $this->assertFalse($client->setSecureProtocol('not boolean type'));

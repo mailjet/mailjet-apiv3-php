@@ -20,13 +20,14 @@ class Response
     private $success;
     private $body;
     private $rawResponse;
+    public  $request;
 
     /**
      * Construct a Mailjet response
      * @param Request        $request  Mailjet actual request
      * @param ResponseInterface $response Guzzle response
      */
-    public function __construct($request, $response)
+    public function __construct(Request $request, $response)
     {
         $this->request = $request;
 
@@ -126,7 +127,7 @@ class Response
      *
      * @param string    $body   The mailjet response as string
      *
-     * @return object           Object representing the mailjet response
+     * @return array            Object representing the mailjet response
      */
     protected function decodeBody($body)
     {
