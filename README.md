@@ -3,7 +3,7 @@
 [api_credential]: https://app.mailjet.com/account/api_keys
 [mailjet]: http://www.mailjet.com
 
-![alt text](http://cdn.appstorm.net/web.appstorm.net/files/2012/02/mailjet_logo_200x200.png "Mailjet")
+![alt text](https://www.mailjet.com/images/email/transac/logo_header.png "Mailjet")
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/3fa729f3750849ce8e0471b0487439cb)](https://www.codacy.com/app/gbadi/mailjet-apiv3-php)
 [![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
