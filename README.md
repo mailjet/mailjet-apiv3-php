@@ -3,7 +3,7 @@
 [api_credential]: https://app.mailjet.com/account/api_keys
 [mailjet]: http://www.mailjet.com
 
-![alt text](https://www.mailjet.com/images/email/transac/logo_header.png "Mailjet")
+![alt text](https://www.mailjet.com/images/email/transac/logo_hwwweader.png "Mailjet")
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/3fa729f3750849ce8e0471b0487439cb)](https://www.codacy.com/app/gbadi/mailjet-apiv3-php)
 [![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
@@ -222,7 +222,7 @@ Properties of the $settings (Client constructor) and $options (API call function
 // Client constructors with specific settings: 
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
                           getenv('MJ_APIKEY_PRIVATE'), true, 
-                          ['url' => "www.mailjet.com", 'version' => 'v3', 'call' => false]
+                          ['url' => "api.mailjet.com", 'version' => 'v3', 'call' => false]
                         );
 
 // API call with specific options. The options passed in the call will only be used for this call.
@@ -242,7 +242,7 @@ To create a new instance of the Mailjet client with token auth the token should 
 ``` php
 $mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
                           NULL, true, 
-                          ['url' => "www.mailjet.com", 'version' => 'v4', 'call' => false]
+                          ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]
                         );
 ```
 
