@@ -135,7 +135,7 @@ $response->success() && var_dump($response->getData());
 ?>
 ```
 
-In case you wish to use Mailjet's Send API v3, you can find the legacy documentation and code samples [here](https://dev.mailjet.com/legacy/?php#send-api-v3-august-2017).
+In case you wish to use Mailjet's Send API v3, you can find the legacy documentation and code samples [here](https://dev.mailjet.com/guides/?php#sending-a-basic-email-v3).
 
 
 ### [Send marketing campaign](http://dev.mailjet.com/guides/?php#send-marketing-campaigns)
