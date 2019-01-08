@@ -234,7 +234,7 @@ Priority list of options, settings, and default configurations in order of prece
 
 API call > Client constructor > Resource (only with version, available in the Resources Class - [Resources.php](src/Mailjet/Resources.php)) > Wrapper configuration ([Config.php](src/Mailjet/Config.php)) 
 
-## Version 1.4.0 of the PHP wrapper
+## SMS API
 
 This version adds the possibility to use authentication with bearer token and use the [SMS features](https://dev.mailjet.com/guides-sms/#overview) of the API. The bearer token can be generated in the [SMS menu](https://app.mailjet.com/sms) of your Mailjet account.
 
@@ -242,7 +242,7 @@ To create a new instance of the Mailjet client with token auth the token should 
 ``` php
 $mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
                           NULL, true, 
-                          ['url' => "www.mailjet.com", 'version' => 'v3', 'call' => false]
+                          ['url' => "www.mailjet.com", 'version' => 'v4', 'call' => false]
                         );
 ```
 
