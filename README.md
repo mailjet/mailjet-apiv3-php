@@ -2,17 +2,20 @@
 [doc]: http://dev.mailjet.com/guides/?php#
 [api_credential]: https://app.mailjet.com/account/api_keys
 [mailjet]: http://www.mailjet.com
+[smsDashboard]:https://app.mailjet.com/sms
 
 ![alt text](https://www.mailjet.com/images/email/transac/logo_header.png "Mailjet")
+
+# Official Mailjet PHP Wrapper
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/3fa729f3750849ce8e0471b0487439cb)](https://www.codacy.com/app/gbadi/mailjet-apiv3-php)
 [![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
 ![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)
 ![Current Version](https://img.shields.io/badge/version-1.1.8-green.svg)
 
-[Mailjet][mailjet] API Client.
+This repo contains the PHP wrapper for the Mailjet API.
 
-Check out all the resources and all the PHP code examples on the official documentation: [Mailjet Documentation][doc]
+Check out all the resources and PHP code examples on the [Offical Documentation](doc).
 
 ## Requirements
 
@@ -27,6 +30,24 @@ Without composer:
 
 Clone or download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file. If you encounter an issue, please post it here and not on the mirror repository.
 
+## API Versioning
+
+The Mailjet API is spread among three distinct versions:
+
+- `v3` - The Email API
+- `v3.1` - Email Send API v3.1, which is the latest version of our Send API
+- `v4` - SMS API
+
+Since most Email API endpoints are located under `v3`, it is set as the default one and does not need to be specified when making your request. For the others you need to specify the version using `version`. For example, if using Send API `v3.1`:
+
+``` php
+
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['version' => 'v3.1']);
+
+```
+
+For additional information refer to our [API Reference](https://dev.preprod.mailjet.com/reference/overview/versioning/).
+
 ## Getting Started!
 
 [Grab][api_credential] and save your Mailjet API credentials.
@@ -38,6 +59,8 @@ export MJ_APIKEY_PUBLIC='your api key'
 export MJ_APIKEY_PRIVATE='your api secret'
 
 ```
+
+For the V4 namespace (SMS API) the authorization method is based on a Bearer token. To generate a new token, please go Mailjet's [SMS Dashboard][smsDashboard] and click on 'Generate a token'. Additional information can be found [here](#sms-api).
 
 Initialize your [Mailjet][mailjet] Client:
 
@@ -98,9 +121,9 @@ $response = $mj->get(Resources::$Contact, ['filters' => $filters]);
 
 ```
 
-### [Send transactional emails](http://dev.mailjet.com/guides/?php#send-transactional-email)
+### [Send an email](http://dev.mailjet.com/guides/?php#send-transactional-email)
 
-You can send transactional messages with Mailjet's v3.1 Send API with the following code:  
+You can send transactional messages via Mailjet's v3.1 Send API with the following code:  
 
 ``` php
 <?php
@@ -135,7 +158,7 @@ $response->success() && var_dump($response->getData());
 ?>
 ```
 
-In case you wish to use Mailjet's Send API v3, you can find the legacy documentation and code samples [here](https://dev.mailjet.com/guides/?php#sending-a-basic-email-v3).
+You can also use the previous version of Mailjet's Send API (v3). You can find the documentation explaining the overall differences and code samples [here](https://dev.mailjet.com/guides/?php#sending-a-basic-email-v3).
 
 
 ### [Send marketing campaign](http://dev.mailjet.com/guides/?php#send-marketing-campaigns)
@@ -163,7 +186,7 @@ $response = $mj->post(Resources::$NewsletterTest, ['id' => $id, 'body' => $body]
 
 The [Event API](https://www.mailjet.com/feature/event-api/) offers a real-time notification through http request on any events related to the messages you sent. The main supported events are open, click, bounce, spam, blocked, unsub and sent. This event notification works for transactional and marketing emails.
 
-The endpoint is a URL our server will call for each event (it can lead to a lot of hits). You can use the API to setup a new endpoint using the /eventcallbackurl resource. Alternatively, you can configure this in your account preferences, in the Event Tracking section.
+The endpoint is a URL our server will call for each event (it can lead to a lot of hits). You can use the API to setup a new endpoint using the /eventcallbackurl resource. Alternatively, you can configure this in your account preferences, in the [Event Tracking](https://app.mailjet.com/account/triggers) section.
 
 ``` php
 <?php
@@ -222,7 +245,7 @@ Properties of the $settings (Client constructor) and $options (API call function
 // Client constructors with specific settings: 
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
                           getenv('MJ_APIKEY_PRIVATE'), true, 
-                          ['url' => "www.mailjet.com", 'version' => 'v3', 'call' => false]
+                          ['url' => "api.mailjet.com", 'version' => 'v3', 'call' => false]
                         );
 
 // API call with specific options. The options passed in the call will only be used for this call.
@@ -242,7 +265,7 @@ To create a new instance of the Mailjet client with token auth the token should 
 ``` php
 $mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
                           NULL, true, 
-                          ['url' => "www.mailjet.com", 'version' => 'v4', 'call' => false]
+                          ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]
                         );
 ```
 
