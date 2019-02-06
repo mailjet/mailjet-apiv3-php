@@ -15,7 +15,7 @@
 
 This repo contains the PHP wrapper for the Mailjet API.
 
-Check out all the resources and PHP code examples on the [Offical Documentation](doc).
+Check out all the resources and PHP code examples on the [Offical Documentation](https://dev.mailjet.com/guides/?php#getting-started).
 
 ## Requirements
 
