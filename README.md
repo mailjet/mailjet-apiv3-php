@@ -46,7 +46,7 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 ```
 
-For additional information refer to our [API Reference](https://dev.preprod.mailjet.com/reference/overview/versioning/).
+For additional information refer to our [API Reference](https://dev.mailjet.com/reference/overview/versioning/).
 
 ## Getting Started!
 
