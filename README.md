@@ -9,6 +9,11 @@
 
 # Official Mailjet PHP Wrapper
 
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/3fa729f3750849ce8e0471b0487439cb)](https://www.codacy.com/app/gbadi/mailjet-apiv3-php)
+[![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
+![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)
+![Current Version](https://img.shields.io/badge/version-1.1.8-green.svg)
+
 ## Overview
 
 This repository contains the official PHP wrapper for the Mailjet API.
