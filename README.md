@@ -48,6 +48,19 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 For additional information refer to our [API Reference](https://dev.mailjet.com/reference/overview/versioning/).
 
+## Base URL
+
+The default base domain name for the Mailjet API is `api.mailjet.com`. You can modify this base URL by setting a value for `url` in your call:
+
+```php
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
+                          getenv('MJ_APIKEY_PRIVATE'), true,
+                          ['url' => "api.us.mailjet.com"]
+                        );
+```
+
+If your account has been moved to Mailjet's **US architecture**, the URL value you need to set is `api.us.mailjet.com`.
+
 ## Getting Started!
 
 [Grab][api_credential] and save your Mailjet API credentials.
