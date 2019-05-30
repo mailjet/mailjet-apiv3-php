@@ -18,7 +18,7 @@
 
 This repository contains the official PHP wrapper for the Mailjet API.
 
-Check out all the resources and PHP code examples in the [Offical Documentation](https://dev.mailjet.com/guides/?php#getting-started). If you have suggestions on how to improve the guides, please submit an issue in our [Official API Documentation repo](https://github.com/mailjet/api-documentation).
+Check out all the resources and PHP code examples in the [Offical Documentation](https://dev.mailjet.com/guides/?php#getting-started). 
 
 ## Table of contents
 
@@ -27,10 +27,11 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
 - [Authentication](#authentication)
 - [Make your first call](#make-your-first-call)
 - [Client / Call configuration specifics](#client--call-configuration-specifics)
-  - [API versioning](#api-versioning)
-  - [Base URL](#base-url)
+  - [Options](#options)
+    - [API versioning](#api-versioning)
+    - [Base URL](#base-url)
+    - [Disable HTTPS](#disable-https)
   - [Disable API call](#disable-api-call)
-  - [Disable HTTPS](#disable-https)
 - [Request examples](#request-examples)
   - [POST request](#post-request)
     - [Simple POST request](#simple-post-request)
@@ -41,7 +42,8 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
     - [Retrieve a single object](#retrieve-a-single-object)
   - [PUT request](#put-request)
   - [DELETE request](#delete-request)
-- [Use HTTP proxy](#use-http-proxy)
+  - [Response](#response)
+  - [API resources helpers](#api-resources-helpers)
 - [SMS API](#sms-api)
   - [Token authentication](#token-authentication)
   - [Example Request](#example-request)
@@ -85,7 +87,7 @@ $mj = new \Mailjet\Client($apikey, $apisecret);
 // or, without using environment variables:
 
 $apikey = 'your API key';
-$apisecret = 'your API secrret';
+$apisecret = 'your API secret';
 
 $mj = new \Mailjet\Client($apikey, $apisecret);
 ```
@@ -138,11 +140,18 @@ $response->success() && var_dump($response->getData());
 
 ## Client / Call Configuration Specifics
 
-You have the option to modify the way you will construct the client or your calls. To do that, you should add an array of parameters. If a parameter is not mentioned in the array, it will use its default value.
+To instantiate the librarie you can use the following constructor:  
 
-For the options to take effect, you need to add a `true` value before the array.
+`new \Mailjet\Client($MJ_APIKEY_PUBLIC, $MJ_APIKEY_PRIVATE,$CALL,$OPTIONS);`
 
-### API Versioning
+ - `$MJ_APIKEY_PUBLIC` : public Mailjet API key
+ - `$MJ_APIKEY_PUBLIC` : private Mailjet API key
+ - `$CALL` : boolean to enable the API call to Mailjet API server (should be `true` to run the API call)
+ - `$OPTIONS` : associative PHP array describing the connection options (see Options bellow for full list)
+
+### Options
+
+#### API Versioning
 
 The Mailjet API is spread among three distinct versions:
 
@@ -158,7 +167,7 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 For additional information refer to our [API Reference](https://dev.preprod.mailjet.com/reference/overview/versioning/).
 
-### Base URL
+#### Base URL
 
 The default base domain name for the Mailjet API is api.mailjet.com. You can modify this base URL by setting a value for `url` in your call:
 
@@ -171,6 +180,14 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
 
 If your account has been moved to Mailjet's US architecture, the URL value you need to set is `api.us.mailjet.com`
 
+#### Disable HTTPS
+
+By default all HTTP requests will be set as secure ones (HTTPS). We don't recommend disabling this option, but if you need to do so, set a `false` falue to the `https` parameter:
+
+```php
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['https' => 'false']);
+```
+
 ### Disable API call
 
 By default the API call parameter is always enabled. However, you may want to disable it during testing to prevent unnecessary calls to the Mailjet API. This is done by setting the `call` parameter to `false`:
@@ -179,17 +196,16 @@ By default the API call parameter is always enabled. However, you may want to di
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['call' => 'false']);
 ```
 
-### Disable HTTPS
-
-By default all HTTP requests will be set as secure ones (HTTPS). We don't recommend disabling this option, but if you need to do so, set a `false` falue to the `https` parameter:
-
-```php
-$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['https' => 'false']);
-```
-
 ## Request Examples
 
 ### POST Request
+
+Use the `post` method of the Mailjet CLient (ie `$mj->post($ressource, $params)`)
+
+`$param` will be a PHP associative arrays with the following keys : 
+
+ - `body`: associative PHP array defining the object to create. The properties correspond to the property of the JSON Payload) 
+ - `id` : ID you want to apply a POST reqeust to (used in case of action on a resource)
 
 #### Simple POST request
 
@@ -236,6 +252,13 @@ $response->success() && var_dump($response->getData());
 ```
 
 ### GET Request
+
+Use the `get` method of the Mailjet CLient (ie `$mj->get($ressource, $params)`)
+
+`$param` will be a PHP associative arrays with the following keys : 
+
+ - `id` : Unique ID of the element you want to get (optional)
+ - `filters`: associative array listing the query parameters you want to apply to your get (optional)
 
 #### Retrieve all objects
 
@@ -287,6 +310,13 @@ $response->success() && var_dump($response->getData());
 
 ### PUT Request
 
+Use the `put` method of the Mailjet CLient (ie `$mj->put($ressource, $params)`)
+
+`$param` will be a PHP associative arrays with the following keys : 
+
+ - `id` : Unique ID of the element you want to modify
+ - `body`: associative array representing the object property to update
+
 A `PUT` request in the Mailjet API will work as a `PATCH` request - the update will affect only the specified properties. The other properties of an existing resource will neither be modified, nor deleted. It also means that all non-mandatory properties can be omitted from your payload.
 
 Here's an example of a PUT request:
@@ -310,6 +340,8 @@ $response->success() && var_dump($response->getData());
 
 ### DELETE Request
 
+Use the `delete` method of the Mailjet CLient (ie `$mj->delete($ressource, $params)`)
+
 Upon a successful `DELETE` request the response will not include a response body, but only a `204 No Content` response code.
 
 Here's an example of a `DELETE` request:
@@ -322,14 +354,30 @@ Delete an email template:
 require 'vendor/autoload.php';
 use \Mailjet\Resources;
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'));
-$response = $mj->delete(Resources::$Template, ['id' => $id);
+$response = $mj->delete(Resources::$Template, ['id' => $id]);
 $response->success() && var_dump($response->getData());
 ?>
 ```
 
-## Use HTTP Proxy
+### Response 
 
-[option seems to be missing from PHP wrapper]
+The `get`, `post`, `put` and `delete` method will return a `Response` object with the following available methods: 
+
+ - `success()` : returns a boolean indicating if the API call was successful
+ - `getStatus()` : http status code (ie: 200,400 ...)
+ - `getData()` : content of the property `data` of the JSON response payload if exist or the full JSON payload returned by the API call. This will be PHP associative array.   
+ - `getCount()` : number of elements returned in the response 
+ - `getReasonPhrase()` : http response message phrases ("OK", "Bad Request" ...)
+
+### API resources helpers
+
+All API resources are listed in the `Resources` object. It will make it easy to find the resources and actions aliases.
+
+```
+$response = $mj->delete(Resources::$Template, ['id' => $id);
+$response = $mj->put(Resources::$ContactData, ['id' => $id, 'body' => $body]);
+$response = $mj->post(Resources::$ContactManagecontactslists, ['id' => $id, 'body' => $body]);
+```
 
 ## SMS API
 
@@ -345,7 +393,7 @@ $mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
                           ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]
                         );
 ```
-
+  
 ### Example Request
 
 Here's an example SMS API request:
@@ -378,3 +426,5 @@ Feel free to ask anything, and contribute:
 - Implement your feature or bug fix.
 - Add documentation to it.
 - Commit, push, open a pull request and voila.
+
+If you have suggestions on how to improve the guides, please submit an issue in our [Official API Documentation repo](https://github.com/mailjet/api-documentation).
