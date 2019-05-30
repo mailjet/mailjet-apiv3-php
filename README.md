@@ -18,7 +18,7 @@
 
 This repository contains the official PHP wrapper for the Mailjet API.
 
-Check out all the resources and PHP code examples in the [Offical Documentation](https://dev.mailjet.com/guides/?php#getting-started). If you have suggestions on how to improve the guides, please submit an issue in our [Official API Documentation repo](https://github.com/mailjet/api-documentation).
+Check out all the resources and PHP code examples in the [Offical Documentation](https://dev.mailjet.com/guides/?php#getting-started). 
 
 ## Table of contents
 
@@ -41,7 +41,7 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
     - [Retrieve a single object](#retrieve-a-single-object)
   - [PUT request](#put-request)
   - [DELETE request](#delete-request)
-- [Use HTTP proxy](#use-http-proxy)
+  - [Response](#response)
 - [SMS API](#sms-api)
   - [Token authentication](#token-authentication)
   - [Example Request](#example-request)
@@ -85,7 +85,7 @@ $mj = new \Mailjet\Client($apikey, $apisecret);
 // or, without using environment variables:
 
 $apikey = 'your API key';
-$apisecret = 'your API secrret';
+$apisecret = 'your API secret';
 
 $mj = new \Mailjet\Client($apikey, $apisecret);
 ```
@@ -191,6 +191,13 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 ### POST Request
 
+Use the `post` method of the Mailjet CLient (ie `$mj->post($ressource, $params)`)
+
+`$param` will be a php associative arrays with the following keys : 
+
+ - `body`: associative PHP array defining the object to create. The properties correspond to the property of the JSON Payload) 
+ - `id` : ID you want to apply a POST reqeust to (used in case of action on a resource)
+
 #### Simple POST request
 
 ```php
@@ -236,6 +243,13 @@ $response->success() && var_dump($response->getData());
 ```
 
 ### GET Request
+
+Use the `get` method of the Mailjet CLient (ie `$mj->get($ressource, $params)`)
+
+`$param` will be a php associative arrays with the following keys : 
+
+ - `id` : Unique ID of the element you want to get (optional)
+ - `filters`: associative array listing the query parameters you want to apply to your get (optional)
 
 #### Retrieve all objects
 
@@ -287,6 +301,13 @@ $response->success() && var_dump($response->getData());
 
 ### PUT Request
 
+Use the `put` method of the Mailjet CLient (ie `$mj->put($ressource, $params)`)
+
+`$param` will be a php associative arrays with the following keys : 
+
+ - `id` : Unique ID of the element you want to modify
+ - `body`: associative array representing the object property to update
+
 A `PUT` request in the Mailjet API will work as a `PATCH` request - the update will affect only the specified properties. The other properties of an existing resource will neither be modified, nor deleted. It also means that all non-mandatory properties can be omitted from your payload.
 
 Here's an example of a PUT request:
@@ -310,6 +331,8 @@ $response->success() && var_dump($response->getData());
 
 ### DELETE Request
 
+Use the `delete` method of the Mailjet CLient (ie `$mj->delete($ressource, $params)`)
+
 Upon a successful `DELETE` request the response will not include a response body, but only a `204 No Content` response code.
 
 Here's an example of a `DELETE` request:
@@ -327,10 +350,16 @@ $response->success() && var_dump($response->getData());
 ?>
 ```
 
-## Use HTTP Proxy
+### Response 
 
-[option seems to be missing from PHP wrapper]
+The `get`, `post`, `put` and `delete` method will return a `Response` object with the following available methods: 
 
+ - `success()` : returns a boolean indicating if the API call was successful
+ - `getStatus()` : http status code (ie: 200,400 ...)
+ - `getData()` : content of the property `data` of the JSON response payload if exist or the full JSON payload returned by the API call. This will be PHP associative array.   
+ - `getCount()` : number of elements returned in the response 
+ - `getReasonPhrase()` : http response message phrases ("OK", "Bad Request" ...)
+ 
 ## SMS API
 
 ### Token Authentication
@@ -345,7 +374,7 @@ $mj = new \Mailjet\Client(getenv('MJ_APITOKEN'),
                           ['url' => "api.mailjet.com", 'version' => 'v4', 'call' => false]
                         );
 ```
-
+  
 ### Example Request
 
 Here's an example SMS API request:
@@ -378,3 +407,5 @@ Feel free to ask anything, and contribute:
 - Implement your feature or bug fix.
 - Add documentation to it.
 - Commit, push, open a pull request and voila.
+
+If you have suggestions on how to improve the guides, please submit an issue in our [Official API Documentation repo](https://github.com/mailjet/api-documentation).
