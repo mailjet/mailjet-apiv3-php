@@ -140,7 +140,7 @@ $response->success() && var_dump($response->getData());
 
 ## Client / Call Configuration Specifics
 
-To instantiate the librarie you can use the following constructor:  
+To instantiate the library you can use the following constructor:  
 
 `new \Mailjet\Client($MJ_APIKEY_PUBLIC, $MJ_APIKEY_PRIVATE,$CALL,$OPTIONS);`
 
@@ -174,15 +174,15 @@ The default base domain name for the Mailjet API is api.mailjet.com. You can mod
 ```php
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
                           getenv('MJ_APIKEY_PRIVATE'), true,
-                          ['url' => "api.mailjet.com"]
+                          ['url' => "api.us.mailjet.com"]
                         );
 ```
 
-If your account has been moved to Mailjet's US architecture, the URL value you need to set is `api.us.mailjet.com`
+If your account has been moved to Mailjet's US architecture, the URL value you need to set is `api.us.mailjet.com`.
 
 #### Disable HTTPS
 
-By default all HTTP requests will be set as secure ones (HTTPS). We don't recommend disabling this option, but if you need to do so, set a `false` falue to the `https` parameter:
+By default all HTTP requests will be set as secure ones (HTTPS). We don't recommend disabling this option, but if you need to do so, set a `false` value to the `https` parameter:
 
 ```php
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['https' => 'false']);
@@ -200,9 +200,9 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 ### POST Request
 
-Use the `post` method of the Mailjet CLient (ie `$mj->post($ressource, $params)`)
+Use the `post` method of the Mailjet CLient (i.e. `$mj->post($resource, $params)`)
 
-`$param` will be a PHP associative arrays with the following keys : 
+`$param` will be a PHP associative array with the following keys : 
 
  - `body`: associative PHP array defining the object to create. The properties correspond to the property of the JSON Payload) 
  - `id` : ID you want to apply a POST reqeust to (used in case of action on a resource)
@@ -253,9 +253,9 @@ $response->success() && var_dump($response->getData());
 
 ### GET Request
 
-Use the `get` method of the Mailjet CLient (ie `$mj->get($ressource, $params)`)
+Use the `get` method of the Mailjet CLient (i.e. `$mj->get($ressource, $params)`)
 
-`$param` will be a PHP associative arrays with the following keys : 
+`$param` will be a PHP associative array with the following keys : 
 
  - `id` : Unique ID of the element you want to get (optional)
  - `filters`: associative array listing the query parameters you want to apply to your get (optional)
@@ -310,9 +310,9 @@ $response->success() && var_dump($response->getData());
 
 ### PUT Request
 
-Use the `put` method of the Mailjet CLient (ie `$mj->put($ressource, $params)`)
+Use the `put` method of the Mailjet CLient (i.e. `$mj->put($ressource, $params)`)
 
-`$param` will be a PHP associative arrays with the following keys : 
+`$param` will be a PHP associative array with the following keys : 
 
  - `id` : Unique ID of the element you want to modify
  - `body`: associative array representing the object property to update
@@ -340,7 +340,7 @@ $response->success() && var_dump($response->getData());
 
 ### DELETE Request
 
-Use the `delete` method of the Mailjet CLient (ie `$mj->delete($ressource, $params)`)
+Use the `delete` method of the Mailjet CLient (i.e. `$mj->delete($ressource, $params)`)
 
 Upon a successful `DELETE` request the response will not include a response body, but only a `204 No Content` response code.
 
@@ -374,7 +374,7 @@ The `get`, `post`, `put` and `delete` method will return a `Response` object wit
 All API resources are listed in the `Resources` object. It will make it easy to find the resources and actions aliases.
 
 ```
-$response = $mj->delete(Resources::$Template, ['id' => $id);
+$response = $mj->delete(Resources::$Template, ['id' => $id]);
 $response = $mj->put(Resources::$ContactData, ['id' => $id, 'body' => $body]);
 $response = $mj->post(Resources::$ContactManagecontactslists, ['id' => $id, 'body' => $body]);
 ```
@@ -409,7 +409,7 @@ $body = [
     'To' => "+336000000000",
     'From' => "MJ Pilot",
 ];
-$response = $mj->post(Resources::$Contact, ['body' => $body]);
+$response = $mj->post(Resources::$SmsSend, ['body' => $body]);
 $response->success() && var_dump($response->getData());
 ```
 
