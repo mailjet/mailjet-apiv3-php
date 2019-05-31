@@ -30,7 +30,6 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
   - [Options](#options)
     - [API versioning](#api-versioning)
     - [Base URL](#base-url)
-    - [Disable HTTPS](#disable-https)
   - [Disable API call](#disable-api-call)
 - [Request examples](#request-examples)
   - [POST request](#post-request)
@@ -179,14 +178,6 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
 ```
 
 If your account has been moved to Mailjet's US architecture, the URL value you need to set is `api.us.mailjet.com`.
-
-#### Disable HTTPS
-
-By default all HTTP requests will be set as secure ones (HTTPS). We don't recommend disabling this option, but if you need to do so, set a `false` value to the `https` parameter:
-
-```php
-$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['https' => 'false']);
-```
 
 ### Disable API call
 
