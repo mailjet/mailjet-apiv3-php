@@ -31,6 +31,7 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
     - [API versioning](#api-versioning)
     - [Base URL](#base-url)
   - [Disable API call](#disable-api-call)
+- [List of resources](#list-of-resources)
 - [Request examples](#request-examples)
   - [POST request](#post-request)
     - [Simple POST request](#simple-post-request)
@@ -187,16 +188,20 @@ By default the API call parameter is always enabled. However, you may want to di
 $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['call' => 'false']);
 ```
 
+## List of resources
+
+You can find the list of all available resources for this library, as well as their configuration, in [/lib/mailjet/resources](https://github.com/mailjet/mailjet-gem/tree/master/lib/mailjet/resources).
+
 ## Request Examples
 
 ### POST Request
 
 Use the `post` method of the Mailjet CLient (i.e. `$mj->post($resource, $params)`)
 
-`$param` will be a PHP associative array with the following keys :
+`$params` will be a PHP associative array with the following keys :
 
  - `body`: associative PHP array defining the object to create. The properties correspond to the property of the JSON Payload)
- - `id` : ID you want to apply a POST reqeust to (used in case of action on a resource)
+ - `id` : ID you want to apply a POST request to (used in case of action on a resource)
 
 #### Simple POST request
 
