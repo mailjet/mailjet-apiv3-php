@@ -190,7 +190,7 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'
 
 ## List of resources
 
-You can find the list of all available resources for this library, as well as their configuration, in [/lib/mailjet/resources](https://github.com/mailjet/mailjet-gem/tree/master/lib/mailjet/resources).
+You can find the list of all available resources for this library in [/src/Mailjet/Resources.php](https://github.com/mailjet/mailjet-apiv3-php/blob/master/src/Mailjet/Resources.php). The file lists the name of the PHP resources and the corresponding name in the [API reference][ref].
 
 ## Request Examples
 
