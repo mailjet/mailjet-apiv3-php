@@ -145,7 +145,7 @@ To instantiate the library you can use the following constructor:
 `new \Mailjet\Client($MJ_APIKEY_PUBLIC, $MJ_APIKEY_PRIVATE,$CALL,$OPTIONS);`
 
  - `$MJ_APIKEY_PUBLIC` : public Mailjet API key
- - `$MJ_APIKEY_PUBLIC` : private Mailjet API key
+ - `$MJ_APIKEY_PRIVATE` : private Mailjet API key
  - `$CALL` : boolean to enable the API call to Mailjet API server (should be `true` to run the API call)
  - `$OPTIONS` : associative PHP array describing the connection options (see Options bellow for full list)
 
