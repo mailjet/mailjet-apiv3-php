@@ -52,12 +52,22 @@ class MailjetApiv3Test extends TestCase
 
     private function assertGetBody($payload, $keyName, $response)
     {
-        $this->assertEquals($payload, $response->getBody()[$keyName]);
+        $result = null;
+        if (empty($response->getBody()[$keyName]) === false) {
+            $result = $response->getBody()[$keyName];
+        }
+
+        $this->assertEquals($payload, $result);
     }
 
     private function assertGetData($payload, $keyName, $response)
     {
-        $this->assertEquals($payload, $response->getData()[$keyName]);
+        $result = null;
+        if (empty($response->getData()[$keyName]) === false) {
+            $result = $response->getData()[$keyName];
+        }
+
+        $this->assertEquals($payload, $result);
     }
 
     private function assertGetCount($payload, $response)
