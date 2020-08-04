@@ -236,6 +236,8 @@ class Client
             $path = '';
         } elseif (in_array($action, $this->dataAction)) {
             $path = 'DATA';
+        } elseif($this->version == 'v4') {
+            $path = '';
         }
 
         $arrayFilter = [$path, $resource, $id, $action, $actionid];
