@@ -289,6 +289,28 @@ $response->success() && var_dump($response->getData());
 ?>
 ```
 
+#### Use paging and sorting
+
+```php
+<?php
+/*
+Retrieve a specific contact ID :
+*/
+require 'vendor/autoload.php';
+use \Mailjet\Resources;
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'));
+$filters = [
+    'Limit'=>40,  // default is 10, max is 1000
+    'Offset'=>20,
+    'Sort'=>'ArrivedAt DESC',
+    'Contact'=>$contact->ID,
+    'showSubject'=>true
+];
+$response = $mj->get(Resources::$Message, ['filters'=>$filters]);
+$response->success() && var_dump($response->getData());
+?>
+```
+
 #### Retrieve a single object
 
 ```php
