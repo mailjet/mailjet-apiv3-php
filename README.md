@@ -182,10 +182,10 @@ If your account has been moved to Mailjet's US architecture, the URL value you n
 
 ### Disable API call
 
-By default the API call parameter is always enabled. However, you may want to disable it during testing to prevent unnecessary calls to the Mailjet API. This is done by setting the `call` parameter to `false`:
+By default the API call parameter is always enabled. However, you may want to disable it during testing to prevent unnecessary calls to the Mailjet API. This is done by setting the third parameter to `false`:
 
 ```php
-$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'),true,['call' => 'false']);
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'), false);
 ```
 
 ## List of resources
