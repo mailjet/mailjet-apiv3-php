@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Mailjet;
 
 /**
- * PHP version 7.1.
+ * PHP version 7.2.
  *
  * This is the Mailjet Resources Class
  *
