@@ -1,100 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Mailgun
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license. See the LICENSE file for details.
  */
 
 namespace Mailjet;
 
 use PHPUnit\Framework\TestCase;
 
-class MailjetApiv3Test extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class MailjetApiv3Test extends TestCase
 {
-
-    private $publicKey = 'apikey';
-    private $secretKey = 'secretkey';
-
     const API_BASE_URL = 'https://api.mailjet.com/';
     const VERSION = 'v3';
-
-    private function assertUrl($url, $response, $version = self::VERSION)
-    {
-        $this->assertEquals(self::API_BASE_URL . $version . $url, $response->request->getUrl());
-    }
-
-    private function assertPayload($payload, $response)
-    {
-        $this->assertEquals($payload, $response->request->getBody());
-    }
-
-    private function assertFilters($shouldBe, $response)
-    {
-        $this->assertEquals($shouldBe, $response->request->getFilters());
-    }
-
-    private function assertHttpMethod($payload, $response)
-    {
-        $this->assertEquals($payload, $response->request->getMethod());
-    }
-
-    private function assertGetAuth($response)
-    {
-        $this->assertEquals($this->publicKey, $response->request->getAuth()[0]);
-        $this->assertEquals($this->secretKey, $response->request->getAuth()[1]);
-    }
-
-    private function assertGetStatus($payload, $response)
-    {
-        $this->assertEquals($payload, $response->getStatus());
-    }
-
-    private function assertGetBody($payload, $keyName, $response)
-    {
-        $result = null;
-        if (empty($response->getBody()[$keyName]) === false) {
-            $result = $response->getBody()[$keyName];
-        }
-
-        $this->assertEquals($payload, $result);
-    }
-
-    private function assertGetData($payload, $keyName, $response)
-    {
-        $result = null;
-        if (empty($response->getData()[$keyName]) === false) {
-            $result = $response->getData()[$keyName];
-        }
-
-        $this->assertEquals($payload, $result);
-    }
-
-    private function assertGetCount($payload, $response)
-    {
-        $this->assertEquals($payload, $response->getCount());
-    }
-
-    private function assertGetReasonPhrase($payload, $response)
-    {
-        $this->assertEquals($payload, $response->getReasonPhrase());
-    }
-
-    private function assertGetTotal($payload, $response)
-    {
-        $this->assertEquals($payload, $response->getTotal());
-    }
-
-    private function assertSuccess($payload, $response)
-    {
-        $this->assertEquals($payload, $response->success());
-    }
-
-    private function assertSetSecureProtocol($client)
-    {
-        $this->assertTrue($client->setSecureProtocol(true));
-        $this->assertFalse($client->setSecureProtocol('not boolean type'));
-    }
+    private $publicKey = 'apikey';
+    private $secretKey = 'secretkey';
 
     public function testGet()
     {
@@ -103,15 +31,15 @@ class MailjetApiv3Test extends TestCase
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
         $this->assertFilters(['id' => 2], $client->get(Resources::$Contact, [
-                    'filters' => ['id' => 2]
-                        ], ['version' => 'v3.1']));
+            'filters' => ['id' => 2],
+        ], ['version' => 'v3.1']));
 
         $response = $client->get(Resources::$ContactGetcontactslists, ['id' => 2]);
         $this->assertUrl('/REST/contact/2/getcontactslists', $response);
 
         // error on sort !
         $response = $client->get(Resources::$Contact, [
-            'filters' => ['sort' => 'email+DESC']
+            'filters' => ['sort' => 'email+DESC'],
         ]);
 
         $this->assertUrl('/REST/contact', $response);
@@ -119,7 +47,8 @@ class MailjetApiv3Test extends TestCase
         $this->assertUrl('/REST/contact/2', $client->get(Resources::$Contact, ['id' => 2]));
 
         $this->assertUrl(
-                '/REST/contact/test@mailjet.com', $client->get(Resources::$Contact, ['id' => 'test@mailjet.com'])
+            '/REST/contact/test@mailjet.com',
+            $client->get(Resources::$Contact, ['id' => 'test@mailjet.com'])
         );
 
         $this->assertHttpMethod('GET', $response);
@@ -128,17 +57,17 @@ class MailjetApiv3Test extends TestCase
 
         $this->assertGetStatus(401, $response);
 
-        $this->assertGetBody('', '', $response);
+        $this->assertGetBody(null, '', $response);
 
-        $this->assertGetData('', '', $response);
+        $this->assertGetData(null, '', $response);
 
-        $this->assertGetCount('', $response);
+        $this->assertGetCount(null, $response);
 
         $this->assertGetReasonPhrase('Unauthorized', $response);
 
-        $this->assertGetTotal('', $response);
+        $this->assertGetTotal(null, $response);
 
-        $this->assertSuccess('', $response);
+        $this->assertSuccess(false, $response);
 
         $this->assertSetSecureProtocol($client);
     }
@@ -163,24 +92,24 @@ class MailjetApiv3Test extends TestCase
         $this->assertHttpMethod('POST', $ret);
         $this->assertGetAuth($ret);
         $this->assertGetStatus(401, $ret);
-        $this->assertGetBody('', 'StatusCode', $ret);
-        $this->assertGetData('', 'StatusCode', $ret);
-        $this->assertGetCount('', $ret);
+        $this->assertGetBody(null, 'StatusCode', $ret);
+        $this->assertGetData(null, 'StatusCode', $ret);
+        $this->assertGetCount(null, $ret);
         $this->assertGetReasonPhrase('Unauthorized', $ret);
-        $this->assertGetTotal('', $ret);
-        $this->assertSuccess('', $ret);
+        $this->assertGetTotal(null, $ret);
+        $this->assertSuccess(false, $ret);
     }
 
-    public function testPostV3_1()
+    public function testPostV31()
     {
-        $client = new Client($this->publicKey, $this->secretKey, ['call' => false]);
+        $client = new Client($this->publicKey, $this->secretKey, false);
 
         $email = [
             'Messages' => [[
-            'From' => ['Email' => "test@mailjet.com", 'Name' => "Mailjet PHP test"],
-            'TextPart' => "Simple Email test",
-            'To' => [['Email' => "test@mailjet.com", 'Name' => 'Test']]
-                ]]
+                'From' => ['Email' => 'test@mailjet.com', 'Name' => 'Mailjet PHP test'],
+                'TextPart' => 'Simple Email test',
+                'To' => [['Email' => 'test@mailjet.com', 'Name' => 'Test']],
+            ]],
         ];
 
         $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
@@ -191,21 +120,99 @@ class MailjetApiv3Test extends TestCase
         $this->assertGetStatus(401, $ret);
         $this->assertGetBody(401, 'StatusCode', $ret);
         $this->assertGetData(401, 'StatusCode', $ret);
-        $this->assertGetCount('', $ret);
+        $this->assertGetCount(null, $ret);
         $this->assertGetReasonPhrase('Unauthorized', $ret);
-        $this->assertGetTotal('', $ret);
-        $this->assertSuccess('', $ret);
+        $this->assertGetTotal(null, $ret);
+        $this->assertSuccess(false, $ret);
     }
 
     public function testClientHasOptions()
     {
-        $client = new Client($this->publicKey, $this->secretKey, ['call' => false]);
+        $client = new Client($this->publicKey, $this->secretKey, false);
         $client->setTimeout(3);
         $client->setConnectionTimeout(5);
         $client->addRequestOption('delay', 23);
-        $this->assertEquals(3, $client->getTimeout());
-        $this->assertEquals(5, $client->getConnectionTimeout());
-        $this->assertEquals(23, $client->getRequestOptions()['delay']);
+        static::assertSame(3, $client->getTimeout());
+        static::assertSame(5, $client->getConnectionTimeout());
+        static::assertSame(23, $client->getRequestOptions()['delay']);
     }
 
+    private function assertUrl($url, $response, $version = self::VERSION)
+    {
+        static::assertSame(self::API_BASE_URL.$version.$url, $response->getRequest()->getUrl());
+    }
+
+    private function assertPayload($payload, $response)
+    {
+        static::assertSame($payload, $response->getRequest()->getBody());
+    }
+
+    private function assertFilters($shouldBe, $response)
+    {
+        static::assertSame($shouldBe, $response->getRequest()->getFilters());
+    }
+
+    private function assertHttpMethod($payload, $response)
+    {
+        static::assertSame($payload, $response->getRequest()->getMethod());
+    }
+
+    private function assertGetAuth($response)
+    {
+        static::assertSame($this->publicKey, $response->getRequest()->getAuth()[0]);
+        static::assertSame($this->secretKey, $response->getRequest()->getAuth()[1]);
+    }
+
+    private function assertGetStatus($payload, $response)
+    {
+        static::assertSame($payload, $response->getStatus());
+    }
+
+    private function assertGetBody($payload, $keyName, $response)
+    {
+        $result = null;
+
+        if (false === empty($response->getBody()[$keyName])) {
+            $result = $response->getBody()[$keyName];
+        }
+
+        static::assertSame($payload, $result);
+    }
+
+    private function assertGetData($payload, $keyName, $response)
+    {
+        $result = null;
+
+        if (false === empty($response->getData()[$keyName])) {
+            $result = $response->getData()[$keyName];
+        }
+
+        static::assertSame($payload, $result);
+    }
+
+    private function assertGetCount($payload, $response)
+    {
+        static::assertSame($payload, $response->getCount());
+    }
+
+    private function assertGetReasonPhrase($payload, $response)
+    {
+        static::assertSame($payload, $response->getReasonPhrase());
+    }
+
+    private function assertGetTotal($payload, $response)
+    {
+        static::assertSame($payload, $response->getTotal());
+    }
+
+    private function assertSuccess($payload, $response)
+    {
+        static::assertSame($payload, $response->success());
+    }
+
+    private function assertSetSecureProtocol($client)
+    {
+        static::assertTrue($client->setSecureProtocol(true));
+        static::assertFalse($client->setSecureProtocol('not boolean type'));
+    }
 }

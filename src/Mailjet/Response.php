@@ -1,46 +1,67 @@
 <?php
-/**
- * PHP version 5
+
+declare(strict_types=1);
+
+/*
+ * Copyright (C) 2013 Mailgun
  *
- * This is the Mailjet Response
- *
- * @category Mailjet_API
- * @package  Mailjet-apiv3
- * @author   Guillaume Badi <gbadi@mailjet.com>
- * @license  https://opensource.org/licenses/MIT
- * @link     dev.mailjet.com
+ * This software may be modified and distributed under the terms
+ * of the MIT license. See the LICENSE file for details.
  */
 
 namespace Mailjet;
+
 use Psr\Http\Message\ResponseInterface;
 
 class Response
 {
+    /**
+     * @var int
+     */
     private $status;
+
+    /**
+     * @var bool
+     */
     private $success;
-    private $body;
+
+    /**
+     * @var array
+     */
+    private $body = [];
+
+    /**
+     * @var ResponseInterface
+     */
     private $rawResponse;
 
     /**
-     * Construct a Mailjet response
-     * @param Request        $request  Mailjet actual request
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * Construct a Mailjet response.
+     *
+     * @param Request           $request  Mailjet actual request
      * @param ResponseInterface $response Guzzle response
      */
-    public function __construct($request, $response)
+    public function __construct(Request $request, ResponseInterface $response)
     {
         $this->request = $request;
 
         if ($response) {
             $this->rawResponse = $response;
             $this->status = $response->getStatusCode();
-            $this->body = $this->decodeBody($response->getBody());
-            $this->success = floor($this->status / 100) == 2 ? true : false;
+            $this->body = $this->decodeBody($response->getBody()->getContents());
+            $this->success = 2 === floor($this->status / 100);
         }
     }
 
     /**
      * Status Getter
-     * return the http status code
+     * return the http status code.
+     *
      * @return int status
      */
     public function getStatus()
@@ -50,101 +71,77 @@ class Response
 
     /**
      * Status Getter
-     * return the entire response array
-     * @return array
+     * return the entire response array.
      */
-    public function getBody()
+    public function getBody(): array
     {
         return $this->body;
     }
 
     /**
      * Data Getter
-     * The data returned by the mailjet call
+     * The data returned by the mailjet call.
+     *
      * @return array data
      */
-    public function getData()
+    public function getData(): array
     {
-        if (isset($this->body['Data'])) {
-            return $this->body['Data'];
-        }
-
-        return $this->body;
+        return $this->body['Data'] ?? $this->body;
     }
 
     /**
      * Count getter
-     * return the resulting array size
-     * @return null|int
+     * return the resulting array size.
      */
-    public function getCount()
+    public function getCount(): ?int
     {
-        if (isset($this->body['Count'])) {
-            return $this->body['Count'];
-        }
-
-        return null;
+        return $this->body['Count'] ?? null;
     }
 
     /**
      * Error Reason getter
-     * return the resulting error message
-     * @return null|string
+     * return the resulting error message.
      */
-    public function getReasonPhrase()
+    public function getReasonPhrase(): ?string
     {
         return $this->rawResponse->getReasonPhrase();
     }
 
     /**
      * Total getter
-     * return the total count of all results
-     * @return int count
+     * return the total count of all results.
+     *
+     * @return int|null count
      */
-    public function getTotal()
+    public function getTotal(): ?int
     {
-        if (isset($this->body['Total'])) {
-            return $this->body['Total'];
-        }
-
-        return null;
+        return $this->body['Total'] ?? null;
     }
 
     /**
-     * Success getter
-     * @return boolean true is return code is 2**
+     * Success getter.
+     *
+     * @return bool true is return code is 2**
      */
-    public function success()
+    public function success(): ?bool
     {
         return $this->success;
     }
 
-    /**
-     * From http://stackoverflow.com/questions/19520487/json-bigint-as-string-removed-in-php-5-5
-     *
-     * Decodes a mailjet string response to an object reprensenting that response
-     *
-     * @param string    $body   The mailjet response as string
-     *
-     * @return object           Object representing the mailjet response
-     */
-    protected function decodeBody($body)
+    public function getRequest(): Request
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
-            /** In PHP >=5.4.0, json_decode() accepts an options parameter, that allows you
-             * to specify that large ints (like Steam Transaction IDs) should be treated as
-             * strings, rather than the PHP default behaviour of converting them to floats.
-             */
-            $object = json_decode($body, true, 512, JSON_BIGINT_AS_STRING);
-        } else {
-            /** Not all servers will support that, however, so for older versions we must
-             * manually detect large ints in the JSON string and quote them (thus converting
-             *them to strings) before decoding, hence the preg_replace() call.
-             */
-            $maxIntLength = strlen((string) PHP_INT_MAX) - 1;
-            $jsonWithoutBigIntegers = preg_replace('/:\s*(-?\d{'.$maxIntLength.',})/', ': "$1"', $body);
-            $object = json_decode($jsonWithoutBigIntegers, true);
-        }
-        return $object;
+        return $this->request;
+    }
+
+    /**
+     * Decodes a mailjet string response to an object representing that response.
+     *
+     * @param string $body The mailjet response as string
+     *
+     * @return array Object representing the mailjet response
+     */
+    protected function decodeBody(string $body): array
+    {
+        return json_decode($body, true, 512, JSON_BIGINT_AS_STRING) ?: [];
     }
 }

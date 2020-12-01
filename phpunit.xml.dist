@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit 
-    colors="true"
-    bootstrap="./vendor/autoload.php">
-    <testsuites>
-<!--        <testsuite name="Mailjet APIv3 PHP wrapper test suite">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" bootstrap="./vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <!--        <testsuite name="Mailjet APIv3 PHP wrapper test suite">
             <file>./test/Mailjet/test.php</file>
         </testsuite>-->
-        <testsuite name="apiv3-wrapper">
-            <file>./test/Mailjet/MailjetApiv3Test.php</file>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
+    <testsuite name="apiv3-wrapper">
+      <file>./test/Mailjet/MailjetApiv3Test.php</file>
+    </testsuite>
+  </testsuites>
 </phpunit>

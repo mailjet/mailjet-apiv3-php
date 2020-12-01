@@ -1,25 +1,22 @@
 <?php
 
-/**
- * PHP version 5
+declare(strict_types=1);
+
+/*
+ * Copyright (C) 2013 Mailgun
  *
- * This is the Mailjet PHP API wrapper
- *
- * @category Mailjet_API
- * @package  Mailjet-apiv3
- * @author   Guillaume Badi <gbadi@mailjet.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     dev.mailjet.com
+ * This software may be modified and distributed under the terms
+ * of the MIT license. See the LICENSE file for details.
  */
 
 namespace Mailjet;
 
 class Config
 {
-    const WRAPPER_VERSION = 'v1.4.1';
+    const WRAPPER_VERSION = 'v2.0.0';
     const USER_AGENT = 'mailjet-apiv3-php/';
     const MAIN_VERSION = 'v3';
-    const MAIN_URL = "api.mailjet.com";
+    const MAIN_URL = 'api.mailjet.com';
     const SECURED = true;
     const SMS_VERSION = 'v4';
 }
