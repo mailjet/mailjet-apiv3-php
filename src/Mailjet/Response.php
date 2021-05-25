@@ -54,7 +54,7 @@ class Response
             $this->rawResponse = $response;
             $this->status = $response->getStatusCode();
             $this->body = $this->decodeBody($response->getBody()->getContents());
-            $this->success = 2 === floor($this->status / 100);
+            $this->success = 2 == floor($this->status / 100);
         }
     }
 
