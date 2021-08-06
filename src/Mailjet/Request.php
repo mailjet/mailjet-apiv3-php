@@ -12,11 +12,19 @@ declare(strict_types=1);
 namespace Mailjet;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\ClientTrait as GuzzleClientTrait;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
-class Request extends GuzzleClient
+class Request
 {
+    use GuzzleClientTrait;
+    
     /**
      * @var string
      */
@@ -53,6 +61,11 @@ class Request extends GuzzleClient
     private $requestOptions = [];
 
     /**
+     * @var GuzzleClient
+     */
+    private $guzzleClient;
+
+    /**
      * Build a new Http request.
      *
      * @param array $auth [apikey, apisecret]
@@ -72,12 +85,6 @@ class Request extends GuzzleClient
         string $type,
         array $requestOptions = []
     ) {
-        parent::__construct(['defaults' => [
-            'headers' => [
-                'user-agent' => Config::USER_AGENT.PHP_VERSION.'/'.Client::WRAPPER_VERSION,
-            ],
-        ]]);
-
         $this->type = $type;
         $this->auth = $auth;
         $this->method = $method;
@@ -85,6 +92,14 @@ class Request extends GuzzleClient
         $this->filters = $filters;
         $this->body = $body;
         $this->requestOptions = $requestOptions;
+        $this->guzzleClient = new GuzzleClient(
+            ['defaults' => [
+                'headers' => [
+                    'user-agent' => Config::USER_AGENT . PHP_VERSION.'/' . Client::WRAPPER_VERSION,
+                    ],
+                ]
+            ]
+        );
     }
 
     /**
@@ -185,5 +200,61 @@ class Request extends GuzzleClient
     public function getAuth(): array
     {
         return $this->auth;
+    }
+
+    /**
+     * @param RequestInterface $request Request to send
+     * @param array            $options Request options to apply to the given
+     *                                  request and to the transfer.
+     *
+     * @throws GuzzleException
+     */
+    public function send(RequestInterface $request, array $options = []): ResponseInterface
+    {
+        return $this->guzzleClient->send($request, $options);
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return ResponseInterface
+     *
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        return $this->guzzleClient->sendRequest($request);
+    }
+
+    /**
+     * @param RequestInterface $request Request to send
+     * @param array            $options Request options to apply to the given
+     *                                  request and to the transfer.
+     */
+    public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
+    {
+        return $this->guzzleClient->sendAsync($request,$options);
+    }
+
+    /**
+     * @param string              $method  HTTP method.
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
+     * @throws GuzzleException
+     */
+    public function request(string $method, $uri, array $options = []): ResponseInterface
+    {
+        return $this->guzzleClient->request($method, $uri, $options);
+    }
+
+    /**
+     * @param string              $method  HTTP method
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     */
+    public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
+    {
+        return $this->guzzleClient->requestAsync($method, $uri, $options);
     }
 }
