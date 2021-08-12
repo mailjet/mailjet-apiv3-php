@@ -261,7 +261,7 @@ class Client
      * @param bool $call
      * @param array $settings
      */
-    private function setAuthentication(string $key, string $secret, bool $call, array $settings = []): void
+    private function setAuthentication(string $key, ?string $secret, bool $call, array $settings = []): void
     {
         $isBasicAuth = $this->isBasicAuthentication($key, $secret);
 
@@ -299,7 +299,7 @@ class Client
         $url = $this->buildURL($resource, $action, (string) $args['id'], $args['actionid']);
 
         $contentType = ('csvdata/text:plain' === $action || 'csverror/text:csv' === $action) ? 'text/plain' : 'application/json';
-
+        
         $isBasicAuth = $this->isBasicAuthentication($this->apikey, $this->apisecret);
         $auth = $isBasicAuth ? [$this->apikey, $this->apisecret] : [$this->apitoken];
 
@@ -333,11 +333,11 @@ class Client
      * Checks that both parameters are strings, which means
      * that basic authentication will be required.
      *
-     * @param string $key
-     * @param string $secret
+     * @param mixed $key
+     * @param mixed $secret
      * @return bool flag
      */
-    private function isBasicAuthentication(string $key, string $secret): bool
+    private function isBasicAuthentication($key, $secret): bool
     {
         return !empty($key) && !empty($secret);
     }
