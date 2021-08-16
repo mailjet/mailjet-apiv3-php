@@ -16,14 +16,14 @@ use Psr\Http\Message\ResponseInterface;
 class Response
 {
     /**
-     * @var int
+     * @var int|null
      */
-    private $status;
+    private $status = null;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $success;
+    private $success = null;
 
     /**
      * @var array
@@ -31,9 +31,9 @@ class Response
     private $body = [];
 
     /**
-     * @var ResponseInterface
+     * @var ResponseInterface|null
      */
-    private $rawResponse;
+    private $rawResponse = null;
 
     /**
      * @var Request
@@ -43,10 +43,10 @@ class Response
     /**
      * Construct a Mailjet response.
      *
-     * @param Request           $request  Mailjet actual request
-     * @param ResponseInterface $response Guzzle response
+     * @param Request                $request  Mailjet actual request
+     * @param ResponseInterface|null $response Guzzle response
      */
-    public function __construct(Request $request, ResponseInterface $response)
+    public function __construct(Request $request, ?ResponseInterface $response)
     {
         $this->request = $request;
 
@@ -62,9 +62,9 @@ class Response
      * Status Getter
      * return the http status code.
      *
-     * @return int status
+     * @return int|null status
      */
-    public function getStatus()
+    public function getStatus(): ?int
     {
         return $this->status;
     }
@@ -101,10 +101,12 @@ class Response
     /**
      * Error Reason getter
      * return the resulting error message.
+     *
+     * @return string|null
      */
     public function getReasonPhrase(): ?string
     {
-        return $this->rawResponse->getReasonPhrase();
+        return $this->rawResponse ? $this->rawResponse->getReasonPhrase() : null;
     }
 
     /**
@@ -121,7 +123,7 @@ class Response
     /**
      * Success getter.
      *
-     * @return bool true is return code is 2**
+     * @return bool|null true is return code is 2**
      */
     public function success(): ?bool
     {
