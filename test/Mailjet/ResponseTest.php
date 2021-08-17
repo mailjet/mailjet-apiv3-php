@@ -34,4 +34,18 @@ final class ResponseTest extends TestCase
         $this->assertEquals('OK', $response->getReasonPhrase());
         $this->assertEquals(200, $response->getTotal());
     }
+
+    public function testNullResponse()
+    {
+        $request = new Request(['test', 'test2'], 'GET', 'test.com', [], [], 'test', []);
+
+        // Response without a response interface as second parameter
+        $response = new Response($request, null);
+
+        $this->assertNull($response->getStatus());
+        $this->assertEquals([], $response->getBody());
+        $this->assertEquals([], $response->getData());
+        $this->assertNull($response->getReasonPhrase());
+        $this->assertNull($response->getTotal());
+    }
 }
