@@ -293,13 +293,13 @@ class Client
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => 'GET' === $method ? null : '{}',
+            'body' => 'GET' === $method ? null : [],
         ], array_change_key_case($args));
 
         $url = $this->buildURL($resource, $action, (string) $args['id'], $args['actionid']);
 
         $contentType = ('csvdata/text:plain' === $action || 'csverror/text:csv' === $action) ? 'text/plain' : 'application/json';
-        
+
         $isBasicAuth = $this->isBasicAuthentication($this->apikey, $this->apisecret);
         $auth = $isBasicAuth ? [$this->apikey, $this->apisecret] : [$this->apitoken];
 
