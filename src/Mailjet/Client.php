@@ -293,7 +293,7 @@ class Client
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => 'GET' === $method ? null : '{}',
+            'body' => 'GET' === $method ? null : [],
         ], array_change_key_case($args));
 
         $url = $this->buildURL($resource, $action, (string) $args['id'], $args['actionid']);
