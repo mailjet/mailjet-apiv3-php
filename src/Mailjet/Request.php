@@ -72,7 +72,7 @@ class Request
      * @param string $method http method
      * @param string $url call url
      * @param array $filters Mailjet resource filters
-     * @param array|null $body Mailjet resource body
+     * @param mixed $body Mailjet resource body
      * @param string $type Request Content-type
      * @param array $requestOptions
      */
@@ -81,7 +81,7 @@ class Request
         string $method,
         string $url,
         array $filters,
-        ?array $body,
+        $body,
         string $type,
         array $requestOptions = []
     ) {
