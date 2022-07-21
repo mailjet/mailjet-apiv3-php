@@ -102,7 +102,7 @@ final class MailjetApiv3Test extends TestCase
 
     public function testPostV31()
     {
-        $client = new Client($this->publicKey, $this->secretKey, false);
+        $client = new Client($this->publicKey, $this->secretKey, false, ['version' => 'v3.1']);
 
         $email = [
             'Messages' => [[
@@ -112,7 +112,7 @@ final class MailjetApiv3Test extends TestCase
             ]],
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
+        $ret = $client->post(Resources::$Email, ['body' => $email], ['timeout' => 1]);
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
         $this->assertHttpMethod('POST', $ret);
