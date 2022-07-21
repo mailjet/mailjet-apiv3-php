@@ -379,6 +379,8 @@ class Client
     {
         if (isset($options['version'])) {
             $this->version = $options['version'];
+        } else if (isset($resource[2])) {
+            $this->version = $resource[2];
         }
 
         $this->url = (string)($options['url'] ?? Config::MAIN_URL);
