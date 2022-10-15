@@ -138,10 +138,7 @@ class Request
 
         if ($call) {
             try {
-                $response = \call_user_func_array(
-                    [$this, strtolower($this->method)],
-                    [$this->url, $payload]
-                );
+                $response = call_user_func([$this, strtolower($this->method)], $this->url, $payload);
             } catch (ClientException $e) {
                 $response = $e->getResponse();
             } catch (ServerException $e) {
