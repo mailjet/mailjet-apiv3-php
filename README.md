@@ -1,6 +1,6 @@
 [doc]: http://dev.mailjet.com/guides/?php#
 [ref]: http://dev.mailjet.com/reference/
-[api_credential]: https://app.mailjet.com/account/api_keys
+[api_credential]: https://app.mailjet.com/account/apikeys
 [mailjet]: http://www.mailjet.com
 [smsDashboard]:https://app.mailjet.com/sms
 
