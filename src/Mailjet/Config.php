@@ -13,10 +13,10 @@ namespace Mailjet;
 
 class Config
 {
-    const WRAPPER_VERSION = 'v2.0.0';
-    const USER_AGENT = 'mailjet-apiv3-php/';
-    const MAIN_VERSION = 'v3';
-    const MAIN_URL = 'api.mailjet.com';
-    const SECURED = true;
-    const SMS_VERSION = 'v4';
+    public const WRAPPER_VERSION = 'v2.0.0';
+    public const USER_AGENT = 'mailjet-apiv3-php/';
+    public const MAIN_VERSION = 'v3';
+    public const MAIN_URL = 'api.mailjet.com';
+    public const SECURED = true;
+    public const SMS_VERSION = 'v4';
 }
