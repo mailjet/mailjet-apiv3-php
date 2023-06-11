@@ -60,7 +60,6 @@ class Client
 
     /**
      * Client constructor requires:.
-     *
      * @param string $key Mailjet API Key
      * @param string|null $secret Mailjet API Secret
      * @param bool $call performs the call or not
@@ -73,7 +72,6 @@ class Client
 
     /**
      * Trigger a POST request.
-     *
      * @param array $resource Mailjet Resource/Action pair
      * @param array $args Request arguments
      * @param array $options
@@ -96,7 +94,6 @@ class Client
 
     /**
      * Trigger a GET request.
-     *
      * @param array $resource Mailjet Resource/Action pair
      * @param array $args Request arguments
      * @param array $options
@@ -119,7 +116,6 @@ class Client
 
     /**
      * Trigger a POST request.
-     *
      * @param array $resource Mailjet Resource/Action pair
      * @param array $args Request arguments
      * @param array $options
@@ -142,7 +138,6 @@ class Client
 
     /**
      * Trigger a GET request.
-     *
      * @param array $resource Mailjet Resource/Action pair
      * @param array $args Request arguments
      * @param array $options
@@ -165,9 +160,7 @@ class Client
 
     /**
      * Sets if we need to use https or http protocol while using API Url.
-     *
      * @param bool|mixed $bIsSecured True use https / false use http
-     *
      * @return bool true if we set value false otherwise
      */
     public function setSecureProtocol($bIsSecured = null): bool
@@ -229,12 +222,10 @@ class Client
 
     /**
      * Add a HTTP request option.
-     *
      * @param string $key
      * @param mixed $value
      *                     [IMPORTANT]Default options will be overwritten
      *                     if such option is provided
-     *
      * @see \GuzzleHttp\RequestOptions for a list of available request options.
      */
     public function addRequestOption(string $key, $value): void
@@ -255,7 +246,6 @@ class Client
 
     /**
      * Set auth.
-     *
      * @param string $key
      * @param string|null $secret
      * @param bool $call
@@ -279,12 +269,10 @@ class Client
 
     /**
      * Magic method to call a mailjet resource.
-     *
      * @param string $method Http method
      * @param string $resource mailjet resource
      * @param string $action mailjet resource action
      * @param array $args Request arguments
-     *
      * @return Response server response
      */
     private function _call(string $method, string $resource, string $action, array $args): Response
@@ -296,7 +284,7 @@ class Client
             'body' => 'GET' === $method ? null : '{}',
         ], array_change_key_case($args));
 
-        $url = $this->buildURL($resource, $action, (string) $args['id'], $args['actionid']);
+        $url = $this->buildURL($resource, $action, (string)$args['id'], $args['actionid']);
 
         $contentType = 'application/json';
         if ('csvdata/text:plain' === $action) {
@@ -324,7 +312,6 @@ class Client
     /**
      * Build the base API url depending on wether user need a secure connection
      * or not.
-     *
      * @return string the API url;
      */
     private function getApiUrl(): string
@@ -337,7 +324,6 @@ class Client
     /**
      * Checks that both parameters are strings, which means
      * that basic authentication will be required.
-     *
      * @param mixed $key
      * @param mixed $secret
      * @return bool flag
@@ -349,12 +335,10 @@ class Client
 
     /**
      * Build the final call url without query strings.
-     *
      * @param string $resource Mailjet resource
      * @param string $action Mailjet resource action
      * @param string $id mailjet resource id
      * @param string $actionid mailjet resource actionid
-     *
      * @return string final call url
      */
     private function buildURL(string $resource, string $action, string $id, string $actionid): string
@@ -376,7 +360,6 @@ class Client
 
     /**
      * Temporary set the variables generating the url.
-     *
      * @param array $options contain temporary modifications for the client
      * @param array $resource may contain the version linked to the resource
      */
