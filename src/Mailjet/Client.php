@@ -261,7 +261,7 @@ class Client
      * @param bool $call
      * @param array $settings
      */
-    private function setAuthentication(string $key, ?string $secret, bool $call, array $settings = []): void
+    public function setAuthentication(string $key, ?string $secret, bool $call, array $settings = []): void
     {
         $isBasicAuth = $this->isBasicAuthentication($key, $secret);
 
@@ -371,7 +371,7 @@ class Client
 
         $arrayFilter = [$path, $resource, $id, $action, $actionid];
 
-        return $this->getApiUrl().implode('/', array_filter($arrayFilter));
+        return $this->getApiUrl() . implode('/', array_filter($arrayFilter));
     }
 
     /**
