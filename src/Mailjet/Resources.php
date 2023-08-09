@@ -18,7 +18,7 @@ namespace Mailjet;
  *
  * @category Mailjet_API
  *
- * @author Guillaume Badi <gbadi@mailjet.com>
+ * @author  Guillaume Badi <gbadi@mailjet.com>
  * @license MIT https://opensource.org/licenses/MIT
  *
  * @see dev.mailjet.com

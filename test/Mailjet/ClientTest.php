@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
+ * @preserveGlobalState         disabled
  */
 final class ClientTest extends TestCase
 {
@@ -36,9 +36,11 @@ final class ClientTest extends TestCase
 
         $responseMock = Mockery::mock(Response::class);
         $responseMock->shouldReceive('getData')
-            ->andReturn([
+            ->andReturn(
+                [
                 'status' => 'test',
-            ]);
+                ]
+            );
 
         $this->requestMock->shouldReceive('call')
             ->andReturn($responseMock);
