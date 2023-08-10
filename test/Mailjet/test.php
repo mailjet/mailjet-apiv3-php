@@ -87,17 +87,23 @@ final class test extends TestCase
 
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
-        $this->assertFilters(['id' => 2], $client->get(Resources::$Contact, [
-            'filters' => ['id' => 2],
-        ], ['version' => 'v3.1']));
+        $this->assertFilters(
+            ['id' => 2], $client->get(
+                Resources::$Contact, [
+                'filters' => ['id' => 2],
+                ], ['version' => 'v3.1']
+            )
+        );
 
         $response = $client->get(Resources::$ContactGetcontactslists, ['id' => 2]);
         $this->assertUrl('/REST/contact/2/getcontactslists', $response);
 
         // error on sort !
-        $response = $client->get(Resources::$Contact, [
+        $response = $client->get(
+            Resources::$Contact, [
             'filters' => ['sort' => 'email+DESC'],
-        ]);
+            ]
+        );
         $this->assertUrl('/REST/contact', $response);
 
         $this->assertUrl('/REST/contact/2', $client->get(Resources::$Contact, ['id' => 2]));

@@ -20,11 +20,18 @@
     "require-dev": {
         "phpunit/phpunit": "^8|^9",
         "mockery/mockery": "^1.4",
-        "php-coveralls/php-coveralls": "^2.0"
+        "php-coveralls/php-coveralls": "^2.0",
+        "phpcompatibility/php-compatibility": "*",
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
         "psr-0": {
             "Mailjet": "src/"
         }
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
     }
 }

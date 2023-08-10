@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
+ * @preserveGlobalState         disabled
  */
 final class RequestTest extends TestCase
 {

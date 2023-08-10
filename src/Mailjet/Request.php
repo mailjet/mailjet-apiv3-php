@@ -17,6 +17,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -67,22 +68,23 @@ class Request
 
     /**
      * Build a new Http request.
-     * @param array $auth [apikey, apisecret]
-     * @param string $method http method
-     * @param string $url call url
-     * @param array $filters Mailjet resource filters
-     * @param mixed $body Mailjet resource body
-     * @param string $type Request Content-type
-     * @param array $requestOptions
+     *
+     * @param array  $auth           [apikey, apisecret]
+     * @param string $method         http method
+     * @param string $url            call url
+     * @param array  $filters        Mailjet resource filters
+     * @param mixed  $body           Mailjet resource body
+     * @param string $type           Request Content-type
+     * @param array  $requestOptions
      */
     public function __construct(
-        array  $auth,
+        array $auth,
         string $method,
         string $url,
-        array  $filters,
-               $body,
+        array $filters,
+        $body,
         string $type,
-        array  $requestOptions = []
+        array $requestOptions = []
     ) {
         $this->type = $type;
         $this->auth = $auth;
@@ -103,10 +105,11 @@ class Request
 
     /**
      * Trigger the actual call
-     * @param $call
+     *
+     * @param  $call
      * @return Response the call response
      */
-    public function call($call)
+    public function call($call): Response
     {
         $payload = [
             'query' => $this->filters,
@@ -135,9 +138,7 @@ class Request
         if ($call) {
             try {
                 $response = call_user_func([$this, strtolower($this->method)], $this->url, $payload);
-            } catch (ClientException $e) {
-                $response = $e->getResponse();
-            } catch (ServerException $e) {
+            } catch (ClientException|ServerException $e) {
                 $response = $e->getResponse();
             }
         }
@@ -147,6 +148,7 @@ class Request
 
     /**
      * Filters getters.
+     *
      * @return array Request filters
      */
     public function getFilters(): array
@@ -156,6 +158,7 @@ class Request
 
     /**
      * Http method getter.
+     *
      * @return string Request method
      */
     public function getMethod(): string
@@ -165,6 +168,7 @@ class Request
 
     /**
      * Call Url getter.
+     *
      * @return string Request Url
      */
     public function getUrl(): string
@@ -174,6 +178,7 @@ class Request
 
     /**
      * Request body getter.
+     *
      * @return array request body
      */
     public function getBody(): array
@@ -183,6 +188,7 @@ class Request
 
     /**
      * Auth getter. to discuss.
+     *
      * @return array Request auth
      */
     public function getAuth(): array
@@ -191,9 +197,9 @@ class Request
     }
 
     /**
-     * @param RequestInterface $request Request to send
-     * @param array $options Request options to apply to the given
-     *                                  request and to the transfer.
+     * @param  RequestInterface $request Request to send
+     * @param  array            $options Request options to apply to the given
+     *                                   request and to the transfer.
      * @throws GuzzleException
      */
     public function send(RequestInterface $request, array $options = []): ResponseInterface
@@ -202,9 +208,9 @@ class Request
     }
 
     /**
-     * @param RequestInterface $request
+     * @param  RequestInterface $request
      * @return ResponseInterface
-     * @throws \Psr\Http\Client\ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
@@ -213,7 +219,7 @@ class Request
 
     /**
      * @param RequestInterface $request Request to send
-     * @param array $options Request options to apply to the given
+     * @param array            $options Request options to apply to the given
      *                                  request and to the transfer.
      */
     public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
@@ -222,9 +228,9 @@ class Request
     }
 
     /**
-     * @param string $method HTTP method.
-     * @param string|UriInterface $uri URI object or string.
-     * @param array $options Request options to apply.
+     * @param  string              $method  HTTP method.
+     * @param  string|UriInterface $uri     URI object or string.
+     * @param  array               $options Request options to apply.
      * @throws GuzzleException
      */
     public function request(string $method, $uri, array $options = []): ResponseInterface
@@ -233,9 +239,9 @@ class Request
     }
 
     /**
-     * @param string $method HTTP method
-     * @param string|UriInterface $uri URI object or string.
-     * @param array $options Request options to apply.
+     * @param string              $method  HTTP method
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
      */
     public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
     {
