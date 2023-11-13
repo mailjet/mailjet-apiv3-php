@@ -127,7 +127,7 @@ class Client
     }
 
     /**
-     * Trigger a POST request.
+     * Trigger a PUT request.
      *
      * @param  array $resource Mailjet Resource/Action pair
      * @param  array $args     Request arguments
@@ -150,7 +150,7 @@ class Client
     }
 
     /**
-     * Trigger a GET request.
+     * Trigger a DELETE request.
      *
      * @param  array $resource Mailjet Resource/Action pair
      * @param  array $args     Request arguments
