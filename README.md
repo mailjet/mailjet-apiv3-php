@@ -51,7 +51,7 @@ Check out all the resources and PHP code examples in the [Offical Documentation]
 
 ### Compatibility
 
-This library requires **PHP v5.4** or higher.
+This library requires **PHP v8.1** or higher.
 
 ### Installation
 
