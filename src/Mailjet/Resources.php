@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Mailjet;
 
 /**
- * PHP version 7.2.
  *
  * This is the Mailjet Resources Class
  *
@@ -49,6 +48,7 @@ class Resources
     public static $Campaignstatistics = ['campaignstatistics', ''];
     public static $Clickstatistics = ['clickstatistics', ''];
     public static $Contact = ['contact', ''];
+    public static $Contacts = ['contacts', ''];
     public static $ContactManagecontactslists = ['contact', 'managecontactslists'];
     public static $ContactGetcontactslists = ['contact', 'getcontactslists'];
     public static $ContactManagemanycontacts = ['contact', 'managemanycontacts'];
