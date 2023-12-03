@@ -377,6 +377,24 @@ $response->success() && var_dump($response->getData());
 ?>
 ```
 
+```php
+<?php
+/*
+Delete a contact from contact list:
+*/
+require 'vendor/autoload.php';
+use \Mailjet\Resources;
+$mj = new \Mailjet\Client(
+  getenv('MJ_APIKEY_PUBLIC'),
+  getenv('MJ_APIKEY_PRIVATE'),
+  true,
+  ['version' => 'v4']
+);
+$response = $mj->delete(Resources::$Contacts, ['ID' => xxxx]);
+$response->success() && var_dump($response->getData());
+?>
+```
+
 ### Response
 
 The `get`, `post`, `put` and `delete` method will return a `Response` object with the following available methods:
