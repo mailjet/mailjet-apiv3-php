@@ -40,10 +40,13 @@ class ContactNormalizer implements NormalizerInterface
         return new Assert\Collection([
             'fields' => [
                 'filters' => new Assert\Collection([
-                    'countonly' => new Assert\Length(['min' => 1]),
+                    'fields' => [
+                        'countonly' => new Assert\Length(['min' => 1]),
+                    ],
+                    'allowExtraFields' => true,
                 ]),
             ],
-            'allowMissingFields' => false,
+            'allowExtraFields' => true,
         ]);
     }
 }
