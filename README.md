@@ -448,6 +448,45 @@ $response = $mj->post(Resources::$SmsSend, ['body' => $body]);
 $response->success() && var_dump($response->getData());
 ```
 
+
+### Send request with supporting emojis in the subject
+
+```php
+require 'vendor/autoload.php';
+
+use \Mailjet\Resources;
+
+$mj = new \Mailjet\Client(
+    'xxx',
+    'xxx',
+    true,
+);
+
+try {
+    $subject = \Mailjet\Utility\StringUtility::utfStringNotation("This is subject with emoji  🤑" );
+
+    $body = [
+        'Locale' => "en_US",
+        'Sender' => "sender@gmail.com",
+        'SenderEmail' => "sender@gmail.com",
+        'Subject' => $subject,
+        'TemplateID' => 12345,
+        'ContactsListID' => 12345,
+        'Title' => "Emoji Test" . time(),
+
+    ];
+    $response = $mj->post(
+        Resources::$Campaigndraft,
+        [
+            'body' => $body,
+        ]
+    );
+    print_r($response->getData());
+} catch (Throwable $throwable) {
+    print_r($throwable->getMessage());
+}
+```
+
 ## Contribute
 
 Mailjet loves developers. You can be part of this project!
