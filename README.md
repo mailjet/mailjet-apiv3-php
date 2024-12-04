@@ -56,7 +56,9 @@ This library requires **PHP v8.1** or higher.
 
 Use the below code to install the wrapper:
 
-`composer require mailjet/mailjet-apiv3-php`
+```bash
+composer require mailjet/mailjet-apiv3-php
+```
 
 If you are not using [Composer](https://getcomposer.org/), clone or download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file. If you encounter an issue, please post it here and not on the mirror repository.
 
