@@ -77,7 +77,7 @@ class Client
      * @param bool        $call     performs the call or not
      * @param array       $settings
      */
-    public function __construct(string $key, string $secret = null, bool $call = true, array $settings = [])
+    public function __construct(string $key, ?string $secret = null, bool $call = true, array $settings = [])
     {
         $this->setAuthentication($key, $secret, $call, $settings);
     }
