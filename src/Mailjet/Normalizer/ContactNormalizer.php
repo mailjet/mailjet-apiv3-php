@@ -3,14 +3,13 @@
 namespace Mailjet\Normalizer;
 
 use Mailjet\Response;
-
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
 
 class ContactNormalizer implements NormalizerInterface
 {
     /**
-     * @param Response $response
+     * @param  Response $response
      * @return Response
      */
     public static function normalizeResponse(Response $response): Response
@@ -22,7 +21,7 @@ class ContactNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return bool
      */
     public static function shouldBeNormalized(array $data): bool
@@ -37,16 +36,20 @@ class ContactNormalizer implements NormalizerInterface
      */
     private static function getValidationRule(): Assert\Collection
     {
-        return new Assert\Collection([
+        return new Assert\Collection(
+            [
             'fields' => [
-                'filters' => new Assert\Collection([
+                'filters' => new Assert\Collection(
+                    [
                     'fields' => [
                         'countonly' => new Assert\Length(['min' => 1]),
                     ],
                     'allowExtraFields' => true,
-                ]),
+                    ]
+                ),
             ],
             'allowExtraFields' => true,
-        ]);
+            ]
+        );
     }
 }
