@@ -315,8 +315,13 @@ class Client
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => 'GET' === $method ? null : '{}',
+            'body' => null,
+            'json' => null,
         ], array_change_key_case($args));
+
+        if ('GET' !== $method && null === $args['body'] && null === $args['json']) {
+            $args['body'] = "{}";
+        }
 
         $url = $this->buildURL($resource, $action, (string)$args['id'], $args['actionid']);
 
@@ -334,7 +339,7 @@ class Client
             $method,
             $url,
             $args['filters'],
-            $args['body'],
+            $args['body'] ?? $args['json'],
             $contentType,
             $this->requestOptions
         );

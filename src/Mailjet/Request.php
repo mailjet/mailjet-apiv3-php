@@ -42,7 +42,7 @@ class Request
     private $filters;
 
     /**
-     * @var array
+     * @var array|string
      */
     private $body;
 
@@ -82,7 +82,7 @@ class Request
         string $method,
         string $url,
         array $filters,
-        $body,
+        array|string $body,
         string $type,
         array $requestOptions = []
     ) {
@@ -113,7 +113,7 @@ class Request
     {
         $payload = [
             'query' => $this->filters,
-            ('application/json' === $this->type ? 'json' : 'body') => $this->body,
+            (is_array($this->body) ? 'json' : 'body') => $this->body,
         ];
 
         $authArgsCount = \count($this->auth);
@@ -179,9 +179,9 @@ class Request
     /**
      * Request body getter.
      *
-     * @return array request body
+     * @return array|string request body
      */
-    public function getBody(): array
+    public function getBody(): array|string
     {
         return $this->body;
     }
