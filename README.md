@@ -489,6 +489,32 @@ try {
 }
 ```
 
+## Get Campaigns with filters
+
+```php
+require 'vendor/autoload.php';
+
+use \Mailjet\Resources;
+
+$mj = new \Mailjet\Client(
+    'xxx',
+    'yyy',
+    true,
+    ['version' => 'v3']
+);
+try {
+    //Note: If no query parameters are used, only campaigns sent since 00:00 UTC on the current day will be returned.
+    $filters = [
+        'period' => 'Year',
+    ];
+    $response = $mj->get(Resources::$Campaign, ['filters' => $filters]);
+    print_r($response->getBody());
+
+} catch (Throwable $throwable) {
+    print_r($throwable->getMessage());
+}
+```
+
 ## Contribute
 
 Mailjet loves developers. You can be part of this project!
