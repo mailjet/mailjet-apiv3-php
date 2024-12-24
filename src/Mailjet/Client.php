@@ -36,26 +36,26 @@ class Client
      */
     public const PROXY = 'proxy';
 
-    private $apikey;
-    private $apisecret;
-    private $apitoken;
-    private $version = Config::MAIN_VERSION;
-    private $url = Config::MAIN_URL;
-    private $secure = Config::SECURED;
-    private $call = true;
-    private $settings = [];
-    private $changed = false;
+    private string $apikey;
+    private ?string $apisecret;
+    private ?string $apitoken;
+    private string $version = Config::MAIN_VERSION;
+    private string $url = Config::MAIN_URL;
+    private bool $secure = Config::SECURED;
+    private bool $call = true;
+    private array $settings = [];
+    private bool $changed = false;
     /**
      * @var int[]
      */
-    private $requestOptions = [
+    private array $requestOptions = [
         self::TIMEOUT => 15,
         self::CONNECT_TIMEOUT => 2,
     ];
     /**
      * @var string[]
      */
-    private $smsResources = [
+    private array $smsResources = [
         'send',
         'sms',
         'sms-send',
@@ -63,7 +63,7 @@ class Client
     /**
      * @var string[]
      */
-    private $dataAction = [
+    private array $dataAction = [
         'csverror/text:csv',
         'csvdata/text:plain',
         'JSONError/application:json/LAST',
@@ -348,6 +348,7 @@ class Client
     }
 
     // phpcs:enable
+
     /**
      * Build the base API url depending on wether user need a secure connection
      * or not.

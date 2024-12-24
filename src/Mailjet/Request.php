@@ -29,17 +29,17 @@ class Request
     /**
      * @var string
      */
-    private $method;
+    private string $method;
 
     /**
      * @var string
      */
-    private $url;
+    private string $url;
 
     /**
      * @var array
      */
-    private $filters;
+    private array $filters;
 
     /**
      * @var array|string
@@ -49,22 +49,22 @@ class Request
     /**
      * @var array
      */
-    private $auth;
+    private array $auth;
 
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var array
      */
-    private $requestOptions = [];
+    private array $requestOptions;
 
     /**
      * @var GuzzleClient
      */
-    private $guzzleClient;
+    private GuzzleClient $guzzleClient;
 
     /**
      * Build a new Http request.
@@ -138,7 +138,7 @@ class Request
         if ($call) {
             try {
                 $response = call_user_func([$this, strtolower($this->method)], $this->url, $payload);
-            } catch (ClientException|ServerException $e) {
+            } catch (ClientException | ServerException $e) {
                 $response = $e->getResponse();
             }
         }

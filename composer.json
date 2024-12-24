@@ -23,7 +23,7 @@
         "mockery/mockery": "^1.4",
         "php-coveralls/php-coveralls": "^2.0",
         "phpcompatibility/php-compatibility": "*",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^2.0",
         "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
