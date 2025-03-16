@@ -564,6 +564,38 @@ try {
 }
 ```
 
+### Introducing DTOs
+We adding DTOs for better developer experience with working on data. This is the example of how to use it:
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use Mailjet\Model\MailjetCampaignDataDTO;
+use \Mailjet\Resources;
+
+$mj = new \Mailjet\Client(
+    'xxx',
+    'xxx',
+    true,
+    ['version' => 'v3']
+);
+try {
+    $filters = [
+        'period' => 'Month',
+        'Limit' => 10,
+    ];
+    $response = $mj->get(Resources::$Campaigndraft + ['model' => MailjetCampaignDataDTO::class], ['filters' => $filters]);
+
+    foreach ($response->getData() as $campaign) {
+        /** @var MailjetCampaignDataDTO $campaign */
+        print_r($campaign);
+    }
+} catch (Throwable $throwable) {
+    print_r($throwable->getMessage());
+}
+```
+
 ## Contribute
 
 Mailjet loves developers. You can be part of this project!

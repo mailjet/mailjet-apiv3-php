@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailjet;
 
+use Mailjet\Model\DtoInterface;
 use Mailjet\Normalizer\NormalizerInterface;
 
 class Client
@@ -133,6 +134,17 @@ class Client
 
         if (!empty($this->changed)) {
             $this->setSettings();
+        }
+
+        if (isset($resource['model']) && class_exists($resource['model'])) {
+            /**
+             * @var $model DtoInterface
+             */
+            $model = $resource['model'];
+            $data = array_map(function ($item) use ($model) {
+                return $model::fromArray($item);
+            }, $result->getData());
+            $result->setData($data);
         }
 
         return $result;
