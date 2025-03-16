@@ -595,6 +595,54 @@ try {
     print_r($throwable->getMessage());
 }
 ```
+### Create Template via API
+
+#### Important note. Do not use MJML Content. It does not recognize it.
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use Mailjet\Model\MailjetCampaignDataDTO;
+use \Mailjet\Resources;
+
+$mj = new \Mailjet\Client(
+    'xxx',
+    'xxx',
+    true,
+    ['version' => 'v3']
+);
+try {
+    $body = [
+        'Author' => "John Doe",
+        'Copyright' => "Mailjet",
+        'Description' => "Used to send out promo codes.",
+        'EditMode' => 2,
+        'IsStarred' => false,
+        'IsTextPartGenerationEnabled' => true,
+        'Locale' => "en_US",
+        'Name' => sprintf('test-%s-%s', time(), __FILE__),
+        'OwnerType' => "user",
+        'Presets' => "string",
+        'Purposes' => ["marketing"],
+    ];
+    $response = $mj->post(Resources::$Template, ['body' => $body]);
+    $id = $response->getData()[0]['ID'];
+    if ($id) {
+        $body = [
+            'Headers' => "",
+            'Html-part' => "<h3>Dear passenger, welcome to Mailjet!</h3><br />May the delivery force be with you!",
+            'MJMLContent' => "",
+            'Text-part' => "Dear passenger, welcome to Mailjet! May the delivery force be with you!"
+        ];
+
+        $r = $mj->post(Resources::$TemplateDetailcontent, ['id' => $id, 'body' => $body]);
+    }
+} catch (Throwable $throwable) {
+    print_r($throwable->getMessage());
+}
+
+```
 
 ## Contribute
 
