@@ -42,7 +42,7 @@ class Request
     private array $filters;
 
     /**
-     * @var array
+     * @var array|string|null
      */
     private $body;
 
@@ -69,20 +69,20 @@ class Request
     /**
      * Build a new Http request.
      *
-     * @param array  $auth           [apikey, apisecret]
-     * @param string $method         http method
-     * @param string $url            call url
-     * @param array  $filters        Mailjet resource filters
-     * @param mixed  $body           Mailjet resource body
-     * @param string $type           Request Content-type
-     * @param array  $requestOptions
+     * @param array             $auth           [apikey, apisecret]
+     * @param string            $method         http method
+     * @param string            $url            call url
+     * @param array             $filters        Mailjet resource filters
+     * @param array|string|null $body           Mailjet resource body
+     * @param string            $type           Request Content-type
+     * @param array             $requestOptions
      */
     public function __construct(
         array $auth,
         string $method,
         string $url,
         array $filters,
-        $body,
+        array|string|null $body,
         string $type,
         array $requestOptions = []
     ) {
@@ -113,7 +113,7 @@ class Request
     {
         $payload = [
             'query' => $this->filters,
-            ('application/json' === $this->type ? 'json' : 'body') => $this->body,
+            (is_array($this->body) ? 'json' : 'body') => $this->body,
         ];
 
         $authArgsCount = \count($this->auth);
@@ -179,9 +179,9 @@ class Request
     /**
      * Request body getter.
      *
-     * @return array request body
+     * @return array|string|null request body
      */
-    public function getBody(): array
+    public function getBody(): array|string|null
     {
         return $this->body;
     }

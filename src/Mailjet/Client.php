@@ -90,13 +90,13 @@ class Client
      * @param  array $options
      * @return Response
      */
-    public function post(array $resource, array $args = [], array $options = []): Response
+    public function post(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
     {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
 
-        $result = $this->_call('POST', $resource[0], $resource[1], $args);
+        $result = $this->_call('POST', $resource[0], $resource[1], $args, $contentType);
 
         if (!empty($this->changed)) {
             $this->setSettings();
@@ -113,13 +113,13 @@ class Client
      * @param  array $options
      * @return Response
      */
-    public function get(array $resource, array $args = [], array $options = []): Response
+    public function get(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
     {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
 
-        $result = $this->_call('GET', $resource[0], $resource[1], $args);
+        $result = $this->_call('GET', $resource[0], $resource[1], $args, $contentType);
 
         if (isset($resource['normalizer']) && class_exists($resource['normalizer'])) {
             /**
@@ -146,13 +146,13 @@ class Client
      * @param  array $options
      * @return Response
      */
-    public function put(array $resource, array $args = [], array $options = []): Response
+    public function put(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
     {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
 
-        $result = $this->_call('PUT', $resource[0], $resource[1], $args);
+        $result = $this->_call('PUT', $resource[0], $resource[1], $args, $contentType);
 
         if (!empty($this->changed)) {
             $this->setSettings();
@@ -169,13 +169,13 @@ class Client
      * @param  array $options
      * @return Response
      */
-    public function delete(array $resource, array $args = [], array $options = []): Response
+    public function delete(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
     {
         if (!empty($options)) {
             $this->setOptions($options, $resource);
         }
 
-        $result = $this->_call('DELETE', $resource[0], $resource[1], $args);
+        $result = $this->_call('DELETE', $resource[0], $resource[1], $args, $contentType);
 
         if (!empty($this->changed)) {
             $this->setSettings();
@@ -306,20 +306,25 @@ class Client
      * @param string $resource mailjet resource
      * @param string $action mailjet resource action
      * @param array $args Request arguments
+     * @param string $contentType Request Content-type
      * @return Response server response
      */
-    private function _call(string $method, string $resource, string $action, array $args): Response
+    private function _call(string $method, string $resource, string $action, array $args, string $contentType = 'application/json'): Response
     {
         $args = array_merge([
             'id' => '',
             'actionid' => '',
             'filters' => [],
-            'body' => 'GET' === $method ? null : '{}',
+            'body' => null,
+            'json' => null,
         ], array_change_key_case($args));
+
+        if ('GET' !== $method && null === $args['body'] && null === $args['json']) {
+            $args['body'] = "{}";
+        }
 
         $url = $this->buildURL($resource, $action, (string)$args['id'], $args['actionid']);
 
-        $contentType = 'application/json';
         if ('csvdata/text:plain' === $action) {
             $contentType = 'text/plain';
         } elseif ('csverror/text:csv' === $action) {
@@ -334,7 +339,7 @@ class Client
             $method,
             $url,
             $args['filters'],
-            $args['body'],
+            $args['body'] ?? $args['json'],
             $contentType,
             $this->requestOptions
         );
