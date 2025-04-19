@@ -86,9 +86,10 @@ class Client
     /**
      * Trigger a POST request.
      *
-     * @param  array $resource Mailjet Resource/Action pair
-     * @param  array $args     Request arguments
-     * @param  array $options
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args Request arguments
+     * @param array $options
+     * @param string $contentType
      * @return Response
      */
     public function post(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
@@ -109,9 +110,10 @@ class Client
     /**
      * Trigger a GET request.
      *
-     * @param  array $resource Mailjet Resource/Action pair
-     * @param  array $args     Request arguments
-     * @param  array $options
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args Request arguments
+     * @param array $options
+     * @param string $contentType
      * @return Response
      */
     public function get(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
@@ -153,9 +155,10 @@ class Client
     /**
      * Trigger a PUT request.
      *
-     * @param  array $resource Mailjet Resource/Action pair
-     * @param  array $args     Request arguments
-     * @param  array $options
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args Request arguments
+     * @param array $options
+     * @param string $contentType
      * @return Response
      */
     public function put(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
@@ -176,9 +179,10 @@ class Client
     /**
      * Trigger a DELETE request.
      *
-     * @param  array $resource Mailjet Resource/Action pair
-     * @param  array $args     Request arguments
-     * @param  array $options
+     * @param array $resource Mailjet Resource/Action pair
+     * @param array $args Request arguments
+     * @param array $options
+     * @param string $contentType
      * @return Response
      */
     public function delete(array $resource, array $args = [], array $options = [], string $contentType = 'application/json'): Response
@@ -305,6 +309,7 @@ class Client
         } else {
             $this->apitoken = $key;
             $this->version = Config::SMS_VERSION;
+            $this->apikey = '';
         }
 
         $this->initSettings($call, $settings);
@@ -378,11 +383,11 @@ class Client
      * Checks that both parameters are strings, which means
      * that basic authentication will be required.
      *
-     * @param  mixed $key
-     * @param  mixed $secret
+     * @param string|null $key
+     * @param string|null $secret
      * @return bool flag
      */
-    private function isBasicAuthentication($key, $secret): bool
+    private function isBasicAuthentication(?string $key, ?string $secret): bool
     {
         return !empty($key) && !empty($secret);
     }
