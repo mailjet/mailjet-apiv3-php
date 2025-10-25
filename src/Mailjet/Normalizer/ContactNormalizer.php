@@ -37,19 +37,15 @@ class ContactNormalizer implements NormalizerInterface
     private static function getValidationRule(): Assert\Collection
     {
         return new Assert\Collection(
-            [
-            'fields' => [
+            fields: [
                 'filters' => new Assert\Collection(
-                    [
-                    'fields' => [
-                        'countonly' => new Assert\Length(['min' => 1]),
+                    fields: [
+                        'countonly' => new Assert\Length(min: 1),
                     ],
-                    'allowExtraFields' => true,
-                    ]
+                    allowExtraFields: true
                 ),
             ],
-            'allowExtraFields' => true,
-            ]
+            allowExtraFields: true
         );
     }
 }
