@@ -181,6 +181,24 @@ $mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'),
 
 If your account has been moved to Mailjet's US architecture, the URL value you need to set is `api.us.mailjet.com`.
 
+#### Network Connectivity
+
+By default, the library forces IPv4 connections to avoid intermittent SSL connection issues on servers with misconfigured IPv6. This resolves the common `SSL_ERROR_SYSCALL` error.
+
+If you need to use IPv6 or system default, you can override this setting:
+
+```php
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'));
+
+// Use IPv6
+$mj->addRequestOption('force_ip_resolve', 'v6');
+
+// Or use system default (both IPv4 and IPv6)
+$mj->addRequestOption('force_ip_resolve', null);
+```
+
+**Note:** If you experience intermittent connection failures, ensure IPv4 forcing is enabled (default behavior).
+
 ### Disable API call
 
 By default the API call parameter is always enabled. However, you may want to disable it during testing to prevent unnecessary calls to the Mailjet API. This is done by setting the third parameter to `false`:
