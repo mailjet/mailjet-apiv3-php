@@ -52,6 +52,7 @@ class Client
     private array $requestOptions = [
         self::TIMEOUT => 15,
         self::CONNECT_TIMEOUT => 2,
+        'force_ip_resolve' => 'v4',
     ];
     /**
      * @var string[]
