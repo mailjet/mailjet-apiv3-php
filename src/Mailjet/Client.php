@@ -311,6 +311,7 @@ class Client
             $this->apitoken = $key;
             $this->version = Config::SMS_VERSION;
             $this->apikey = '';
+            $this->apisecret = '';
         }
 
         $this->initSettings($call, $settings);
