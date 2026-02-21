@@ -111,22 +111,18 @@ class Request
             return new Response($this, null);
         }
 
-        // Build URI with query parameters
         $uri = $this->url;
         if (!empty($this->filters)) {
             $separator = str_contains($uri, '?') ? '&' : '?';
             $uri .= $separator . http_build_query($this->filters);
         }
 
-        // Create PSR-7 request
         $request = $this->requestFactory->createRequest($this->method, $uri);
 
-        // Set headers
         $request = $request
             ->withHeader('content-type', $this->type)
             ->withHeader('user-agent', Config::USER_AGENT . PHP_VERSION . '/' . Client::WRAPPER_VERSION);
 
-        // Set authentication
         if (\count($this->auth) > 1) {
             $credentials = base64_encode($this->auth[0] . ':' . $this->auth[1]);
             $request = $request->withHeader('Authorization', 'Basic ' . $credentials);
@@ -134,7 +130,6 @@ class Request
             $request = $request->withHeader('Authorization', 'Bearer ' . $this->auth[0]);
         }
 
-        // Set body
         if ($this->body !== null) {
             $bodyContent = is_array($this->body) ? json_encode($this->body, JSON_THROW_ON_ERROR) : $this->body;
             $stream = $this->streamFactory->createStream($bodyContent);
