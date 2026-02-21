@@ -11,21 +11,12 @@ declare(strict_types=1);
 
 namespace Mailjet;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\ClientTrait as GuzzleClientTrait;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Request
 {
-    use GuzzleClientTrait;
-
     /**
      * @var string
      */
@@ -44,7 +35,7 @@ class Request
     /**
      * @var array|string|null
      */
-    private $body;
+    private array|string|null $body;
 
     /**
      * @var array
@@ -57,25 +48,32 @@ class Request
     private string $type;
 
     /**
-     * @var array
+     * @var ClientInterface
      */
-    private array $requestOptions;
+    private ClientInterface $httpClient;
 
     /**
-     * @var GuzzleClient
+     * @var RequestFactoryInterface
      */
-    private GuzzleClient $guzzleClient;
+    private RequestFactoryInterface $requestFactory;
+
+    /**
+     * @var StreamFactoryInterface
+     */
+    private StreamFactoryInterface $streamFactory;
 
     /**
      * Build a new Http request.
      *
-     * @param array             $auth           [apikey, apisecret]
-     * @param string            $method         http method
-     * @param string            $url            call url
-     * @param array             $filters        Mailjet resource filters
-     * @param array|string|null $body           Mailjet resource body
-     * @param string            $type           Request Content-type
-     * @param array             $requestOptions
+     * @param array                   $auth           [apikey, apisecret] or [apitoken]
+     * @param string                  $method         http method
+     * @param string                  $url            call url
+     * @param array                   $filters        Mailjet resource filters
+     * @param array|string|null       $body           Mailjet resource body
+     * @param string                  $type           Request Content-type
+     * @param ClientInterface         $httpClient     PSR-18 HTTP client
+     * @param RequestFactoryInterface $requestFactory PSR-17 request factory
+     * @param StreamFactoryInterface  $streamFactory  PSR-17 stream factory
      */
     public function __construct(
         array $auth,
@@ -84,7 +82,9 @@ class Request
         array $filters,
         array|string|null $body,
         string $type,
-        array $requestOptions = []
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory
     ) {
         $this->type = $type;
         $this->auth = $auth;
@@ -92,62 +92,62 @@ class Request
         $this->url = $url;
         $this->filters = $filters;
         $this->body = $body;
-        $this->requestOptions = $requestOptions;
-        $this->guzzleClient = new GuzzleClient(
-            ['defaults' => [
-                'headers' => [
-                    'user-agent' => Config::USER_AGENT . PHP_VERSION . '/' . Client::WRAPPER_VERSION,
-                ],
-            ],
-            ]
-        );
+        $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
     }
 
     /**
-     * Trigger the actual call
+     * Trigger the actual call.
      *
-     * @param  $call
+     * @param  bool $call whether to actually perform the HTTP call
      * @return Response the call response
+     * @throws \Psr\Http\Client\ClientExceptionInterface on network-level errors (timeout, DNS failure, etc.)
+     * @throws \JsonException if array body cannot be JSON-encoded
      */
-    public function call($call): Response
+    public function call(bool $call): Response
     {
-        $payload = [
-            'query' => $this->filters,
-            (is_array($this->body) ? 'json' : 'body') => $this->body,
-        ];
+        if (!$call) {
+            return new Response($this, null);
+        }
 
-        $authArgsCount = \count($this->auth);
-        $headers = [
-            'content-type' => $this->type,
-        ];
+        // Build URI with query parameters
+        $uri = $this->url;
+        if (!empty($this->filters)) {
+            $separator = str_contains($uri, '?') ? '&' : '?';
+            $uri .= $separator . http_build_query($this->filters);
+        }
 
-        if ($authArgsCount > 1) {
-            $payload['auth'] = $this->auth;
+        // Create PSR-7 request
+        $request = $this->requestFactory->createRequest($this->method, $uri);
+
+        // Set headers
+        $request = $request
+            ->withHeader('content-type', $this->type)
+            ->withHeader('user-agent', Config::USER_AGENT . PHP_VERSION . '/' . Client::WRAPPER_VERSION);
+
+        // Set authentication
+        if (\count($this->auth) > 1) {
+            $credentials = base64_encode($this->auth[0] . ':' . $this->auth[1]);
+            $request = $request->withHeader('Authorization', 'Basic ' . $credentials);
         } else {
-            $headers['Authorization'] = 'Bearer ' . $this->auth[0];
+            $request = $request->withHeader('Authorization', 'Bearer ' . $this->auth[0]);
         }
 
-        $payload['headers'] = $headers;
-
-        if ((!empty($this->requestOptions)) && (\is_array($this->requestOptions))) {
-            $payload = array_merge_recursive($payload, $this->requestOptions);
+        // Set body
+        if ($this->body !== null) {
+            $bodyContent = is_array($this->body) ? json_encode($this->body, JSON_THROW_ON_ERROR) : $this->body;
+            $stream = $this->streamFactory->createStream($bodyContent);
+            $request = $request->withBody($stream);
         }
 
-        $response = null;
-
-        if ($call) {
-            try {
-                $response = call_user_func([$this, strtolower($this->method)], $this->url, $payload);
-            } catch (ClientException | ServerException $e) {
-                $response = $e->getResponse();
-            }
-        }
+        $response = $this->httpClient->sendRequest($request);
 
         return new Response($this, $response);
     }
 
     /**
-     * Filters getters.
+     * Filters getter.
      *
      * @return array Request filters
      */
@@ -187,64 +187,12 @@ class Request
     }
 
     /**
-     * Auth getter. to discuss.
+     * Auth getter.
      *
      * @return array Request auth
      */
     public function getAuth(): array
     {
         return $this->auth;
-    }
-
-    /**
-     * @param  RequestInterface $request Request to send
-     * @param  array            $options Request options to apply to the given
-     *                                   request and to the transfer.
-     * @throws GuzzleException
-     */
-    public function send(RequestInterface $request, array $options = []): ResponseInterface
-    {
-        return $this->guzzleClient->send($request, $options);
-    }
-
-    /**
-     * @param  RequestInterface $request
-     * @return ResponseInterface
-     * @throws ClientExceptionInterface
-     */
-    public function sendRequest(RequestInterface $request): ResponseInterface
-    {
-        return $this->guzzleClient->sendRequest($request);
-    }
-
-    /**
-     * @param RequestInterface $request Request to send
-     * @param array            $options Request options to apply to the given
-     *                                  request and to the transfer.
-     */
-    public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
-    {
-        return $this->guzzleClient->sendAsync($request, $options);
-    }
-
-    /**
-     * @param  string              $method  HTTP method.
-     * @param  string|UriInterface $uri     URI object or string.
-     * @param  array               $options Request options to apply.
-     * @throws GuzzleException
-     */
-    public function request(string $method, $uri, array $options = []): ResponseInterface
-    {
-        return $this->guzzleClient->request($method, $uri, $options);
-    }
-
-    /**
-     * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
-     */
-    public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
-    {
-        return $this->guzzleClient->requestAsync($method, $uri, $options);
     }
 }

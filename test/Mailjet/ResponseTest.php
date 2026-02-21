@@ -11,17 +11,33 @@ declare(strict_types=1);
 
 namespace Mailjet;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState         disabled
- */
+#[RunTestsInSeparateProcesses]
 final class ResponseTest extends TestCase
 {
+    private function createMailjetRequest(): Request
+    {
+        return new Request(
+            ['test', 'test2'],
+            'GET',
+            'test.com',
+            [],
+            [],
+            'test',
+            $this->createMock(ClientInterface::class),
+            $this->createMock(RequestFactoryInterface::class),
+            $this->createMock(StreamFactoryInterface::class)
+        );
+    }
+
     public function testResponse()
     {
-        $request = new Request(['test', 'test2'], 'GET', 'test.com', [], [], 'test', []);
+        $request = $this->createMailjetRequest();
 
         $response = new Response(
             $request,
@@ -37,7 +53,7 @@ final class ResponseTest extends TestCase
 
     public function testNullResponse()
     {
-        $request = new Request(['test', 'test2'], 'GET', 'test.com', [], [], 'test', []);
+        $request = $this->createMailjetRequest();
 
         // Response without a response interface as second parameter
         $response = new Response($request, null);

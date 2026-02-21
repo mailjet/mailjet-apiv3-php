@@ -11,12 +11,10 @@ declare(strict_types=1);
 
 namespace Mailjet;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
+#[CoversNothing]
 final class MailjetApiv3Test extends TestCase
 {
     const API_BASE_URL = 'https://api.mailjet.com/';
@@ -132,15 +130,17 @@ final class MailjetApiv3Test extends TestCase
         $this->assertSuccess(false, $ret);
     }
 
-    public function testClientHasOptions()
+    public function testCustomHttpClient()
     {
-        $client = new Client($this->publicKey, $this->secretKey, false);
-        $client->setTimeout(3);
-        $client->setConnectionTimeout(5);
-        $client->addRequestOption('delay', 23);
-        static::assertSame(3, $client->getTimeout());
-        static::assertSame(5, $client->getConnectionTimeout());
-        static::assertSame(23, $client->getRequestOptions()['delay']);
+        $httpClient = new \GuzzleHttp\Client();
+        $client = new Client(
+            $this->publicKey,
+            $this->secretKey,
+            false,
+            [],
+            $httpClient
+        );
+        static::assertInstanceOf(Client::class, $client);
     }
 
     private function assertUrl($url, $response, $version = self::VERSION)

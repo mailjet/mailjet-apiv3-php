@@ -14,17 +14,25 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^7.4.4",
+        "php-http/discovery": "^1.19",
         "psr/http-client": "^1.0",
+        "psr/http-client-implementation": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-factory-implementation": "^1.0",
         "symfony/validator": "^6.3|^7.0"
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "^7.4.4",
         "phpunit/phpunit": "^11.4.0",
         "mockery/mockery": "^1.4",
         "php-coveralls/php-coveralls": "^2.0",
         "phpcompatibility/php-compatibility": "*",
         "phpstan/phpstan": "^2.0",
         "squizlabs/php_codesniffer": "*"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "PSR-18 compatible HTTP client",
+        "symfony/http-client": "PSR-18 compatible HTTP client (use with nyholm/psr7 for PSR-17 factories)"
     },
     "autoload": {
         "psr-0": {
