@@ -19,7 +19,8 @@
         "psr/http-client-implementation": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-factory-implementation": "^1.0",
-        "symfony/validator": "^6.3|^7.0"
+        "symfony/validator": "^6.3|^7.0|^8.0"
+
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^7.4.4",
