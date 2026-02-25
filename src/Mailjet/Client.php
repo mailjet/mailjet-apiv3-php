@@ -11,49 +11,30 @@ declare(strict_types=1);
 
 namespace Mailjet;
 
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Mailjet\Model\DtoInterface;
 use Mailjet\Normalizer\NormalizerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
     public const WRAPPER_VERSION = Config::WRAPPER_VERSION;
 
-    /**
-     * connect_timeout: (float, default=2) Float describing the number of
-     * seconds to wait while trying to connect to a server. Use 0 to wait
-     * indefinitely (the default behavior).
-     */
-    public const CONNECT_TIMEOUT = 'connect_timeout';
-
-    /**
-     * timeout: (float, default=15) Float describing the timeout of the
-     * request in seconds. Use 0 to wait indefinitely (the default behavior).
-     */
-    public const TIMEOUT = 'timeout';
-
-    /**
-     * proxy: (array, default=none) Array describing the proxy options used by guzzle client
-     * See guzzle-http for specification.
-     */
-    public const PROXY = 'proxy';
-
-    private string $apikey;
-    private ?string $apisecret;
-    private ?string $apitoken;
+    private string $apikey = '';
+    private ?string $apisecret = null;
+    private ?string $apitoken = null;
     private string $version = Config::MAIN_VERSION;
     private string $url = Config::MAIN_URL;
     private bool $secure = Config::SECURED;
     private bool $call = true;
     private array $settings = [];
     private bool $changed = false;
-    /**
-     * @var int[]
-     */
-    private array $requestOptions = [
-        self::TIMEOUT => 15,
-        self::CONNECT_TIMEOUT => 2,
-        'force_ip_resolve' => 'v4',
-    ];
+    private ClientInterface $httpClient;
+    private RequestFactoryInterface $requestFactory;
+    private StreamFactoryInterface $streamFactory;
     /**
      * @var string[]
      */
@@ -72,15 +53,29 @@ class Client
     ];
 
     /**
-     * Client constructor requires:.
+     * Client constructor.
      *
-     * @param string      $key      Mailjet API Key
-     * @param string|null $secret   Mailjet API Secret
-     * @param bool        $call     performs the call or not
-     * @param array       $settings
+     * @param string                       $key            Mailjet API Key
+     * @param string|null                  $secret         Mailjet API Secret
+     * @param bool                         $call           performs the call or not
+     * @param array                        $settings
+     * @param ClientInterface|null         $httpClient     PSR-18 HTTP client (auto-discovered if null)
+     * @param RequestFactoryInterface|null $requestFactory PSR-17 request factory (auto-discovered if null)
+     * @param StreamFactoryInterface|null  $streamFactory  PSR-17 stream factory (auto-discovered if null)
      */
-    public function __construct(string $key, ?string $secret = null, bool $call = true, array $settings = [])
-    {
+    public function __construct(
+        string $key,
+        ?string $secret = null,
+        bool $call = true,
+        array $settings = [],
+        ?ClientInterface $httpClient = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?StreamFactoryInterface $streamFactory = null
+    ) {
+        $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
+
         $this->setAuthentication($key, $secret, $call, $settings);
     }
 
@@ -219,80 +214,6 @@ class Client
     }
 
     /**
-     * Set HTTP request Timeout.
-     *
-     * @param int $timeout
-     */
-    public function setTimeout(int $timeout): void
-    {
-        $this->requestOptions[self::TIMEOUT] = $timeout;
-    }
-
-    /**
-     * Set HTTP proxy options
-     * See: http://docs.guzzlephp.org/en/stable/request-options.html#proxy.
-     *
-     * @param array $proxyArray
-     */
-    public function setHttpProxy(array $proxyArray): void
-    {
-        $this->requestOptions[self::PROXY] = $proxyArray;
-    }
-
-    /**
-     * Set HTTP connection Timeout.
-     *
-     * @param int $timeout
-     */
-    public function setConnectionTimeout(int $timeout): void
-    {
-        $this->requestOptions[self::CONNECT_TIMEOUT] = $timeout;
-    }
-
-    /**
-     * Get HTTP request Timeout
-     * $return int|null.
-     */
-    public function getTimeout(): ?int
-    {
-        return $this->requestOptions[self::TIMEOUT];
-    }
-
-    /**
-     * Get HTTP connection Timeout
-     * $return int|null.
-     */
-    public function getConnectionTimeout(): ?int
-    {
-        return $this->requestOptions[self::CONNECT_TIMEOUT];
-    }
-
-    /**
-     * Add a HTTP request option.
-     *
-     * @param string $key
-     * @param mixed  $value
-     *                     [IMPORTANT]Default options will be overwritten
-     *                     if such option is provided
-     * @see   \GuzzleHttp\RequestOptions for a list of available request options.
-     */
-    public function addRequestOption(string $key, $value): void
-    {
-        if ($key && (null !== $value)) {
-            $this->requestOptions[$key] = $value;
-        }
-    }
-
-    /**
-     * Get HTTP connection options
-     * $return array.
-     */
-    public function getRequestOptions(): array
-    {
-        return $this->requestOptions;
-    }
-
-    /**
      * Set auth.
      *
      * @param string      $key
@@ -320,7 +241,8 @@ class Client
 
     // phpcs:disable
     /**
-     * Magic method to call a mailjet resource.
+     * Build and execute a mailjet API call.
+     *
      * @param string $method Http method
      * @param string $resource mailjet resource
      * @param string $action mailjet resource action
@@ -360,7 +282,9 @@ class Client
             $args['filters'],
             $args['body'] ?? $args['json'],
             $contentType,
-            $this->requestOptions
+            $this->httpClient,
+            $this->requestFactory,
+            $this->streamFactory
         );
 
         return $request->call($this->call);
@@ -369,7 +293,7 @@ class Client
     // phpcs:enable
 
     /**
-     * Build the base API url depending on wether user need a secure connection
+     * Build the base API url depending on whether user needs a secure connection
      * or not.
      *
      * @return string the API url;
@@ -465,7 +389,7 @@ class Client
     }
 
     /**
-     * Set a backup if the variables generating the url are change during a call.
+     * Set a backup if the variables generating the url are changed during a call.
      *
      * @param bool  $call
      * @param array $settings

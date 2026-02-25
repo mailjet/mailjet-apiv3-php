@@ -11,7 +11,7 @@
 
 [![Build Status](https://travis-ci.org/mailjet/mailjet-apiv3-php.svg?branch=master)](https://travis-ci.org/mailjet/mailjet-apiv3-php)
 ![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)
-![Current Version](https://img.shields.io/badge/version-1.4.1-green.svg)
+![Current Version](https://img.shields.io/badge/version-2.0.0-green.svg)
 
 ## Overview
 
@@ -60,7 +60,38 @@ Use the below code to install the wrapper:
 composer require mailjet/mailjet-apiv3-php
 ```
 
-If you are not using [Composer](https://getcomposer.org/), clone or download [this repository](https://github.com/mailjet/mailjet-apiv3-php-no-composer) that already contains all the dependencies and the `vendor/autoload.php` file. If you encounter an issue, please post it here and not on the mirror repository.
+This library requires a [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP client and [PSR-17](https://www.php-fig.org/psr/psr-17/) factories. If you don't already have one in your project, Composer will auto-install a compatible default (e.g. Guzzle) via [php-http/discovery](https://github.com/php-http/discovery).
+
+If you prefer a specific HTTP client, require it explicitly:
+
+```bash
+# Using Guzzle
+composer require guzzlehttp/guzzle
+
+# Using Symfony HttpClient
+composer require symfony/http-client nyholm/psr7
+```
+
+### Bring Your Own HTTP Client
+
+You can inject your own PSR-18 HTTP client into the Mailjet client:
+
+```php
+use \Mailjet\Client;
+
+// Auto-discovery (default) — uses whatever PSR-18 client is installed
+$mj = new Client($apikey, $apisecret);
+
+// Inject a specific HTTP client
+$httpClient = new \GuzzleHttp\Client(['timeout' => 30, 'proxy' => 'tcp://localhost:8080']);
+$mj = new Client($apikey, $apisecret, true, [], $httpClient);
+
+// Inject a Symfony HttpClient
+$httpClient = new \Symfony\Component\HttpClient\Psr18Client();
+$mj = new Client($apikey, $apisecret, true, [], $httpClient);
+```
+
+You can also inject PSR-17 request and stream factories as the 6th and 7th constructor arguments if needed.
 
 ### Authentication
 
@@ -143,12 +174,15 @@ $response->success() && var_dump($response->getData());
 
 To instantiate the library you can use the following constructor:  
 
-`new \Mailjet\Client($MJ_APIKEY_PUBLIC, $MJ_APIKEY_PRIVATE,$CALL,$OPTIONS);`
+`new \Mailjet\Client($MJ_APIKEY_PUBLIC, $MJ_APIKEY_PRIVATE, $CALL, $OPTIONS, $HTTP_CLIENT, $REQUEST_FACTORY, $STREAM_FACTORY);`
 
  - `$MJ_APIKEY_PUBLIC` : public Mailjet API key
  - `$MJ_APIKEY_PRIVATE` : private Mailjet API key
  - `$CALL` : boolean to enable the API call to Mailjet API server (should be `true` to run the API call)
- - `$OPTIONS` : associative PHP array describing the connection options (see Options bellow for full list)
+ - `$OPTIONS` : associative PHP array describing the connection options (see Options below for full list)
+ - `$HTTP_CLIENT` : (optional) PSR-18 `ClientInterface` implementation — auto-discovered if null
+ - `$REQUEST_FACTORY` : (optional) PSR-17 `RequestFactoryInterface` — auto-discovered if null
+ - `$STREAM_FACTORY` : (optional) PSR-17 `StreamFactoryInterface` — auto-discovered if null
 
 ### Options
 
@@ -183,21 +217,12 @@ If your account has been moved to Mailjet's US architecture, the URL value you n
 
 #### Network Connectivity
 
-By default, the library forces IPv4 connections to avoid intermittent SSL connection issues on servers with misconfigured IPv6. This resolves the common `SSL_ERROR_SYSCALL` error.
-
-If you need to use IPv6 or system default, you can override this setting:
+Since v2.0, HTTP transport is fully delegated to the injected PSR-18 client. If you experience intermittent `SSL_ERROR_SYSCALL` errors, configure your HTTP client to force IPv4:
 
 ```php
-$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'));
-
-// Use IPv6
-$mj->addRequestOption('force_ip_resolve', 'v6');
-
-// Or use system default (both IPv4 and IPv6)
-$mj->addRequestOption('force_ip_resolve', null);
+$httpClient = new \GuzzleHttp\Client(['force_ip_resolve' => 'v4']);
+$mj = new \Mailjet\Client(getenv('MJ_APIKEY_PUBLIC'), getenv('MJ_APIKEY_PRIVATE'), true, [], $httpClient);
 ```
-
-**Note:** If you experience intermittent connection failures, ensure IPv4 forcing is enabled (default behavior).
 
 ### Disable API call
 

@@ -46,7 +46,7 @@ class Response
      * Construct a Mailjet response.
      *
      * @param Request                $request  Mailjet actual request
-     * @param ResponseInterface|null $response Guzzle response
+     * @param ResponseInterface|null $response PSR-7 response
      */
     public function __construct(Request $request, ?ResponseInterface $response)
     {
