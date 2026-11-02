@@ -24,7 +24,7 @@
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^7.4.4",
-        "phpunit/phpunit": "^11.4.0",
+        "phpunit/phpunit": "^13.4.5",
         "mockery/mockery": "^1.4",
         "php-coveralls/php-coveralls": "^2.0",
         "phpcompatibility/php-compatibility": "*",
